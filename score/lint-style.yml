@@ -1,0 +1,18 @@
+# Readable, idiomatic Go: style and simplification checks, dead code, formatting.
+# Counted automatically (no verdicts); the count is ranked across the five models.
+version: "2"
+run:
+  relative-path-mode: wd
+  tests: true
+linters:
+  default: none
+  enable: [staticcheck, ineffassign, unused, misspell]
+  settings:
+    staticcheck:
+      # S1 simplifications, ST style, QF quick fixes. ST1000 (package comment) is noise for a main package.
+      checks: ["S1*", "ST*", "QF*", "-ST1000"]
+formatters:
+  enable: [gofmt]
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0

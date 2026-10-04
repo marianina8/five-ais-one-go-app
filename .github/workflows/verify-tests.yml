@@ -1,0 +1,47 @@
+# Proves the hidden tests are trustworthy on every change:
+# the reference implementation must pass all of them, and every planted bug must be caught.
+name: Verify the hidden tests
+
+on:
+  push:
+    paths: ["acceptance/**", "reference/**", "mutants/**", "score/**", ".github/workflows/verify-tests.yml"]
+  pull_request:
+    paths: ["acceptance/**", "reference/**", "mutants/**", "score/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-go@v7
+        with:
+          go-version: "1.24"
+          cache: false
+
+      - name: Vet
+        run: |
+          go -C acceptance vet ./...
+          go -C reference vet ./...
+          go -C score vet ./...
+
+      - name: Reference passes every hidden test
+        run: |
+          go -C reference build -o "$RUNNER_TEMP/shortener" .
+          SHORTENER_BIN="$RUNNER_TEMP/shortener" go -C acceptance test -count=1 -v ./... | tee "$RUNNER_TEMP/acceptance.txt"
+          echo "### Reference: $(grep -c -- '--- PASS' "$RUNNER_TEMP/acceptance.txt") tests passed, $(grep -c -- '--- FAIL' "$RUNNER_TEMP/acceptance.txt" || true) failed" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Every planted bug is caught
+        run: |
+          python3 mutants/mutants.py | tee "$RUNNER_TEMP/mutants.txt"
+          { echo; echo '### Planted bugs'; echo '```'; grep -E 'CAUGHT|MISSED' "$RUNNER_TEMP/mutants.txt"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Scorer builds
+        run: go -C score build -o "$RUNNER_TEMP/score" .

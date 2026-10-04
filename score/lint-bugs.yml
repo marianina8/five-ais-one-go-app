@@ -1,0 +1,15 @@
+# Possible bugs and security problems. Every finding is a candidate: it costs points
+# only after a human marks it "confirmed" in findings.json.
+version: "2"
+run:
+  relative-path-mode: wd
+  tests: true
+linters:
+  default: none
+  enable: [govet, staticcheck, gosec, errcheck]
+  settings:
+    staticcheck:
+      checks: ["SA*"]
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0

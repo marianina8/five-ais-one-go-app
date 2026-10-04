@@ -1,0 +1,6 @@
+.DS_Store
+__pycache__/
+/shortener
+/score/score
+*.test
+/blind-review/

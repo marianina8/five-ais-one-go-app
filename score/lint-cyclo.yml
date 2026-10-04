@@ -1,0 +1,14 @@
+# Lists every function's cyclomatic complexity so the scorer can find the maximum.
+version: "2"
+run:
+  relative-path-mode: wd
+  tests: false
+linters:
+  default: none
+  enable: [gocyclo]
+  settings:
+    gocyclo:
+      min-complexity: 1
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
