@@ -43,7 +43,7 @@ Request: `{"url": "https://example.com/page", "alias": "my-page"}` (`alias` is o
 ### Admin auth
 Admin requests send `Authorization: Bearer <ADMIN_TOKEN>`. Missing or wrong token: **401**.
 
-Any other method on a known path: **405**.
+Any other method on a known path: **405** (a HEAD request may be answered like the matching GET).
 
 ## Storage and concurrency
 - Links (including visit counts) are stored in the `-data` JSON file and must survive a restart.

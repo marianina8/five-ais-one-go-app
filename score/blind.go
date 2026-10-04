@@ -3,89 +3,132 @@ package main
 import (
 	"crypto/rand"
 	"fmt"
+	"io/fs"
 	"math/big"
 	"os"
 	"path/filepath"
 	"regexp"
-	"sort"
 	"strings"
 )
 
-// Words that would give away which model wrote a project during the blind review.
-var giveaways = regexp.MustCompile(`(?i)\b(claude|anthropic|sonnet|opus|gpt|openai|chatgpt|gemini|google|deepseek|qwen|llm|ai[- ]generated)\b`)
+// giveawayPattern matches words that would reveal which model wrote a project.
+var giveawayPattern = regexp.MustCompile(`(?i)\b(claude|anthropic|sonnet|opus|gpt|openai|chatgpt|gemini|google|deepseek|qwen|llm|ai[- ]generated)\b`)
 
-// blind copies every run's project to out/<letter>/ in random order and records the mapping
-// in results/blind/map.json. Only the code goes over: no logs, stats or model names.
-func blind(results, runsRoot, out string) error {
-	mapPath := filepath.Join(results, "blind", "map.json")
-	if _, err := os.Stat(mapPath); err == nil {
-		return fmt.Errorf("%s already exists; delete it to make a new blind set", mapPath)
-	}
-	workspaces, _ := filepath.Glob(filepath.Join(runsRoot, "*", "*", "workspace"))
-	if len(workspaces) == 0 {
-		return fmt.Errorf("no %s/<model>/<run>/workspace folders", runsRoot)
-	}
-	if len(workspaces) > 26 {
-		return fmt.Errorf("%d runs; at most 26 letters", len(workspaces))
-	}
-	// Fisher–Yates shuffle with crypto/rand.
-	for i := len(workspaces) - 1; i > 0; i-- {
-		j, _ := rand.Int(rand.Reader, big.NewInt(int64(i+1)))
-		workspaces[i], workspaces[j.Int64()] = workspaces[j.Int64()], workspaces[i]
-	}
-	mapping := map[string]string{}
-	var warnings []string
-	for i, ws := range workspaces {
-		letter := string(rune('A' + i))
-		run := filepath.Base(filepath.Dir(ws))
-		model := filepath.Base(filepath.Dir(filepath.Dir(ws)))
-		mapping[letter] = model + "/" + run
-		dst := filepath.Join(out, letter)
-		if err := copyGoProject(ws, dst); err != nil {
-			return err
-		}
-		_ = filepath.Walk(dst, func(p string, info os.FileInfo, err error) error {
-			if err != nil || info.IsDir() {
-				return nil
-			}
-			if ext := filepath.Ext(p); ext != ".go" && ext != ".md" && info.Name() != "go.mod" {
-				return os.Remove(p) // data files, binaries: not part of the review
-			}
-			b, _ := os.ReadFile(p)
-			for n, line := range strings.Split(string(b), "\n") {
-				if giveaways.MatchString(line) {
-					rel, _ := filepath.Rel(out, p)
-					warnings = append(warnings, fmt.Sprintf("%s:%d mentions %q", rel, n+1, giveaways.FindString(line)))
-				}
-			}
-			return nil
-		})
-	}
-	if err := writeJSON(mapPath, mapping); err != nil {
+// blind copies every run's project to reviewDir/<letter>/ in random order and records which
+// letter is which run in resultsDir/blind/map.json. Only the code is copied: no logs, stats or
+// data files. It also creates an empty reviews.json to fill in, one entry per letter.
+func blind(resultsDir, runsDir, reviewDir string) error {
+	mapFile := filepath.Join(resultsDir, "blind", "map.json")
+	projects, err := blindCandidates(runsDir, reviewDir, mapFile)
+	if err != nil {
 		return err
 	}
-	letters := make([]string, 0, len(mapping))
-	for l := range mapping {
-		letters = append(letters, l)
-	}
-	sort.Strings(letters)
-	reviews := map[string]Review{}
-	for _, l := range letters {
-		reviews[l] = Review{}
-	}
-	reviewPath := filepath.Join(results, "blind", "reviews.json")
-	if _, err := os.Stat(reviewPath); os.IsNotExist(err) {
-		if err := writeJSON(reviewPath, reviews); err != nil {
+
+	letterToRun := map[string]string{}
+	var letters, giveaways []string
+	for i, project := range projects {
+		letter := string(rune('A' + i))
+		runDir := filepath.Dir(project)
+		letterToRun[letter] = filepath.Base(filepath.Dir(runDir)) + "/" + filepath.Base(runDir)
+		letters = append(letters, letter)
+
+		copyDir := filepath.Join(reviewDir, letter)
+		if err := copyProject(project, copyDir); err != nil {
 			return err
 		}
+		found, err := keepCodeOnly(copyDir, reviewDir)
+		if err != nil {
+			return err
+		}
+		giveaways = append(giveaways, found...)
 	}
-	fmt.Printf("Wrote %d projects to %s/ (%s). Mapping sealed in %s: don't open it until the reveal.\n",
-		len(letters), out, strings.Join(letters, ", "), mapPath)
-	if len(warnings) > 0 {
+	if err := writeBlindFiles(resultsDir, letterToRun); err != nil {
+		return err
+	}
+
+	fmt.Printf("Wrote %d projects to %s/ (%s).\nThe mapping is in %s: don't open it until the reveal.\n",
+		len(letters), reviewDir, strings.Join(letters, ", "), mapFile)
+	if len(giveaways) > 0 {
 		fmt.Println("\nThese lines could give a model away. Check them before you start the review:")
-		for _, w := range warnings {
-			fmt.Println("  " + w)
+		for _, line := range giveaways {
+			fmt.Println("  " + line)
 		}
 	}
 	return nil
+}
+
+// blindCandidates finds every run's project, in random order, after checking that no
+// earlier blind set would be overwritten or mixed in.
+func blindCandidates(runsDir, reviewDir, mapFile string) ([]string, error) {
+	reviewsFile := filepath.Join(filepath.Dir(mapFile), "reviews.json")
+	for _, earlier := range []string{mapFile, reviewsFile} {
+		if _, err := os.Stat(earlier); err == nil {
+			return nil, fmt.Errorf("%s already exists; a new blind set reshuffles the letters, so delete it first", earlier)
+		}
+	}
+	if _, err := os.Stat(reviewDir); err == nil {
+		return nil, fmt.Errorf("%s already exists; delete it so no old projects mix in", reviewDir)
+	}
+	projects, err := filepath.Glob(filepath.Join(runsDir, "*", "*", "workspace"))
+	if err != nil {
+		return nil, err
+	}
+	switch {
+	case len(projects) == 0:
+		return nil, fmt.Errorf("no %s/<model>/<run>/workspace folders", runsDir)
+	case len(projects) > 26:
+		return nil, fmt.Errorf("%d runs, but there are only 26 letters", len(projects))
+	}
+	return projects, shuffle(projects)
+}
+
+// writeBlindFiles saves the letter mapping and an empty review sheet.
+func writeBlindFiles(resultsDir string, letterToRun map[string]string) error {
+	if err := writeJSON(filepath.Join(resultsDir, "blind", "map.json"), letterToRun); err != nil {
+		return err
+	}
+	reviewsFile := filepath.Join(resultsDir, "blind", "reviews.json")
+	emptyReviews := map[string]Review{}
+	for letter := range letterToRun {
+		emptyReviews[letter] = Review{}
+	}
+	return writeJSON(reviewsFile, emptyReviews)
+}
+
+// shuffle puts paths in random order (Fisher–Yates with crypto/rand).
+func shuffle(paths []string) error {
+	for i := len(paths) - 1; i > 0; i-- {
+		j, err := rand.Int(rand.Reader, big.NewInt(int64(i+1)))
+		if err != nil {
+			return err
+		}
+		paths[i], paths[j.Int64()] = paths[j.Int64()], paths[i]
+	}
+	return nil
+}
+
+// keepCodeOnly deletes everything in dir except .go, .md and go.mod files, and returns the
+// lines that mention a model or vendor, as "path:line mentions ...", relative to baseDir.
+func keepCodeOnly(dir, baseDir string) ([]string, error) {
+	var giveaways []string
+	err := filepath.WalkDir(dir, func(path string, entry fs.DirEntry, err error) error {
+		if err != nil || entry.IsDir() {
+			return err
+		}
+		if ext := filepath.Ext(path); ext != ".go" && ext != ".md" && entry.Name() != "go.mod" {
+			return os.Remove(path) // data files and binaries aren't part of the review
+		}
+		source, err := os.ReadFile(path) // #nosec G304 -- reads a file under a folder the operator passed in
+		if err != nil {
+			return err
+		}
+		rel, _ := filepath.Rel(baseDir, path)
+		for number, line := range strings.Split(string(source), "\n") {
+			if word := giveawayPattern.FindString(line); word != "" {
+				giveaways = append(giveaways, fmt.Sprintf("%s:%d mentions %q", rel, number+1, word))
+			}
+		}
+		return nil
+	})
+	return giveaways, err
 }

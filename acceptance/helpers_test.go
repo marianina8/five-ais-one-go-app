@@ -1,12 +1,13 @@
 // Hidden acceptance tests for SPEC.md. Never shown to a contestant.
 //
-// They treat the contestant's program as a black box: build it, start it, talk to it over HTTP.
-// Every test starts its own fresh server, so one failure can't cascade into others.
+// They treat the contestant's program as a black box: start the binary SHORTENER_BIN points
+// to and talk to it over HTTP. Every test starts its own fresh server, so one failure can't
+// cascade into others.
 //
 //	SHORTENER_BIN=/path/to/shortener go test -json ./...
 //
 // Test names start with a category (Core, Validation, Admin, Errors, Persistence, Concurrency);
-// score/score.go weights the categories.
+// score/hidden.go gives each category its points.
 package acceptance
 
 import (

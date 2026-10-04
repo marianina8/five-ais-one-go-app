@@ -114,6 +114,7 @@ func TestValidation_BadURLs(t *testing.T) {
 		"javascript":       "javascript:alert(document.cookie)",
 		"data_url":         "data:text/html,<script>alert(1)</script>",
 		"no_host":          "https://",
+		"port_only":        "http://:80/x",
 		"header_injection": "https://example.com/\r\nSet-Cookie: session=evil",
 		"too_long_2049":    "https://example.com/" + strings.Repeat("a", 2049-len("https://example.com/")),
 	}
@@ -175,9 +176,17 @@ func TestValidation_DuplicateAlias409(t *testing.T) {
 }
 
 func TestValidation_MalformedJSON(t *testing.T) {
-	s := start(t, opts{})
-	r := s.do("POST", "/api/links", strings.NewReader(`{"url": "https://example.com"`), "Content-Type", "application/json")
-	expectStatus(t, r, 400, "malformed JSON")
+	cases := map[string]string{
+		"truncated":     `{"url": "https://example.com"`,
+		"trailing_data": `{"url": "https://example.com/trailing"} {"url": "https://example.com/2"}`,
+	}
+	for name, body := range cases {
+		t.Run(name, func(t *testing.T) {
+			s := start(t, opts{})
+			r := s.do("POST", "/api/links", strings.NewReader(body), "Content-Type", "application/json")
+			expectStatus(t, r, 400, "malformed JSON: "+name)
+		})
+	}
 }
 
 func TestValidation_UnknownField(t *testing.T) {
@@ -310,6 +319,8 @@ func TestErrors_JSONErrorFormat(t *testing.T) {
 		{"duplicate alias", s.do("POST", "/api/links", jsonBody(map[string]string{"url": "https://example.com/", "alias": "dupe"})), 409},
 		{"no token", s.do("GET", "/api/links", nil), 401},
 		{"unknown code", s.do("GET", "/nope123", nil), 404},
+		{"unknown path", s.do("GET", "/no/such/path", nil), 404},
+		{"wrong method", s.do("PUT", "/api/links", strings.NewReader("{}"), auth...), 405},
 	}
 	for _, c := range checks {
 		expectJSONError(t, c.r, c.want, c.what)
@@ -390,25 +401,43 @@ func TestPersistence_DefaultDataFile(t *testing.T) {
 	}
 }
 
+// TestPersistence_KillAndRecoverWithoutRestartGrace checks the spec's rule that every change
+// is saved before its response: a create, a visit and a delete must each survive SIGKILL.
+// Each change is the only one before its kill, so a later save can't cover for a missing one.
 func TestPersistence_KillAndRecoverWithoutRestartGrace(t *testing.T) {
 	s := start(t, opts{})
-	l := s.mustCreate("https://example.com/", "hard-kill")
+	link := s.mustCreate("https://example.com/kept", "hard-kill")
 	s = s.restart(false) // SIGKILL: nothing gets flushed on the way out
-	if _, ok := s.find(l.Code); !ok {
-		t.Fatal("link acknowledged with 201 was lost after SIGKILL")
+	if _, ok := s.find(link.Code); !ok {
+		t.Fatal("a link acknowledged with 201 was lost after SIGKILL")
+	}
+
+	expectStatus(t, s.do("GET", "/"+link.Code, nil), 302, "visit")
+	s = s.restart(false)
+	if got, _ := s.find(link.Code); got.Visits != 1 {
+		t.Fatalf("a visit answered with 302 was lost after SIGKILL: visits %d, want 1", got.Visits)
+	}
+
+	expectStatus(t, s.do("DELETE", "/api/links/"+link.Code, nil, auth...), 204, "delete")
+	s = s.restart(false)
+	if _, ok := s.find(link.Code); ok {
+		t.Fatal("a delete answered with 204 came back after SIGKILL")
 	}
 }
 
-// TestPersistence_KillDuringWrites kills the program while it is busy writing, several times.
-// A program that rewrites its data file in place sooner or later leaves a half-written file
-// and then can't start. Writing a temp file and renaming it over the old one avoids that.
+// TestPersistence_KillDuringWrites kills the program while it is busy writing, 30 times at
+// varied moments. A program that rewrites its data file in place is caught mid-write in some
+// round, leaves a half-written file and then can't start. Writing a temp file and renaming it
+// over the old one avoids that. (One round lands mid-write well over a third of the time, so
+// 30 rounds miss an in-place writer about once in millions of runs.)
 func TestPersistence_KillDuringWrites(t *testing.T) {
 	s := start(t, opts{})
 	// Make the data file big enough that a rewrite takes a while.
 	for i := range 300 {
 		s.mustCreate("https://example.com/"+strings.Repeat("p", 1500)+fmt.Sprint(i), "")
 	}
-	for round := range 8 {
+	const rounds = 30
+	for round := range rounds {
 		var stop atomic.Bool
 		var wg sync.WaitGroup
 		for w := range 16 {
@@ -422,7 +451,7 @@ func TestPersistence_KillDuringWrites(t *testing.T) {
 				}
 			}()
 		}
-		time.Sleep(time.Duration(150+round*37) * time.Millisecond)
+		time.Sleep(time.Duration(40+(round*53)%160) * time.Millisecond) // 40-199 ms, varied
 		s.kill()
 		stop.Store(true)
 		wg.Wait()

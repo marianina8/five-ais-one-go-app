@@ -12,6 +12,10 @@ on:
 permissions:
   contents: read
 
+defaults:
+  run:
+    shell: bash   # explicit bash runs with -eo pipefail, so `cmd | tee` fails when cmd fails
+
 jobs:
   verify:
     runs-on: ubuntu-latest

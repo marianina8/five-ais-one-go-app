@@ -24,7 +24,7 @@ From the YouTube series **Build It in Go**, episode 2. Episode 1 built the revie
 ## The rules
 
 - **Same everything.** Every model gets the same spec, the same tools (list, read and write files; `go build`, `go test`, `go vet`), the same step and time limits, an empty folder and no network.
-- **Hidden tests.** 53 tests written before the contest. They start the program and talk to it over HTTP, so they don't depend on how a model organized its code.
+- **Hidden tests.** 55 tests written before the contest. They start the program and talk to it over HTTP, so they don't depend on how a model organized its code.
 - **Two runs per model.** The scorecard shows the average; a difference of a few points is noise.
 - **Blind review.** Before the human review, the projects are renamed to random letters.
 - **Claude grades Claude?** The review agent runs on Claude, and Claude is a contestant. So the agent's findings only count once a human confirms them, and 80 of the 100 points come from tests and tools, not from any AI judge.
@@ -40,21 +40,21 @@ From the YouTube series **Build It in Go**, episode 2. Episode 1 built the revie
 | Would I merge it? | 20 | Blind review: would I approve it as a pull request (0–10), and could a teammate understand it in five minutes (0–10). |
 | Cost and speed | shown, not scored | Model calls, tokens, dollars, wall-clock time. |
 
-Tie-break: fewer confirmed high-severity bugs, then lower cost.
+Tie-break: fewer confirmed high-severity bugs (the review agent rates severity; for a confirmed tool finding, the person confirming it sets one), then lower cost.
 
 ## Can the tests be trusted?
 
 Two checks run on every push ([verify-tests workflow](.github/workflows/verify-tests.yml)):
 
-1. **A reference implementation passes all 53 tests.** It's in [`reference/`](reference/), written by hand to the same spec. If the tests demanded something the spec doesn't say, it would fail.
-2. **14 planted bugs are all caught.** [`mutants/`](mutants/) makes 14 copies of the reference, each with one realistic mistake: a missing admin check, a token compared with `Contains`, an empty list sent as `null`, an unlocked visit counter, a data file rewritten in place, and more. Each must fail the test written to catch it.
+1. **A reference implementation passes all 55 tests.** It's in [`reference/`](reference/), written by hand to the same spec. If the tests demanded something the spec doesn't say, it would fail.
+2. **15 planted bugs are all caught.** [`mutants/`](mutants/) makes 15 copies of the reference, each with one realistic mistake: a missing admin check, a token compared with `Contains`, an empty list sent as `null`, an unlocked visit counter, a data file rewritten in place, and more. Each must fail the test written to catch it.
 
 Run them yourself (Go 1.24+, Python 3):
 
 ```bash
 go -C reference build -o /tmp/shortener .
-SHORTENER_BIN=/tmp/shortener go -C acceptance test -v ./...   # 53/53 pass
-python3 mutants/mutants.py                                     # 14/14 bugs caught
+SHORTENER_BIN=/tmp/shortener go -C acceptance test -v ./...   # 55/55 pass
+python3 mutants/mutants.py                                     # 15/15 bugs caught
 ```
 
 ## What's here
@@ -62,7 +62,7 @@ python3 mutants/mutants.py                                     # 14/14 bugs caug
 | Folder | What it is |
 |---|---|
 | [`spec/SPEC.md`](spec/SPEC.md) | The prompt every model received |
-| [`acceptance/`](acceptance/) | The 53 hidden black-box tests |
+| [`acceptance/`](acceptance/) | The 55 hidden black-box tests |
 | [`reference/`](reference/) | A hand-written implementation that proves the tests are correct (never shown to the models) |
 | [`mutants/`](mutants/) | The planted-bug check |
 | [`score/`](score/) | The scorer, in Go: `measure` (tests, race detector, linters, coverage), `blind` (renames projects for review), `tally` (the scorecard) |
@@ -72,8 +72,12 @@ python3 mutants/mutants.py                                     # 14/14 bugs caug
 
 ```bash
 go -C score build -o /tmp/score .
-/tmp/score measure --src path/to/project --out results/my-model/run1 --acceptance acceptance
+/tmp/score measure --project path/to/project --out results/my-model/run1
+#   -> measure.json (what the machine measured) and findings.json (each finding waits for a verdict)
+/tmp/score blind --runs runs --results results --review blind-review
+#   -> blind-review/A, B, ... and the sealed letter mapping in results/blind/map.json
 /tmp/score tally --results results
+#   -> results/scorecard.md and scorecard.json; marked provisional while a verdict or review is missing
 ```
 
-The scorer runs the project's code with a minimal environment (no API keys, no cloud credentials, no module downloads), on a copy of its folder. Only run code you trust.
+The scorer runs the project's code with a minimal environment (no API keys, no cloud credentials, no module downloads), on a copy of its folder. Only run code you trust. It needs Go 1.24+ and golangci-lint v2 on your PATH.
