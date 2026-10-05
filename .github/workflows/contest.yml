@@ -1,0 +1,230 @@
+# Runs the contest: every model builds the URL shortener from spec/SPEC.md, twice, under the
+# same rules. Then the scorer measures every run, and the results are published to a branch.
+#
+# plan     reads contest/contestants.json and makes one job per model and run
+# contest  one model, one run: the harness, the model's API, and go commands in a container
+#          with no network. Only that model's API key is in the job.
+# score    measures every run (hidden tests, race detector, linters, coverage). No secrets.
+# publish  commits the code, transcripts, stats and provisional scorecard to a new branch.
+#          It runs no contestant code; it's the only job that can write to the repo.
+#
+# Start it from the Actions tab (Run workflow). A push to the contest-dry-run branch runs a
+# cheap smoke test instead: every model, one run, three model calls each.
+name: Contest
+
+on:
+  workflow_dispatch:
+    inputs:
+      models:
+        description: "Labels from contest/contestants.json, comma-separated, or all"
+        default: all
+      runs:
+        description: "Runs per model"
+        type: choice
+        options: ["2", "1"]
+        default: "2"
+      max_steps:
+        description: "Model calls per run"
+        default: "40"
+      minutes:
+        description: "Time limit per run"
+        default: "20"
+      name:
+        description: "Name for the results branch: contest-results/<name>-<run number>"
+        default: contest
+  push:
+    branches: [contest-dry-run]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: contest-${{ github.ref }}
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash   # explicit bash runs with -eo pipefail
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      max_steps: ${{ steps.plan.outputs.max_steps }}
+      minutes: ${{ steps.plan.outputs.minutes }}
+      branch: ${{ steps.plan.outputs.branch }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          sparse-checkout: contest
+
+      - id: plan
+        env:
+          EVENT: ${{ github.event_name }}
+          MODELS: ${{ inputs.models }}
+          RUNS: ${{ inputs.runs }}
+          MAX_STEPS: ${{ inputs.max_steps }}
+          MINUTES: ${{ inputs.minutes }}
+          NAME: ${{ inputs.name }}
+          RUN_NUMBER: ${{ github.run_number }}
+        run: |
+          if [ "$EVENT" = push ]; then   # the dry run
+            MODELS=all RUNS=1 MAX_STEPS=3 MINUTES=5 NAME=dry-run
+          fi
+          [[ "$RUNS" =~ ^[12]$ && "$MAX_STEPS" =~ ^[0-9]+$ && "$MINUTES" =~ ^[0-9]+$ && "$NAME" =~ ^[a-z0-9-]+$ ]] \
+            || { echo "::error::bad inputs"; exit 1; }
+          matrix=$(jq -c --arg models "$MODELS" --argjson runs "$RUNS" '
+            ($models | split(",") | map(gsub("^ +| +$"; ""))) as $wanted
+            | map(select($models == "all" or (.label | IN($wanted[]))))
+            | if length == 0 then error("no contestants match: \($models)") else . end
+            | [.[] as $c | range(1; $runs + 1) | $c + {run: "run\(.)"}]
+            | {include: .}' contest/contestants.json)
+          {
+            echo "matrix=$matrix"
+            echo "max_steps=$MAX_STEPS"
+            echo "minutes=$MINUTES"
+            echo "branch=contest-results/$NAME-$RUN_NUMBER"
+          } >> "$GITHUB_OUTPUT"
+          echo "$matrix" | jq -r '"Planned \(.include | length) runs: " + ([.include[] | "\(.label)/\(.run)"] | join(", "))'
+
+  contest:
+    name: ${{ matrix.label }} ${{ matrix.run }}
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      id-token: write   # Bedrock only: sign in to AWS without stored keys
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    steps:
+      # Only the harness and the spec: the hidden tests and the reference stay out of reach.
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            harness
+            spec
+
+      - uses: actions/setup-go@v7
+        with:
+          go-version: "1.24"
+          cache-dependency-path: harness/go.sum
+
+      - name: Build the harness
+        run: |
+          (cd harness && go build -o "$RUNNER_TEMP/harness" .)
+          docker pull --quiet golang:1.24   # every go command the model runs happens in here
+
+      - name: Sign in to AWS (OIDC)
+        if: matrix.provider == 'bedrock'
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ secrets.BEDROCK_ROLE_ARN }}
+          aws-region: us-west-2
+          role-session-name: contest-${{ github.run_id }}
+          mask-aws-account-id: true
+
+      - name: Run ${{ matrix.name }} (${{ matrix.run }})
+        env:
+          # Each job gets only its own model's key.
+          ANTHROPIC_API_KEY: ${{ matrix.provider == 'anthropic' && secrets.ANTHROPIC_API_KEY || '' }}
+          OPENAI_API_KEY: ${{ matrix.provider == 'openai' && secrets.OPENAI_API_KEY || '' }}
+          GEMINI_API_KEY: ${{ matrix.provider == 'gemini' && secrets.GEMINI_API_KEY || '' }}
+          PROVIDER: ${{ matrix.provider }}
+          MODEL: ${{ matrix.model }}
+          LABEL: ${{ matrix.label }}/${{ matrix.run }}
+          MAX_STEPS: ${{ needs.plan.outputs.max_steps }}
+          MINUTES: ${{ needs.plan.outputs.minutes }}
+        run: |
+          out="$RUNNER_TEMP/out"
+          "$RUNNER_TEMP/harness" --provider "$PROVIDER" --model "$MODEL" --label "$LABEL" \
+            --spec spec/SPEC.md --workspace "$out/workspace" --out "$out" \
+            --max-steps "$MAX_STEPS" --minutes "$MINUTES" --sandbox docker
+          jq -r '"### \(.label)\n\nStopped by **\(.stopped_by)** after \(.model_calls) model calls and \(.tool_calls) tool calls · \(.seconds)s · $\(.cost_usd) · \(.input_tokens) tokens in, \(.output_tokens) out" + (if .error then "\n\nError: `\(.error)`" else "" end)' \
+            "$out/stats.json" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the run
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: run__${{ matrix.label }}__${{ matrix.run }}
+          path: ${{ runner.temp }}/out
+          include-hidden-files: true
+          if-no-files-found: warn
+
+  score:
+    needs: [plan, contest]
+    if: always() && needs.plan.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-go@v7
+        with:
+          go-version: "1.24"
+          cache: false
+
+      - name: Install the linters and the scorer
+        run: |
+          go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.5.0
+          go -C score build -o "$RUNNER_TEMP/score" .
+
+      - uses: actions/download-artifact@v7
+        with:
+          pattern: run__*
+          path: ${{ runner.temp }}/runs
+
+      - name: Measure every run
+        run: |
+          for dir in "$RUNNER_TEMP"/runs/run__*; do
+            name=${dir##*/run__}
+            label=${name%__*}
+            run=${name##*__}
+            target="results/$label/$run"
+            # An empty workspace isn't uploaded, so recreate it: every run gets measured and listed.
+            mkdir -p "$target/workspace"
+            cp -R "$dir"/. "$target"/
+            # Keep source, not build outputs: drop anything over 5 MB (a compiled binary).
+            find "$target/workspace" -type f -size +5M -print -delete
+            "$RUNNER_TEMP/score" measure --project "$target/workspace" --out "$target" || echo "::warning::could not measure $label/$run"
+          done
+          "$RUNNER_TEMP/score" tally --results results | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: results
+          path: results
+          include-hidden-files: true
+
+  publish:
+    needs: [plan, score]
+    if: always() && needs.score.result == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # push the results branch; this job runs no contestant code
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/download-artifact@v7
+        with:
+          name: results
+          path: results
+
+      - name: Commit the results to ${{ needs.plan.outputs.branch }}
+        env:
+          BRANCH: ${{ needs.plan.outputs.branch }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898299+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add --force results
+          git commit --quiet -m "Contest results from run ${{ github.run_id }}"
+          git push origin "$BRANCH"
+          echo "Results: ${{ github.server_url }}/${{ github.repository }}/tree/$BRANCH/results" >> "$GITHUB_STEP_SUMMARY"

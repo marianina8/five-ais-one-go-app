@@ -4,9 +4,9 @@ name: Verify the hidden tests
 
 on:
   push:
-    paths: ["acceptance/**", "reference/**", "mutants/**", "score/**", ".github/workflows/verify-tests.yml"]
+    paths: ["acceptance/**", "reference/**", "mutants/**", "score/**", "harness/**", "spec/**", ".github/workflows/verify-tests.yml"]
   pull_request:
-    paths: ["acceptance/**", "reference/**", "mutants/**", "score/**"]
+    paths: ["acceptance/**", "reference/**", "mutants/**", "score/**", "harness/**", "spec/**"]
   workflow_dispatch:
 
 permissions:
@@ -49,3 +49,6 @@ jobs:
 
       - name: Scorer builds
         run: go -C score build -o "$RUNNER_TEMP/score" .
+
+      - name: Harness tests (fake vendor APIs, no keys needed)
+        run: go -C harness test -race -count=1 ./...

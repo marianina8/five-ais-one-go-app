@@ -1,0 +1,8 @@
+{
+  "_note": "US dollars per million tokens, standard (not batch) list prices, checked 2026-10-04. Output includes reasoning/thinking tokens. Cost is computed at these prices with no cache discounts, so every model is priced the same way. max_output_tokens caps the per-call output limit for models whose API allows less than the harness default.",
+  "claude-sonnet-5-5": {"input": 2.00, "output": 10.00, "source": "https://platform.claude.com/docs/en/about-claude/pricing"},
+  "claude-opus-5-5": {"input": 4.00, "output": 20.00, "source": "https://platform.claude.com/docs/en/about-claude/pricing"},
+  "gpt-6.1-sol": {"input": 2.00, "output": 10.00, "source": "https://developers.openai.com/api/docs/pricing"},
+  "gemini-3.1-pro-preview": {"input": 2.00, "output": 12.00, "source": "https://ai.google.dev/gemini-api/docs/pricing (prompts up to 200k tokens)"},
+  "deepseek.v3.2": {"input": 0.62, "output": 1.85, "max_output_tokens": 8192, "source": "Amazon Bedrock pricing, us-west-2"}
+}
