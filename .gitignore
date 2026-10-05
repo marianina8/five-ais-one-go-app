@@ -4,3 +4,4 @@ __pycache__/
 /score/score
 *.test
 /blind-review/
+.blind-key.json
