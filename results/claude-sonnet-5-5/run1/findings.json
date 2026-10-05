@@ -5,7 +5,8 @@
     "file": "main.go",
     "line": 28,
     "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "main.go:28 ignored Encode to ResponseWriter; no practical effect."
   },
   {
     "id": "T02",
@@ -13,7 +14,8 @@
     "file": "main_test.go",
     "line": 69,
     "message": "Error return value of `json.Unmarshal` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "Ignored json.Unmarshal error in test code (main_test.go:69)."
   },
   {
     "id": "T03",
@@ -21,7 +23,8 @@
     "file": "store.go",
     "line": 84,
     "message": "Error return value of `f.Close` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "store.go:84 f.Close in deferred failure cleanup; the success path checks Close at store.go:94."
   },
   {
     "id": "T04",
@@ -29,7 +32,8 @@
     "file": "store.go",
     "line": 85,
     "message": "Error return value of `os.Remove` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "store.go:85 os.Remove of temp file is best-effort cleanup on the error path."
   },
   {
     "id": "T05",
@@ -37,7 +41,8 @@
     "file": "store.go",
     "line": 102,
     "message": "Error return value of `d.Sync` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "store.go:102 directory Sync after a successful rename is best-effort; the data file was already fsynced and renamed, so it cannot be left unloadable."
   },
   {
     "id": "T06",
@@ -45,7 +50,8 @@
     "file": "store.go",
     "line": 103,
     "message": "Error return value of `d.Close` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "store.go:103 Close of a directory handle opened only for Sync; no effect."
   },
   {
     "id": "T07",
@@ -54,7 +60,8 @@
     "file": "main.go",
     "line": 185,
     "message": "G114: Use of net/http serve function that has no support for setting timeouts",
-    "verdict": "pending"
+    "verdict": "confirmed",
+    "note": "main.go:185 http.ListenAndServe uses a server with no timeouts."
   },
   {
     "id": "T08",
@@ -63,7 +70,8 @@
     "file": "store.go",
     "line": 40,
     "message": "G304: Potential file inclusion via variable",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "G304 not applicable: path comes from the operator's -data flag (store.go:40)."
   },
   {
     "id": "T09",
@@ -72,6 +80,259 @@
     "file": "store.go",
     "line": 101,
     "message": "G304: Potential file inclusion via variable",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "G304 not applicable: opens the data file's directory derived from -data (store.go:101)."
+  },
+  {
+    "id": "A01",
+    "source": "agent",
+    "rule": "Error handling",
+    "file": "store.go",
+    "line": 154,
+    "message": "store.go:154-167 and main.go:96-104 \u2014 A redirect depends on the visit counter being saved to disk. If `saveLocked` fails, for example on a full disk or a missing directory, `Visit` rolls back the count and returns an error. The handler then answers 500 and never redirects. A bookkeeping failure takes down the main function of the service. I removed the data directory and requested an existing link: it returned 500 instead of redirecting. [verified] \u2014 Make the redirect succeed regardless. Increment in memory, return the URL, and persist the counter best-effort (log the error, or flush periodically).",
+    "severity": "medium",
+    "verdict": "rejected",
+    "note": "Spec requires the visit to be saved before the redirect; 500 on save failure (main.go:96-104) is spec-mandated."
+  },
+  {
+    "id": "A02",
+    "source": "agent",
+    "rule": "Error handling",
+    "file": "main.go",
+    "line": 76,
+    "message": "main.go:76-83, 96-104, 145-152 \u2014 Every 500 path discards the underlying error and returns only \"internal error\". Nothing is logged, so a disk failure, as in the test above, is invisible to the operator. \u2014 Call `log.Printf(\"...: %v\", err)` before writing the 500.",
+    "severity": "medium",
+    "verdict": "rejected",
+    "note": "Logging is a feature the spec didn't ask for (main.go:76-83)."
+  },
+  {
+    "id": "A03",
+    "source": "agent",
+    "rule": "Error handling",
+    "file": "main.go",
+    "line": 28,
+    "message": "main.go:28 \u2014 `json.NewEncoder(w).Encode(v)` ignores its error. \u2014 Log it. It only fails when the client has gone away or `v` is unmarshalable, so this is minor.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "main.go:28 ignored Encode to ResponseWriter has no practical effect."
+  },
+  {
+    "id": "A04",
+    "source": "agent",
+    "rule": "Error handling",
+    "file": "store.go",
+    "line": 56,
+    "message": "store.go:56-58 \u2014 When loading, a duplicate `code` in the file is silently skipped, so one of the two records is dropped. The next save then permanently erases it. \u2014 Return an error, or at least log the skipped code.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Handling duplicates in a hand-edited data file (store.go:56) is not requested by the spec; the service never writes duplicates."
+  },
+  {
+    "id": "A05",
+    "source": "agent",
+    "rule": "Error handling",
+    "file": "store.go",
+    "line": 101,
+    "message": "store.go:101-104 \u2014 The error from the directory `Sync` is ignored. The rename has already happened, so the write counts as successful. \u2014 This is acceptable as best-effort, but add a comment saying so.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "store.go:101-104 directory Sync after rename is best-effort; agent itself calls it acceptable."
+  },
+  {
+    "id": "A06",
+    "source": "agent",
+    "rule": "Secrets and sensitive data",
+    "file": "main.go",
+    "line": 157,
+    "message": "main.go:157-169 \u2014 `validateURL` accepts URLs containing credentials (`https://user:pass@host/`). Anyone with the admin token sees them through `GET /api/links`, and the 302 hands them to every visitor. They are also stored in plaintext in data.json. \u2014 Reject URLs where `u.User != nil`.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Rejecting credential URLs (main.go:157) is not requested by the spec."
+  },
+  {
+    "id": "A07",
+    "source": "agent",
+    "rule": "Secrets and sensitive data",
+    "file": "main.go",
+    "line": 175,
+    "message": "main.go:175, 41 \u2014 The admin token is a single static env var and is compared in constant time, which is fine. There is no protection against brute-forcing it: failed attempts are not rate-limited or logged. \u2014 Use a long random token, and consider rate limiting or logging failed attempts.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Token is compared in constant time (main.go:41); rate limiting/logging not requested."
+  },
+  {
+    "id": "A08",
+    "source": "agent",
+    "rule": "Input validation",
+    "file": "main.go",
+    "line": 47,
+    "message": "main.go:47-55 \u2014 `POST /api/links` needs no authentication, so anyone can create unlimited links. Each create rewrites the whole data file and grows memory. The service can be filled with spam or phishing redirects and its disk exhausted. \u2014 Require auth for creation, or add per-IP rate limiting and a cap on the number of links. If creation is meant to be public, say so in a comment.",
+    "severity": "medium",
+    "verdict": "rejected",
+    "note": "Spec requires unauthenticated POST /api/links (main.go:47)."
+  },
+  {
+    "id": "A09",
+    "source": "agent",
+    "rule": "Input validation",
+    "file": "store.go",
+    "line": 47,
+    "message": "store.go:47-61 \u2014 The data file's contents are trusted on load. Records with empty codes, codes that don't match `aliasRe`, or a code of `api` are accepted, and nothing re-validates the URLs. A hand-edited file could create entries that can never be reached or that bypass the checks. \u2014 Validate each record with the same rules used at creation.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Re-validating the data file on load (store.go:47) is not requested by the spec."
+  },
+  {
+    "id": "A10",
+    "source": "agent",
+    "rule": "Input validation",
+    "file": "main.go",
+    "line": 127,
+    "message": "main.go:127 \u2014 The body is already fully read and size-limited, then copied via `string(body)` into a new reader. \u2014 Use `bytes.NewReader(body)`. See Clarity.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "string(body) copy at main.go:127 is style/efficiency, not a defect."
+  },
+  {
+    "id": "A11",
+    "source": "agent",
+    "rule": "External services",
+    "file": "main.go",
+    "line": 185,
+    "message": "main.go:185 \u2014 `http.ListenAndServe` uses a default server with no `ReadHeaderTimeout`, `ReadTimeout`, `WriteTimeout` or `IdleTimeout`. Slow clients can hold connections open indefinitely (Slowloris). \u2014 Build an `&http.Server{...}` with those timeouts set, and ideally add graceful shutdown.",
+    "severity": "medium",
+    "verdict": "duplicate",
+    "note": "Same missing-server-timeouts issue as T07 (main.go:185)."
+  },
+  {
+    "id": "A12",
+    "source": "agent",
+    "rule": "External services",
+    "file": "main.go",
+    "line": 185,
+    "message": "main.go:185 \u2014 There is no graceful shutdown. A SIGTERM during a request ends the process. The atomic rename in `saveLocked` protects the file itself, but in-flight requests get dropped. \u2014 Use `Server.Shutdown` on a signal.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Graceful shutdown not requested by the spec; atomic rename keeps the file valid (main.go:185)."
+  },
+  {
+    "id": "A13",
+    "source": "agent",
+    "rule": "Resources and concurrency",
+    "file": "store.go",
+    "line": 154,
+    "message": "store.go:154-167 \u2014 Every redirect marshals the whole dataset, writes a temp file, calls `fsync` twice (file and directory) and renames it, all while holding the global mutex. Throughput is limited by disk sync latency, and all requests, including reads of `List`, queue behind it. Combined with the open `POST`, this makes DoS easy. \u2014 Keep counters in memory and flush them in a background goroutine on an interval or at shutdown. Write only when data changes.",
+    "severity": "medium",
+    "verdict": "rejected",
+    "note": "Saving on every visit under the lock (store.go:154) is what the spec requires."
+  },
+  {
+    "id": "A14",
+    "source": "agent",
+    "rule": "Resources and concurrency",
+    "file": "store.go",
+    "line": 129,
+    "message": "store.go:129-138 \u2014 The loop that picks a random code has no retry limit and runs under the lock. In practice 62^7 codes make this safe, but a crypto/rand failure is the only exit. \u2014 Cap the attempts (for example 10) and return an error.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "store.go:129-138 unbounded retry loop terminates with overwhelming probability given 62^7 codes; no practical defect."
+  },
+  {
+    "id": "A15",
+    "source": "agent",
+    "rule": "Resources and concurrency",
+    "file": "main.go",
+    "line": 91,
+    "message": "main.go:91-96 \u2014 A HEAD request counts as a visit and triggers a disk write. Link checkers and crawlers inflate the counts. \u2014 Skip the increment for HEAD.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "HEAD may be answered like GET per spec (main.go:91); HEAD handling choices not a defect."
+  },
+  {
+    "id": "A16",
+    "source": "agent",
+    "rule": "Tests",
+    "file": "main_test.go",
+    "message": "main_test.go \u2014 No test covers the failure paths in `store.go`: write errors and the rollback logic in `Create`, `Visit` and `Delete`. This is where the 500-on-redirect behaviour comes from. \u2014 Add tests that make the data directory unwritable and assert both the response and that the in-memory state is unchanged.",
+    "severity": "medium",
+    "verdict": "rejected",
+    "note": "Missing failure-path tests; test coverage scored elsewhere."
+  },
+  {
+    "id": "A17",
+    "source": "agent",
+    "rule": "Tests",
+    "file": "main_test.go",
+    "line": 31,
+    "message": "main_test.go:31-82 \u2014 `TestFlow` is one long sequence and mostly calls `t.Fatal()` with no message. Failures won't say which step broke. The following are missing:",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Test structure/messages in main_test.go:31-82 are style."
+  },
+  {
+    "id": "A18",
+    "source": "agent",
+    "rule": "Tests",
+    "file": "main_test.go",
+    "line": 69,
+    "message": "main_test.go:69 \u2014 The `json.Unmarshal` error is ignored, so a malformed response would show up only as a confusing length mismatch. \u2014 Check the error.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Ignored Unmarshal error in test code (main_test.go:69); the test still fails on a bad body via the length check."
+  },
+  {
+    "id": "A19",
+    "source": "agent",
+    "rule": "Tests",
+    "file": "main_test.go",
+    "line": 84,
+    "message": "main_test.go:84-103 \u2014 `TestConcurrent` only gives value under `-race`, and it never checks the persisted file. \u2014 Run CI with `-race`, and reopen the store afterwards to confirm the counts persisted.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Test suggestion (run with -race, check persistence); scored elsewhere."
+  },
+  {
+    "id": "A20",
+    "source": "agent",
+    "rule": "Clarity",
+    "file": "main.go",
+    "line": 127,
+    "message": "main.go:127 \u2014 `json.NewDecoder(strings.NewReader(string(body)))` converts the bytes to a string and back into a reader. \u2014 Use `bytes.NewReader(body)`, or decode straight from `http.MaxBytesReader` and drop `io.ReadAll`.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Clarity suggestion at main.go:127."
+  },
+  {
+    "id": "A21",
+    "source": "agent",
+    "rule": "Clarity",
+    "file": "main.go",
+    "line": 133,
+    "message": "main.go:133 \u2014 `if _, err := dec.Token(); err != io.EOF` is a trick for rejecting trailing data. It is hard to read and compares the error with `!=`. \u2014 Add a comment (\"reject anything after the first JSON value\") and use `errors.Is`, or use `dec.More()`.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Clarity of dec.Token trailing-data check at main.go:133; it works correctly."
+  },
+  {
+    "id": "A22",
+    "source": "agent",
+    "rule": "Clarity",
+    "file": "store.go",
+    "line": 176,
+    "message": "store.go:176-185 \u2014 `Delete` copies the order slice, removes the entry and restores the copy on failure. Because it relies on `append` shifting in place, it needs the copy to be safe. \u2014 Save first with a newly built slice, or use `slices.Delete` on a copy. Then only assign the new state on success.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "store.go:176-185 Delete copies order before in-place append and restores it on failure; correct, clarity only."
+  },
+  {
+    "id": "A23",
+    "source": "agent",
+    "rule": "Clarity",
+    "file": "main.go",
+    "line": 141,
+    "message": "main.go:141 and store.go:134 \u2014 The \"api is reserved\" rule is repeated in three places: main.go:87, main.go:141 and store.go:134. \u2014 Put it in one `reserved(code)` helper.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Duplicated 'api' reserved check is style (main.go:87,141, store.go:134)."
   }
 ]

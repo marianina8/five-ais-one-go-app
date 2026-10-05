@@ -73,79 +73,6 @@
     "ModelCalls": 9.5
   },
   {
-    "Model": "gemini-3-1-pro",
-    "Runs": [
-      {
-        "Model": "gemini-3-1-pro",
-        "Run": "run1",
-        "Built": true,
-        "Works": 39.3,
-        "Bugs": 20,
-        "OwnTests": 9.6,
-        "Merge": 0,
-        "Reviewed": false,
-        "StyleScore": 5,
-        "StyleMeasured": true,
-        "Confirmed": null,
-        "Pending": 17,
-        "Stats": {
-          "model_calls": 40,
-          "input_tokens": 607349,
-          "output_tokens": 36705,
-          "cost_usd": 1.6552,
-          "seconds": 346,
-          "finished": true,
-          "stopped_by": "done",
-          "error": ""
-        },
-        "HiddenPassed": 53,
-        "HiddenTotal": 55,
-        "Coverage": 76.8,
-        "OwnTestsPassed": true
-      },
-      {
-        "Model": "gemini-3-1-pro",
-        "Run": "run2",
-        "Built": true,
-        "Works": 39.3,
-        "Bugs": 20,
-        "OwnTests": 7.7,
-        "Merge": 0,
-        "Reviewed": false,
-        "StyleScore": 10,
-        "StyleMeasured": true,
-        "Confirmed": null,
-        "Pending": 22,
-        "Stats": {
-          "model_calls": 32,
-          "input_tokens": 495377,
-          "output_tokens": 26124,
-          "cost_usd": 1.3042,
-          "seconds": 246,
-          "finished": true,
-          "stopped_by": "done",
-          "error": ""
-        },
-        "HiddenPassed": 53,
-        "HiddenTotal": 55,
-        "Coverage": 61.9,
-        "OwnTestsPassed": true
-      }
-    ],
-    "Works": 39.3,
-    "Bugs": 20,
-    "Readable": 8,
-    "OwnTests": 8.65,
-    "Merge": 0,
-    "Total": 75.95,
-    "StyleScore": 7.5,
-    "AnyBuilt": true,
-    "ConfirmedHigh": 0,
-    "CostUSD": 1.4797,
-    "Seconds": 296,
-    "ModelCalls": 36
-  },
-  {
     "Model": "claude-sonnet-5-5",
     "Runs": [
       {
@@ -153,14 +80,25 @@
         "Run": "run1",
         "Built": true,
         "Works": 40,
-        "Bugs": 20,
+        "Bugs": 18,
         "OwnTests": 9.3,
         "Merge": 0,
         "Reviewed": false,
         "StyleScore": 9,
         "StyleMeasured": true,
-        "Confirmed": null,
-        "Pending": 9,
+        "Confirmed": [
+          {
+            "id": "T07",
+            "source": "gosec",
+            "rule": "G114",
+            "file": "main.go",
+            "line": 185,
+            "message": "G114: Use of net/http serve function that has no support for setting timeouts",
+            "verdict": "confirmed",
+            "note": "main.go:185 http.ListenAndServe uses a server with no timeouts."
+          }
+        ],
+        "Pending": 0,
         "Stats": {
           "model_calls": 6,
           "input_tokens": 54109,
@@ -181,14 +119,25 @@
         "Run": "run2",
         "Built": true,
         "Works": 40,
-        "Bugs": 20,
+        "Bugs": 18,
         "OwnTests": 9.5,
         "Merge": 0,
         "Reviewed": false,
         "StyleScore": 9,
         "StyleMeasured": true,
-        "Confirmed": null,
-        "Pending": 10,
+        "Confirmed": [
+          {
+            "id": "T08",
+            "source": "gosec",
+            "rule": "G112",
+            "file": "main.go",
+            "line": 189,
+            "message": "G112: Potential Slowloris Attack because ReadHeaderTimeout is not configured in the http.Server",
+            "verdict": "confirmed",
+            "note": "main.go:189 http.Server has no ReadHeaderTimeout or any other timeout, so slow clients can hold connections forever."
+          }
+        ],
+        "Pending": 0,
         "Stats": {
           "model_calls": 3,
           "input_tokens": 22597,
@@ -206,11 +155,11 @@
       }
     ],
     "Works": 40,
-    "Bugs": 20,
+    "Bugs": 18,
     "Readable": 6,
     "OwnTests": 9.4,
     "Merge": 0,
-    "Total": 75.4,
+    "Total": 73.4,
     "StyleScore": 9,
     "AnyBuilt": true,
     "ConfirmedHigh": 0,
@@ -226,14 +175,25 @@
         "Run": "run1",
         "Built": true,
         "Works": 40,
-        "Bugs": 20,
+        "Bugs": 18,
         "OwnTests": 9.3,
         "Merge": 0,
         "Reviewed": false,
         "StyleScore": 9,
         "StyleMeasured": true,
-        "Confirmed": null,
-        "Pending": 11,
+        "Confirmed": [
+          {
+            "id": "T09",
+            "source": "gosec",
+            "rule": "G114",
+            "file": "main.go",
+            "line": 194,
+            "message": "G114: Use of net/http serve function that has no support for setting timeouts",
+            "verdict": "confirmed",
+            "note": "main.go:194 http.ListenAndServe uses a server with no timeouts."
+          }
+        ],
+        "Pending": 0,
         "Stats": {
           "model_calls": 3,
           "input_tokens": 22088,
@@ -261,7 +221,7 @@
         "StyleScore": 14,
         "StyleMeasured": true,
         "Confirmed": null,
-        "Pending": 14,
+        "Pending": 0,
         "Stats": {
           "model_calls": 4,
           "input_tokens": 32492,
@@ -279,17 +239,166 @@
       }
     ],
     "Works": 40,
-    "Bugs": 20,
+    "Bugs": 19,
     "Readable": 2,
     "OwnTests": 9,
     "Merge": 0,
-    "Total": 71,
+    "Total": 70,
     "StyleScore": 11.5,
     "AnyBuilt": true,
     "ConfirmedHigh": 0,
     "CostUSD": 0.28015,
     "Seconds": 79.5,
     "ModelCalls": 3.5
+  },
+  {
+    "Model": "gemini-3-1-pro",
+    "Runs": [
+      {
+        "Model": "gemini-3-1-pro",
+        "Run": "run1",
+        "Built": true,
+        "Works": 39.3,
+        "Bugs": 15,
+        "OwnTests": 9.6,
+        "Merge": 0,
+        "Reviewed": false,
+        "StyleScore": 5,
+        "StyleMeasured": true,
+        "Confirmed": [
+          {
+            "id": "T16",
+            "source": "gosec",
+            "rule": "G114",
+            "file": "main.go",
+            "line": 30,
+            "message": "G114: Use of net/http serve function that has no support for setting timeouts",
+            "verdict": "confirmed",
+            "note": "http.ListenAndServe with no server timeouts (main.go:30)."
+          },
+          {
+            "id": "A07",
+            "source": "agent",
+            "rule": "Secrets and sensitive data",
+            "file": "server.go",
+            "line": 28,
+            "message": "server.go:28-29 — The admin token is compared with `!=`, which is not constant-time and so allows timing attacks. Fix: use `subtle.ConstantTimeCompare` on the supplied token and the expected token.",
+            "severity": "medium",
+            "verdict": "confirmed",
+            "note": "Admin token is compared with != rather than in constant time, which can leak it through timing (server.go:28-29)."
+          },
+          {
+            "id": "A19",
+            "source": "agent",
+            "rule": "Tests",
+            "file": "time_test.go",
+            "line": 10,
+            "message": "time_test.go:10-16 — `TestRFC3339` can't meaningfully fail. `time.Now().UTC()` always marshals with `Z`, and the assertion also accepts any `+`. It doesn't test `Create`'s millisecond truncation either. Fix: create through the store and parse the output with `time.Parse(time.RFC3339Nano, ...)`.",
+            "severity": "low",
+            "verdict": "confirmed",
+            "note": "TestRFC3339 marshals a time it built itself and accepts any Z or +, so it cannot fail (time_test.go:10-16)."
+          }
+        ],
+        "Pending": 0,
+        "Stats": {
+          "model_calls": 40,
+          "input_tokens": 607349,
+          "output_tokens": 36705,
+          "cost_usd": 1.6552,
+          "seconds": 346,
+          "finished": true,
+          "stopped_by": "done",
+          "error": ""
+        },
+        "HiddenPassed": 53,
+        "HiddenTotal": 55,
+        "Coverage": 76.8,
+        "OwnTestsPassed": true
+      },
+      {
+        "Model": "gemini-3-1-pro",
+        "Run": "run2",
+        "Built": true,
+        "Works": 39.3,
+        "Bugs": 12,
+        "OwnTests": 7.7,
+        "Merge": 0,
+        "Reviewed": false,
+        "StyleScore": 10,
+        "StyleMeasured": true,
+        "Confirmed": [
+          {
+            "id": "T01",
+            "source": "race",
+            "rule": "DATA RACE",
+            "file": "store.go",
+            "line": 116,
+            "message": "WARNING: DATA RACE\nWrite at 0x00c00006a4f8 by goroutine 51:\n  main.(*Store).Visit()\n      /tmp/score-2354122949/code/store.go:116 +0x16b\n  main.(*Server).handleFollowLink()\n      /tmp/score-2354122949/code/server.go:117 +0x24b\n  main.(*Server).handleFollowLink-fm()\n      \u003cautogenerated\u003e:1 +0x51\n  net/http.HandlerFunc.ServeHTTP()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:2294 +0x47\n  net/http.(*ServeMux).ServeHTTP()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:2822 +0x23e\n  main.main.wrapInterceptor.func2()\n      /tmp/score-2354122949/code/server.go:198 +0xe2\n  net/http.HandlerFunc.ServeHTTP()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:2294 +0x47\n  net/http.serverHandler.ServeHTTP()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:3301 +0x2a1\n  net/http.(*conn).serve()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:2102 +0x1304\n  net/http.(*Server).Serve.gowrap3()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:3454 +0x4f\n\nPrevious read at 0x00c00006a4f8 by goroutine 43:\n  reflect.Value.Int()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/reflect/value.go:1455 +0x1b3\n  encoding/json.intEncoder()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/encoding/json/encode.go:525 +0x185\n  encoding/json.structEncoder.encode()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/encoding/json/encode.go:727 +0x3c7\n  encoding/json.structEncoder.encode-fm()\n      \u003cautogenerated\u003e:1 +0xe4\n …[trimmed]",
+            "verdict": "confirmed",
+            "note": "store.go:116 Visit increments l.Visits under the lock while List/Create return live *Link pointers that server.go:137/107 JSON-encode after unlock: a real data race."
+          },
+          {
+            "id": "T20",
+            "source": "gosec",
+            "rule": "G114",
+            "file": "main.go",
+            "line": 39,
+            "message": "G114: Use of net/http serve function that has no support for setting timeouts",
+            "verdict": "confirmed",
+            "note": "main.go:39 http.ListenAndServe uses a server with no timeouts."
+          },
+          {
+            "id": "A01",
+            "source": "agent",
+            "rule": "Error handling",
+            "file": "server.go",
+            "line": 166,
+            "message": "server.go:166-193 (with server.go:24-26, 113, 123, 153) — The 404/405 interceptor re-wraps JSON that the handlers already wrote. A missing code, `/api`, or a delete of a nonexistent code returns `{\"error\":\"{\\\"error\\\":\\\"not found\\\"}\"}`, which is JSON nested inside a JSON string. Only mux-generated errors such as `/a/b` come out correctly. Fix: in `Write`, only rewrite the body when the handler did not already set `Content-Type: application/json`. A cleaner way is to remember in `WriteHeader` that the interceptor changed the header, and rewrite only in that case. [verified]",
+            "severity": "medium",
+            "verdict": "confirmed",
+            "note": "server.go:178-191 re-wraps handler JSON errors on 404/405; verified GET /nope returns {\"error\":\"{\\\"error\\\":\\\"not found\\\"}\"}, which breaks the spec's error body format."
+          },
+          {
+            "id": "A09",
+            "source": "agent",
+            "rule": "Secrets and sensitive data",
+            "file": "server.go",
+            "line": 28,
+            "message": "server.go:28-31 — The bearer token is compared with `==`, which is not constant-time and allows timing attacks. Fix: use `subtle.ConstantTimeCompare` on the two values (hash both first, or compare lengths separately).",
+            "severity": "medium",
+            "verdict": "confirmed",
+            "note": "server.go:28-31 compares the bearer token with ==, not constant-time, which the policy counts as a token-leaking comparison."
+          }
+        ],
+        "Pending": 0,
+        "Stats": {
+          "model_calls": 32,
+          "input_tokens": 495377,
+          "output_tokens": 26124,
+          "cost_usd": 1.3042,
+          "seconds": 246,
+          "finished": true,
+          "stopped_by": "done",
+          "error": ""
+        },
+        "HiddenPassed": 53,
+        "HiddenTotal": 55,
+        "Coverage": 61.9,
+        "OwnTestsPassed": true
+      }
+    ],
+    "Works": 39.3,
+    "Bugs": 13.5,
+    "Readable": 8,
+    "OwnTests": 8.65,
+    "Merge": 0,
+    "Total": 69.45,
+    "StyleScore": 7.5,
+    "AnyBuilt": true,
+    "ConfirmedHigh": 0,
+    "CostUSD": 1.4797,
+    "Seconds": 296,
+    "ModelCalls": 36
   },
   {
     "Model": "deepseek-v3-2",
@@ -299,14 +408,69 @@
         "Run": "run1",
         "Built": true,
         "Works": 33.1,
-        "Bugs": 20,
+        "Bugs": 12,
         "OwnTests": 9.7,
         "Merge": 0,
         "Reviewed": false,
         "StyleScore": 6,
         "StyleMeasured": true,
-        "Confirmed": null,
-        "Pending": 9,
+        "Confirmed": [
+          {
+            "id": "T05",
+            "source": "gosec",
+            "rule": "G114",
+            "file": "main.go",
+            "line": 30,
+            "message": "G114: Use of net/http serve function that has no support for setting timeouts",
+            "verdict": "confirmed",
+            "note": "http.ListenAndServe with no server timeouts (main.go:30)."
+          },
+          {
+            "id": "A01",
+            "source": "agent",
+            "rule": "Error handling",
+            "file": "store.go",
+            "line": 230,
+            "message": "store.go:230-243 (also 191-205) — `Delete` removes the link from memory and then saves. If the save fails, it returns an error but does not put the link back. The API reports a 500, yet the link is gone from memory and still on disk. After a failed delete, `Get` returned \"not found\" and the file still contained the link. It comes back after a restart. `Create` (store.go:167-172) does roll back, so the three write paths behave inconsistently. `IncrementVisits` also keeps the changed count in memory when the save fails. Fix: copy the old value, mutate, save, and restore the old value if the save fails. Or build the new map, save it, and swap it in only on success. [verified]",
+            "severity": "medium",
+            "verdict": "confirmed",
+            "note": "Severity changed from high to medium. Delete removes the link from memory and never restores it when saveLocked fails, so a request answered 500 still deletes in memory and memory/disk diverge (store.go:230-243); needs a disk failure, so lowered from high to medium. Severity set to medium for both projects with this failed-save-on-delete bug: it only happens when a save fails."
+          },
+          {
+            "id": "A04",
+            "source": "agent",
+            "rule": "Error handling",
+            "file": "store.go",
+            "line": 81,
+            "message": "store.go:81-88, 107-114 — The temp file is never fsynced and the directory is not synced. The write is not safe against power loss, which the README claims (\"even during crashes\"). If the rename fails, the stale `.tmp` file stays behind. Fix: use `os.CreateTemp` in the same directory, then `f.Sync()`, `f.Close()` and `os.Rename`. Remove the temp file on error.",
+            "severity": "low",
+            "verdict": "confirmed",
+            "note": "Severity changed from medium to low. Temp file is written with os.WriteFile and renamed with no fsync (store.go:81-88, 107-114), so an OS crash can leave an empty data.json that fails to parse at startup, breaking the crash-safety rule. Severity set to low for both projects with this missing fsync: only an OS crash or power loss, not a killed process, can leave the bad file."
+          },
+          {
+            "id": "A07",
+            "source": "agent",
+            "rule": "Secrets and sensitive data",
+            "file": "main.go",
+            "line": 99,
+            "message": "main.go:99 — The admin token is compared with `==`, which is not constant-time. Also the `Bearer` prefix is case-sensitive, so `bearer tok` gets 401 (verified). Fix: use `subtle.ConstantTimeCompare([]byte(token), []byte(h.adminToken))` and `strings.EqualFold` for the scheme. Weak tokens are accepted, since any non-empty value passes.",
+            "severity": "medium",
+            "verdict": "confirmed",
+            "note": "Admin token is compared with == rather than in constant time, which can leak it through timing (main.go:99)."
+          },
+          {
+            "id": "A25",
+            "source": "agent",
+            "rule": "Tests",
+            "file": "handler_test.go",
+            "line": 326,
+            "message": "handler_test.go:326-338 — `TestMain_EnvironmentValidation` asserts nothing and only logs. It cannot fail. Delete it, or move the check into a testable function.",
+            "severity": "low",
+            "verdict": "confirmed",
+            "note": "TestMain_EnvironmentValidation only calls t.Log and asserts nothing, so it cannot fail (handler_test.go:326-338)."
+          }
+        ],
+        "Pending": 0,
         "Stats": {
           "model_calls": 38,
           "input_tokens": 779736,
@@ -327,14 +491,58 @@
         "Run": "run2",
         "Built": true,
         "Works": 35.6,
-        "Bugs": 20,
+        "Bugs": 13,
         "OwnTests": 9.9,
         "Merge": 0,
         "Reviewed": false,
         "StyleScore": 12,
         "StyleMeasured": true,
-        "Confirmed": null,
-        "Pending": 17,
+        "Confirmed": [
+          {
+            "id": "T15",
+            "source": "gosec",
+            "rule": "G114",
+            "file": "main.go",
+            "line": 28,
+            "message": "G114: Use of net/http serve function that has no support for setting timeouts",
+            "verdict": "confirmed",
+            "note": "main.go:28 http.ListenAndServe uses a server with no timeouts."
+          },
+          {
+            "id": "A01",
+            "source": "agent",
+            "rule": "Error handling",
+            "file": "store.go",
+            "line": 175,
+            "message": "store.go:175 — When `save()` fails in `Delete`, the rollback puts back `\u0026Link{Code: code}`, not the original link. The URL, creation time and visit count are lost, and the in-memory entry is now an empty link. A later redirect to that code would send `Location: \"\"`. Keep the original pointer (`link := s.links[code]`) and restore that. [verified] A scratch test with a failing save left `{Code:abc URL:\"\" Visits:0}` after a failed delete, where the original had 1 visit.",
+            "severity": "medium",
+            "verdict": "confirmed",
+            "note": "Severity changed from high to medium. store.go:175 Delete rollback reinserts \u0026Link{Code: code}, losing URL/created_at/visits (verified: empty link after failed save; next successful save persists it). Severity set to medium for both projects with this failed-save-on-delete bug: it only happens when a save fails."
+          },
+          {
+            "id": "A06",
+            "source": "agent",
+            "rule": "Error handling",
+            "file": "store.go",
+            "line": 83,
+            "message": "store.go:83-88 — `save` does not `fsync` the temp file before `Rename`. A power loss can leave an empty or truncated data file, which contradicts the README's \"supports crash recovery\" (README.md:92). A failed rename also leaves a stale `.tmp` file behind. Open the file, write, `Sync`, `Close`, then rename, and remove the temp file on error.",
+            "severity": "low",
+            "verdict": "confirmed",
+            "note": "store.go:84 os.WriteFile without fsync before os.Rename can leave an empty/truncated data file after a power loss, which then fails to load (spec: crash must never leave an unstartable file). Severity set to low for both projects with this missing fsync: only an OS crash or power loss, not a killed process, can leave the bad file."
+          },
+          {
+            "id": "A08",
+            "source": "agent",
+            "rule": "Secrets and sensitive data",
+            "file": "handler.go",
+            "line": 182,
+            "message": "handler.go:182 — The admin token is compared with `==`, which is not constant-time and could leak the token through timing. Use `subtle.ConstantTimeCompare` on `[]byte` values (or on hashes of them).",
+            "severity": "medium",
+            "verdict": "confirmed",
+            "note": "handler.go:182 compares the admin token with ==, not constant-time; policy lists leaky token comparison as a defect."
+          }
+        ],
+        "Pending": 0,
         "Stats": {
           "model_calls": 40,
           "input_tokens": 935993,
@@ -352,11 +560,11 @@
       }
     ],
     "Works": 34.35,
-    "Bugs": 20,
+    "Bugs": 12.5,
     "Readable": 6,
     "OwnTests": 9.8,
     "Merge": 0,
-    "Total": 70.15,
+    "Total": 62.650000000000006,
     "StyleScore": 9,
     "AnyBuilt": true,
     "ConfirmedHigh": 0,

@@ -1,0 +1,11 @@
+{
+  "model": "claude-sonnet-5-5",
+  "provider": "claude",
+  "seconds": 55,
+  "steps": 5,
+  "tool_calls": 14,
+  "usage": {
+    "input_tokens": 53147,
+    "output_tokens": 6208
+  }
+}

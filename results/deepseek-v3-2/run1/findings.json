@@ -5,7 +5,8 @@
     "file": "handler_test.go",
     "line": 329,
     "message": "Error return value of `os.Unsetenv` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "Ignored os.Unsetenv in test code (handler_test.go:329)."
   },
   {
     "id": "T02",
@@ -13,7 +14,8 @@
     "file": "handler_test.go",
     "line": 330,
     "message": "Error return value of `os.Setenv` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "Ignored os.Setenv in test code (handler_test.go:330)."
   },
   {
     "id": "T03",
@@ -21,7 +23,8 @@
     "file": "main.go",
     "line": 84,
     "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "Ignored json Encode to the ResponseWriter has no practical effect (main.go:84)."
   },
   {
     "id": "T04",
@@ -29,7 +32,8 @@
     "file": "store_test.go",
     "line": 304,
     "message": "Error return value of `store.IncrementVisits` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "Ignored error in test code (store_test.go:304)."
   },
   {
     "id": "T05",
@@ -38,7 +42,8 @@
     "file": "main.go",
     "line": 30,
     "message": "G114: Use of net/http serve function that has no support for setting timeouts",
-    "verdict": "pending"
+    "verdict": "confirmed",
+    "note": "http.ListenAndServe with no server timeouts (main.go:30)."
   },
   {
     "id": "T06",
@@ -47,7 +52,8 @@
     "file": "store.go",
     "line": 81,
     "message": "G306: Expect WriteFile permissions to be 0600 or less",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "G306 data file permissions, rejected per policy (store.go:81)."
   },
   {
     "id": "T07",
@@ -56,7 +62,8 @@
     "file": "store.go",
     "line": 107,
     "message": "G306: Expect WriteFile permissions to be 0600 or less",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "G306 data file permissions, rejected per policy (store.go:107)."
   },
   {
     "id": "T08",
@@ -65,7 +72,8 @@
     "file": "store.go",
     "line": 289,
     "message": "G404: Use of weak random number generator (math/rand or math/rand/v2 instead of crypto/rand)",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "G404 math/rand for codes, rejected per policy (store.go:289)."
   },
   {
     "id": "T09",
@@ -74,6 +82,367 @@
     "file": "store.go",
     "line": 298,
     "message": "SA1019: rand.Seed has been deprecated since Go 1.20 and an alternative has been available since Go 1.0: As of Go 1.20 there is no reason to call Seed with a random value. Programs that call Seed with a known value to get a specific sequence of results should use New(NewSource(seed)) to obtain a local random generator.",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "Deprecated rand.Seed call is harmless style, not a defect (store.go:298)."
+  },
+  {
+    "id": "A01",
+    "source": "agent",
+    "rule": "Error handling",
+    "file": "store.go",
+    "line": 230,
+    "message": "store.go:230-243 (also 191-205) \u2014 `Delete` removes the link from memory and then saves. If the save fails, it returns an error but does not put the link back. The API reports a 500, yet the link is gone from memory and still on disk. After a failed delete, `Get` returned \"not found\" and the file still contained the link. It comes back after a restart. `Create` (store.go:167-172) does roll back, so the three write paths behave inconsistently. `IncrementVisits` also keeps the changed count in memory when the save fails. Fix: copy the old value, mutate, save, and restore the old value if the save fails. Or build the new map, save it, and swap it in only on success. [verified]",
+    "severity": "medium",
+    "verdict": "confirmed",
+    "note": "Severity changed from high to medium. Delete removes the link from memory and never restores it when saveLocked fails, so a request answered 500 still deletes in memory and memory/disk diverge (store.go:230-243); needs a disk failure, so lowered from high to medium. Severity set to medium for both projects with this failed-save-on-delete bug: it only happens when a save fails."
+  },
+  {
+    "id": "A02",
+    "source": "agent",
+    "rule": "Error handling",
+    "file": "main.go",
+    "line": 120,
+    "message": "main.go:120-129, 162, 179 \u2014 Errors are matched by their text (`err.Error() == \"not found\"`, `\"alias taken\"`, and so on). Changing a message silently turns a 404 or 409 into a 500. Also, `Create` wraps the save error but returns the bare \"failed to generate unique code\" (store.go:144), which falls into the default 500 branch. Fix: define sentinel errors (`var ErrNotFound = errors.New(\"not found\")` and similar) and use `errors.Is`. The tests (`strings.Contains(err.Error(), ...)`) can use them too.",
+    "severity": "medium",
+    "verdict": "rejected",
+    "note": "Errors matched by string, but every current mapping is correct (main.go:120); maintainability only."
+  },
+  {
+    "id": "A03",
+    "source": "agent",
+    "rule": "Error handling",
+    "file": "main.go",
+    "line": 112,
+    "message": "main.go:112-115 \u2014 Every decode error returns 400 \"Invalid JSON\". A body over 1 MiB gets 400, but the README (line 110) promises 413. Fix: check `errors.As(err, new(*http.MaxBytesError))` and return 413. Also reject trailing data after the JSON object. [verified: a 2 MiB body returned 400]",
+    "severity": "medium",
+    "verdict": "duplicate",
+    "note": "Real, but already scored: the hidden test TestErrors_BodyTooLarge413 fails for this. MaxBytesReader errors fall into the generic decode branch and return 400 instead of the spec-required 413 for bodies over 1 MiB (main.go:112-115)."
+  },
+  {
+    "id": "A04",
+    "source": "agent",
+    "rule": "Error handling",
+    "file": "store.go",
+    "line": 81,
+    "message": "store.go:81-88, 107-114 \u2014 The temp file is never fsynced and the directory is not synced. The write is not safe against power loss, which the README claims (\"even during crashes\"). If the rename fails, the stale `.tmp` file stays behind. Fix: use `os.CreateTemp` in the same directory, then `f.Sync()`, `f.Close()` and `os.Rename`. Remove the temp file on error.",
+    "severity": "low",
+    "verdict": "confirmed",
+    "note": "Severity changed from medium to low. Temp file is written with os.WriteFile and renamed with no fsync (store.go:81-88, 107-114), so an OS crash can leave an empty data.json that fails to parse at startup, breaking the crash-safety rule. Severity set to low for both projects with this missing fsync: only an OS crash or power loss, not a killed process, can leave the bad file."
+  },
+  {
+    "id": "A05",
+    "source": "agent",
+    "rule": "Error handling",
+    "file": "main.go",
+    "line": 84,
+    "message": "main.go:84 \u2014 The error from `json.NewEncoder(w).Encode` is ignored. This is minor, but a failed write goes unlogged.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Ignored Encode to the ResponseWriter has no practical effect (main.go:84)."
+  },
+  {
+    "id": "A06",
+    "source": "agent",
+    "rule": "Error handling",
+    "file": "store.go",
+    "line": 52,
+    "message": "store.go:52-60 \u2014 `load` does not check the stored data. Duplicate codes are silently merged, and entries with an empty code or a bad URL are accepted. Fix: validate on load, or at least reject duplicates.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Re-validating the data file on load is not in the spec (store.go:52)."
+  },
+  {
+    "id": "A07",
+    "source": "agent",
+    "rule": "Secrets and sensitive data",
+    "file": "main.go",
+    "line": 99,
+    "message": "main.go:99 \u2014 The admin token is compared with `==`, which is not constant-time. Also the `Bearer` prefix is case-sensitive, so `bearer tok` gets 401 (verified). Fix: use `subtle.ConstantTimeCompare([]byte(token), []byte(h.adminToken))` and `strings.EqualFold` for the scheme. Weak tokens are accepted, since any non-empty value passes.",
+    "severity": "medium",
+    "verdict": "confirmed",
+    "note": "Admin token is compared with == rather than in constant time, which can leak it through timing (main.go:99)."
+  },
+  {
+    "id": "A08",
+    "source": "agent",
+    "rule": "Secrets and sensitive data",
+    "file": "store.go",
+    "line": 81,
+    "message": "store.go:81, 107 \u2014 The data file is written with mode 0644, so any local user can read it. Use 0600 if the links should stay private.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Data file permissions: the spec says nothing about who may read it (G306 policy) (store.go:81)."
+  },
+  {
+    "id": "A09",
+    "source": "agent",
+    "rule": "Secrets and sensitive data",
+    "file": "store.go",
+    "line": 246,
+    "message": "store.go:246-265 \u2014 URLs containing credentials (`http://user:pw@example.com/`) are accepted, stored in the data file, returned by the admin list endpoint, and sent in the redirect (verified). Fix: reject `parsed.User != nil`.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Rejecting credential URLs is not required by the spec (store.go:246)."
+  },
+  {
+    "id": "A10",
+    "source": "agent",
+    "rule": "Secrets and sensitive data",
+    "file": "store.go",
+    "line": 7,
+    "message": "store.go:7, 289 \u2014 Random codes come from `math/rand`, so they can be predicted. If unlisted links should stay unguessable, use `crypto/rand`.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "math/rand codes are acceptable per policy (G404) (store.go:289)."
+  },
+  {
+    "id": "A11",
+    "source": "agent",
+    "rule": "Input validation",
+    "file": "store.go",
+    "line": 246,
+    "message": "store.go:246-265 \u2014 `validateURL` only checks the scheme and that the host is non-empty. Fix: also reject URLs with user info (see above).",
+    "severity": "medium",
+    "verdict": "rejected",
+    "note": "Rejecting user info in URLs is not required by the spec (store.go:246)."
+  },
+  {
+    "id": "A12",
+    "source": "agent",
+    "rule": "Input validation",
+    "file": "main.go",
+    "line": 107,
+    "message": "main.go:107-115 \u2014 Unknown JSON fields and trailing garbage are accepted. Use `DisallowUnknownFields` if you want strict input.",
+    "severity": "low",
+    "verdict": "duplicate",
+    "note": "Real, but already scored: the hidden test TestValidation_UnknownField fails for this. Decoder has no DisallowUnknownFields, so unknown fields get 201 instead of the spec-required 400 (main.go:107-115)."
+  },
+  {
+    "id": "A13",
+    "source": "agent",
+    "rule": "Input validation",
+    "file": "main.go",
+    "line": 73,
+    "message": "main.go:73 \u2014 The `/{code}` route accepts any path, including `/a/b/c` and encoded characters. It does a map lookup, so this is harmless, but it can return a 404 for paths that should be rejected. `HEAD` requests also get 404 (verified).",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Paths like /a/b correctly return 404, and HEAD support is optional per the spec (main.go:73)."
+  },
+  {
+    "id": "A14",
+    "source": "agent",
+    "rule": "Input validation",
+    "file": "main.go",
+    "line": 12,
+    "message": "main.go:12-31 \u2014 `-addr` and `-data` are not validated. A missing data directory only fails on the first write, not at startup. Fix: check the directory is writable at startup.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Validating flags or the data directory at startup is not required (main.go:12)."
+  },
+  {
+    "id": "A15",
+    "source": "agent",
+    "rule": "External services",
+    "file": "main.go",
+    "line": 30,
+    "message": "main.go:30 \u2014 `http.ListenAndServe` is used with no `ReadHeaderTimeout`, `ReadTimeout`, `WriteTimeout` or `IdleTimeout`, so slow clients can hold connections open (Slowloris). Fix: build an `http.Server` with those timeouts and shut it down gracefully on SIGTERM.",
+    "severity": "high",
+    "verdict": "duplicate",
+    "note": "Same missing-timeouts issue as T05 (main.go:30)."
+  },
+  {
+    "id": "A16",
+    "source": "agent",
+    "rule": "External services",
+    "file": "main.go",
+    "line": 188,
+    "message": "main.go:188-192, store.go:191-205 \u2014 Every redirect starts a new goroutine. Each goroutine takes the global write lock and rewrites and renames the whole JSON file. `POST /api/links` is open to anyone, so a flood of redirects or creates causes unbounded goroutines, heavy disk I/O, and lock contention that also blocks readers. Fix: keep the visit count in memory and flush it periodically or on shutdown. Or use a single worker goroutine fed by a buffered channel. Consider rate-limiting create.",
+    "severity": "medium",
+    "verdict": "duplicate",
+    "note": "Same root cause as A18, the async per-redirect goroutine (main.go:188); the rate-limit and performance parts are out of scope."
+  },
+  {
+    "id": "A17",
+    "source": "agent",
+    "rule": "External services",
+    "file": "main.go",
+    "line": 105,
+    "message": "main.go:105-117 \u2014 Link creation needs no authentication. If the spec requires this, fine, but there is no limit on the number of links either. The data file grows without bound.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Unauthenticated create is spec-required; link caps are not requested (main.go:105)."
+  },
+  {
+    "id": "A18",
+    "source": "agent",
+    "rule": "Resources and concurrency",
+    "file": "main.go",
+    "line": 188,
+    "message": "main.go:188-192 \u2014 The goroutine is fire-and-forget. Nothing waits for it at shutdown, so a visit can be lost. In tests it can also run after the temp directory is removed. Fix: use a `WaitGroup` or a worker with a shutdown signal.",
+    "severity": "medium",
+    "verdict": "duplicate",
+    "note": "Real, but already scored: the hidden test TestPersistence_KillAndRecoverWithoutRestartGrace and TestConcurrency_ParallelVisitsExact fails for this. Visit increment and save run in a fire-and-forget goroutine after the 302 is sent, so the visit is not saved before the response (spec) and can be lost (main.go:188-194)."
+  },
+  {
+    "id": "A19",
+    "source": "agent",
+    "rule": "Resources and concurrency",
+    "file": "store.go",
+    "line": 230,
+    "message": "store.go:230-243 \u2014 All disk I/O happens while holding the write lock. The lock blocks redirects (`Get` uses `RLock`) for the duration of every file write.",
+    "severity": "medium",
+    "verdict": "rejected",
+    "note": "Holding the lock across the save is needed for correctness; this is performance only (store.go:230)."
+  },
+  {
+    "id": "A20",
+    "source": "agent",
+    "rule": "Resources and concurrency",
+    "file": "store.go",
+    "line": 66,
+    "message": "store.go:66-91 \u2014 `save()` is never called and duplicates `saveLocked()`. It also releases the lock before writing, which would race with other writers on the shared `.tmp` file. Remove it.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "save() is unused dead code, so the hypothetical race cannot happen (store.go:66); style."
+  },
+  {
+    "id": "A21",
+    "source": "agent",
+    "rule": "Resources and concurrency",
+    "message": "README.md:118 \u2014 It says visit counters are \"incremented atomically\". They are only mutex-protected, and a failed save leaves memory and disk out of sync.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "README wording, not a code defect."
+  },
+  {
+    "id": "A22",
+    "source": "agent",
+    "rule": "Tests",
+    "file": "store_test.go",
+    "message": "store_test.go, handler_test.go \u2014 Nothing tests a failed save. That is exactly where the Delete and IncrementVisits bugs hide. Add a test that makes the data path unwritable (for example a directory at `data.json.tmp`) and checks the state afterwards.",
+    "severity": "medium",
+    "verdict": "rejected",
+    "note": "Missing tests are scored elsewhere."
+  },
+  {
+    "id": "A23",
+    "source": "agent",
+    "rule": "Tests",
+    "file": "handler_test.go",
+    "line": 303,
+    "message": "handler_test.go:303-324 \u2014 `TestHandler_LargeRequestBody` accepts either 400 or 413. The body is all zero bytes, so it fails as invalid JSON before the size limit matters, and the test would pass without `MaxBytesReader`. Use valid JSON larger than 1 MiB and require 413.",
+    "severity": "medium",
+    "verdict": "rejected",
+    "note": "Weak test, but it can still fail (e.g. on 201/500) (handler_test.go:303); coverage is scored elsewhere."
+  },
+  {
+    "id": "A24",
+    "source": "agent",
+    "rule": "Tests",
+    "file": "store_test.go",
+    "line": 21,
+    "message": "store_test.go:21 \u2014 The \"too long\" URL is built from null bytes. It would be rejected as invalid even without the length check, so the length check is not really tested. Use `\"http://example.com/\" + strings.Repeat(\"a\", 2100)`.",
+    "severity": "medium",
+    "verdict": "rejected",
+    "note": "Weak test input is a coverage issue scored elsewhere (store_test.go:21)."
+  },
+  {
+    "id": "A25",
+    "source": "agent",
+    "rule": "Tests",
+    "file": "handler_test.go",
+    "line": 326,
+    "message": "handler_test.go:326-338 \u2014 `TestMain_EnvironmentValidation` asserts nothing and only logs. It cannot fail. Delete it, or move the check into a testable function.",
+    "severity": "low",
+    "verdict": "confirmed",
+    "note": "TestMain_EnvironmentValidation only calls t.Log and asserts nothing, so it cannot fail (handler_test.go:326-338)."
+  },
+  {
+    "id": "A26",
+    "source": "agent",
+    "rule": "Tests",
+    "file": "handler_test.go",
+    "line": 164,
+    "message": "handler_test.go:164-222, store_test.go:178-222 \u2014 The list-order test sleeps 1 ms to make timestamps differ and only checks \"not decreasing\". Many other cases are missing, such as wrong-token and malformed `Authorization` headers, and the redirect incrementing visits (the async increment is never checked). The tests also never run under `-race`.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Missing or weak test coverage is scored elsewhere (handler_test.go:164)."
+  },
+  {
+    "id": "A27",
+    "source": "agent",
+    "rule": "Tests",
+    "file": "store_test.go",
+    "line": 325,
+    "message": "store_test.go:325-339 \u2014 `TestGenerateRandomCode` can fail by chance, though only rarely. It also does not check the character set.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Test flakiness is negligible, and coverage is scored elsewhere (store_test.go:325)."
+  },
+  {
+    "id": "A28",
+    "source": "agent",
+    "rule": "Clarity",
+    "file": "store.go",
+    "line": 66,
+    "message": "store.go:66-117 \u2014 Two near-identical save functions exist. Keep one, `saveLocked`, and say in its name or comment that the caller must hold the lock.",
+    "severity": "medium",
+    "verdict": "rejected",
+    "note": "Duplicate save functions are a clarity issue (store.go:66)."
+  },
+  {
+    "id": "A29",
+    "source": "agent",
+    "rule": "Clarity",
+    "file": "store.go",
+    "line": 129,
+    "message": "store.go:129-152 \u2014 Code generation is hard to follow. The loop breaks on success and returns on `i == 99`, and a separate \"alias taken\" check afterwards covers both aliases and the random-collision case. Clearer version: write `func (s *JSONStore) newCodeLocked() (string, error)` that loops 100 times and returns the first unused code, and keep the alias check in its own branch.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Clarity issue; the code-generation logic is correct (store.go:129)."
+  },
+  {
+    "id": "A30",
+    "source": "agent",
+    "rule": "Clarity",
+    "file": "store.go",
+    "line": 218,
+    "message": "store.go:218-224 \u2014 The hand-written O(n\u00b2) swap sort is slower and harder to read than `sort.Slice(links, func(i, j int) bool { return links[i].CreatedAt.Before(links[j].CreatedAt) })`. Map iteration order is random, so ties are unstable. Add a tie-break on `Code`.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Sort is correct; clarity/performance only, and ties need equal timestamps (store.go:218)."
+  },
+  {
+    "id": "A31",
+    "source": "agent",
+    "rule": "Clarity",
+    "file": "main.go",
+    "line": 71,
+    "message": "main.go:71 \u2014 The delete route condition slices the path by hand. Use `strings.HasPrefix` and `strings.TrimPrefix`, or Go 1.22+ `http.ServeMux` patterns (`\"DELETE /api/links/{code}\"`). That would also give a correct 405 for unsupported methods (handler_test.go:293-300 currently expects 404).",
+    "severity": "low",
+    "verdict": "duplicate",
+    "note": "Real, but already scored: the hidden test TestErrors_MethodNotAllowed fails for this. Unsupported methods on known paths (e.g. PUT /api/links, POST /{code}) fall to the default branch and return 404 instead of the spec-required 405 (main.go:65-77)."
+  },
+  {
+    "id": "A32",
+    "source": "agent",
+    "rule": "Clarity",
+    "file": "store.go",
+    "line": 296,
+    "message": "store.go:296-299 \u2014 `rand.Seed` is deprecated and unnecessary since Go 1.20, so the `init` can go. `usedKeys` duplicates the keys of `links` and can be removed. Replace `regexp.MatchString` (compiled on every call, store.go:274) with a package-level `regexp.MustCompile`.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Deprecated Seed, redundant map and regexp recompilation are style (store.go:296)."
+  },
+  {
+    "id": "A33",
+    "source": "agent",
+    "rule": "Clarity",
+    "file": "main.go",
+    "line": 33,
+    "message": "main.go:33-48 \u2014 `Link` and `Store` live in `main.go` while the implementation is in `store.go`. Move them next to the store.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Where types are declared is style (main.go:33)."
   }
 ]

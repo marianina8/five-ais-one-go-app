@@ -5,7 +5,8 @@
     "file": "main.go",
     "line": 28,
     "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "main.go:28 ignored Encode to the ResponseWriter only affects a client that has gone away."
   },
   {
     "id": "T02",
@@ -13,7 +14,8 @@
     "file": "main_test.go",
     "line": 51,
     "message": "Error return value of `json.Unmarshal` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "main_test.go:51 is test code."
   },
   {
     "id": "T03",
@@ -21,7 +23,8 @@
     "file": "main_test.go",
     "line": 85,
     "message": "Error return value of `json.Unmarshal` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "main_test.go:85 is test code."
   },
   {
     "id": "T04",
@@ -29,7 +32,8 @@
     "file": "store.go",
     "line": 80,
     "message": "Error return value of `os.Remove` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "store.go:80 is best-effort removal of the temp file after a failed save."
   },
   {
     "id": "T05",
@@ -37,7 +41,8 @@
     "file": "store.go",
     "line": 84,
     "message": "Error return value of `f.Close` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "store.go:84 Close on an error path that already returns the Write error; the temp file is discarded."
   },
   {
     "id": "T06",
@@ -45,7 +50,8 @@
     "file": "store.go",
     "line": 88,
     "message": "Error return value of `f.Close` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "store.go:88 Close on an error path that already returns the Sync error; the temp file is discarded."
   },
   {
     "id": "T07",
@@ -53,7 +59,8 @@
     "file": "store.go",
     "line": 99,
     "message": "Error return value of `d.Sync` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "store.go:99 directory fsync is after the data file was synced and renamed; either old or new file remains loadable, so no wrong result."
   },
   {
     "id": "T08",
@@ -61,7 +68,8 @@
     "file": "store.go",
     "line": 100,
     "message": "Error return value of `d.Close` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "store.go:100 Close of a directory handle opened only for fsync, after the rename."
   },
   {
     "id": "T09",
@@ -70,7 +78,8 @@
     "file": "main.go",
     "line": 194,
     "message": "G114: Use of net/http serve function that has no support for setting timeouts",
-    "verdict": "pending"
+    "verdict": "confirmed",
+    "note": "main.go:194 http.ListenAndServe uses a server with no timeouts."
   },
   {
     "id": "T10",
@@ -79,7 +88,8 @@
     "file": "store.go",
     "line": 37,
     "message": "G304: Potential file inclusion via variable",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "G304: store.go:37 path comes from the operator's -data flag."
   },
   {
     "id": "T11",
@@ -88,6 +98,214 @@
     "file": "store.go",
     "line": 98,
     "message": "G304: Potential file inclusion via variable",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "G304: store.go:98 opens the data file's directory from the -data flag."
+  },
+  {
+    "id": "A01",
+    "source": "agent",
+    "rule": "Error handling",
+    "file": "store.go",
+    "line": 151,
+    "message": "store.go:151-164, main.go:89-97 \u2014 `Visit` rewrites and fsyncs the whole data file on every redirect. If that write fails, for example because the disk is full or read-only, the redirect returns 500 even though the target URL is known. A broken disk therefore takes down every short link, not just the statistics. In a scratch test I deleted the data directory after creating a link, and `GET /abc` returned 500 `{\"error\":\"internal error\"}` [verified]. Fix: always serve the redirect. Log a failed visit-count save, or keep counts in memory and flush them periodically.",
+    "severity": "medium",
+    "verdict": "rejected",
+    "note": "Spec requires each visit to be saved before the response, and a failed save returning 500 (store.go:151, main.go:95)."
+  },
+  {
+    "id": "A02",
+    "source": "agent",
+    "rule": "Error handling",
+    "file": "main.go",
+    "line": 70,
+    "message": "main.go:70-77, 89-97, 166-174 \u2014 Every 500 path returns \"internal error\" and the underlying error is never logged. The disk failure above leaves no trace anywhere, so an operator can't diagnose it. Fix: call `log.Printf(\"...: %v\", err)` before each 500 response. Don't put the error text in the response body.",
+    "severity": "medium",
+    "verdict": "rejected",
+    "note": "Logging is not required by the spec (main.go:70)."
+  },
+  {
+    "id": "A03",
+    "source": "agent",
+    "rule": "Error handling",
+    "file": "store.go",
+    "line": 98,
+    "message": "store.go:98-101 \u2014 The directory `Open` and `Sync` errors are ignored. The rename has already happened, so the data is probably fine, but the \"atomic and durable\" claim in the comment isn't guaranteed. Fix: return or log the error from the directory sync.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "store.go:98-101 directory sync after rename; data file was already synced, so no data loss or unloadable file (same as T07)."
+  },
+  {
+    "id": "A04",
+    "source": "agent",
+    "rule": "Error handling",
+    "file": "main.go",
+    "line": 28,
+    "message": "main.go:28 \u2014 `writeJSON` ignores the `Encode` error. This is mostly harmless, but a failed write to the client goes unnoticed. Fix: log the error.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "main.go:28 ignored Encode to the client has no practical effect."
+  },
+  {
+    "id": "A05",
+    "source": "agent",
+    "rule": "Error handling",
+    "file": "store.go",
+    "line": 50,
+    "message": "store.go:50-57 \u2014 `OpenStore` silently drops entries with duplicate codes, and the next save then permanently removes them from the file. Fix: return an error, or at least log the dropped entries.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "store.go:50 duplicate codes only arise from a hand-edited file; re-validating the data file is not in the spec."
+  },
+  {
+    "id": "A06",
+    "source": "agent",
+    "rule": "Secrets and sensitive data",
+    "file": "main.go",
+    "line": 142,
+    "message": "main.go:142 \u2014 `\"invalid JSON: \"+err.Error()` returns raw decoder error text to the client. It contains no secrets, but it exposes internal details. Fix: return a fixed message.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "main.go:142 decoder error text holds no secrets; style."
+  },
+  {
+    "id": "A07",
+    "source": "agent",
+    "rule": "Input validation",
+    "file": "main.go",
+    "line": 43,
+    "message": "main.go:43-46, 128-176 \u2014 `POST /api/links` needs no authentication, while list and delete do. Anyone who can reach the server can create unlimited links. That allows phishing redirects hosted on your domain, and it lets an attacker grow the data file without limit. Every create rewrites and fsyncs the full file, so the cost per create rises as the file grows. A scratch test confirmed that an unauthenticated create returns 201 [verified]. Fix: require the token for create, or add rate limiting and a cap on the number of links. If open creation is intended, document it and add those limits.",
+    "severity": "high",
+    "verdict": "rejected",
+    "note": "Spec requires POST /api/links without auth; rate limits are not requested (main.go:45)."
+  },
+  {
+    "id": "A08",
+    "source": "agent",
+    "rule": "Input validation",
+    "file": "store.go",
+    "line": 44,
+    "message": "store.go:44-57 \u2014 Entries loaded from the data file skip the URL and code validation that `create` applies. A hand-edited file could contain a code with `/` that can't be reached, or a non-http URL that gets sent in a `Location` header. Fix: run `validURL` and `aliasRe` on load, or skip bad entries and log them.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "store.go:44 re-validating a hand-edited data file is not in the spec."
+  },
+  {
+    "id": "A09",
+    "source": "agent",
+    "rule": "Input validation",
+    "file": "main.go",
+    "line": 85,
+    "message": "main.go:85-98 \u2014 `HEAD` requests, such as link-preview bots and uptime checks, increment the visit counter and trigger a full file write. Fix: don't count HEAD requests.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "main.go:85 spec allows HEAD to be answered like GET; not counting HEAD is an unrequested feature."
+  },
+  {
+    "id": "A10",
+    "source": "agent",
+    "rule": "External services",
+    "file": "main.go",
+    "line": 194,
+    "message": "main.go:194 \u2014 `http.ListenAndServe` uses the default server, which has no `ReadHeaderTimeout`, `ReadTimeout` or `IdleTimeout`. Slow clients can hold connections open indefinitely. There is also no graceful shutdown. Fix: build an `http.Server` with timeouts, and call `Shutdown` on SIGTERM.",
+    "severity": "medium",
+    "verdict": "duplicate",
+    "note": "Same missing server timeouts as T09 (main.go:194); graceful shutdown is not required."
+  },
+  {
+    "id": "A11",
+    "source": "agent",
+    "rule": "Resources and concurrency",
+    "file": "store.go",
+    "line": 151,
+    "message": "store.go:151-164, 62-103 \u2014 One global mutex is held during the whole file rewrite, including fsync, for every redirect and every create. Redirects are therefore serialized behind disk I/O, and the cost grows with the number of links. This is correct but won't scale. Fix: update visit counts in memory and persist them in the background (batched), or use an append-only log or a database.",
+    "severity": "medium",
+    "verdict": "rejected",
+    "note": "store.go:151 per-visit synchronous save under a lock is what the spec requires; scalability is not a defect."
+  },
+  {
+    "id": "A12",
+    "source": "agent",
+    "rule": "Resources and concurrency",
+    "file": "store.go",
+    "line": 78,
+    "message": "store.go:78-82 \u2014 `os.Remove(tmp)` runs only when `ok` is false, so a failed directory sync can't leave a stray file. That is fine. However, a crash between `CreateTemp` and rename leaves `.shortener-*.tmp` files behind, and nothing cleans them up. Fix: remove stale temp files on startup.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "store.go:78 stale temp files after a crash are harmless (random names, never loaded); cleanup is an unrequested feature."
+  },
+  {
+    "id": "A13",
+    "source": "agent",
+    "rule": "Tests",
+    "file": "main_test.go",
+    "message": "main_test.go \u2014 No test covers a failing save. The rollback code in `Create`, `Visit` and `Delete` (store.go:143-147, 159-162, 205-209) is never exercised. Fix: make the data directory read-only or remove it, and assert that the in-memory state is unchanged and the right status is returned.",
+    "severity": "medium",
+    "verdict": "rejected",
+    "note": "Missing test coverage is scored elsewhere."
+  },
+  {
+    "id": "A14",
+    "source": "agent",
+    "rule": "Tests",
+    "file": "main_test.go",
+    "message": "main_test.go \u2014 Missing tests: a bad or malformed `Authorization` header, `HEAD` handling, `DELETE` on a nested path (404) or with a wrong method (405), `OpenStore` on a corrupt or empty file, and random-code collision handling.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Missing test coverage is scored elsewhere."
+  },
+  {
+    "id": "A15",
+    "source": "agent",
+    "rule": "Tests",
+    "file": "main_test.go",
+    "line": 51,
+    "message": "main_test.go:51, 85 \u2014 `json.Unmarshal` errors are ignored. A malformed response would show up as a confusing later assertion failure instead of a clear one.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "main_test.go:51 ignored Unmarshal in tests; later assertions still fail, so not a test that cannot fail."
+  },
+  {
+    "id": "A16",
+    "source": "agent",
+    "rule": "Tests",
+    "file": "main_test.go",
+    "line": 116,
+    "message": "main_test.go:116-117 \u2014 The goroutines in `TestConcurrent` ignore the response codes. The final count check does catch lost writes. The test would be more precise if it asserted 201 and 302 as well.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "main_test.go:116 still checks final link and visit counts, so the test can fail; precision is style."
+  },
+  {
+    "id": "A17",
+    "source": "agent",
+    "rule": "Clarity",
+    "file": "store.go",
+    "line": 186,
+    "message": "store.go:186-211 \u2014 `Delete` copies the order slice, then splices the original in place, then restores from the copy on failure. This works but is hard to follow. `idx >= 0` is always true when the code exists in `links`. Fix: build the new order with `slices.Delete` (or a new slice), save, and only then commit the change. Better still, make a shared \"mutate, save, roll back on error\" helper that `Create`, `Visit` and `Delete` all use.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "store.go:186 clarity only; the agent agrees it works."
+  },
+  {
+    "id": "A18",
+    "source": "agent",
+    "rule": "Clarity",
+    "file": "main.go",
+    "line": 145,
+    "message": "main.go:145-153 \u2014 `dec.Token(); err != io.EOF` is a clever way to detect trailing data. If `Token` returns a valid token with a nil error, the code reports \"trailing data\", which is correct but not obvious. Fix: add a comment saying \"after the first JSON value, the only acceptable result is EOF.\"",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "main.go:145 clarity/comment request; behaviour is correct."
+  },
+  {
+    "id": "A19",
+    "source": "agent",
+    "rule": "Clarity",
+    "file": "main.go",
+    "line": 81,
+    "message": "main.go:81 and 161, store.go:134 \u2014 The reserved name `\"api\"` is checked in three places. Fix: define one `isReserved(code)` helper.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "main.go:81 duplicated 'api' check is style."
   }
 ]

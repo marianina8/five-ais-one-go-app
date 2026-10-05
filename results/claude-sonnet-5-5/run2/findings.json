@@ -5,7 +5,8 @@
     "file": "main.go",
     "line": 28,
     "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "main.go:28 encoding a response to the ResponseWriter; failure only means the client went away, no data effect."
   },
   {
     "id": "T02",
@@ -13,7 +14,8 @@
     "file": "main_test.go",
     "line": 45,
     "message": "Error return value of `json.Unmarshal` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "main_test.go:45 is test code."
   },
   {
     "id": "T03",
@@ -21,7 +23,8 @@
     "file": "main_test.go",
     "line": 70,
     "message": "Error return value of `json.Unmarshal` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "main_test.go:70 is test code."
   },
   {
     "id": "T04",
@@ -29,7 +32,8 @@
     "file": "store.go",
     "line": 75,
     "message": "Error return value of `f.Close` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "store.go:75 Close in deferred error-path cleanup of a temp file that is never renamed; the real Close at :85 is checked."
   },
   {
     "id": "T05",
@@ -37,7 +41,8 @@
     "file": "store.go",
     "line": 76,
     "message": "Error return value of `os.Remove` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "store.go:76 best-effort removal of the abandoned temp file; no effect on the data file."
   },
   {
     "id": "T06",
@@ -45,7 +50,8 @@
     "file": "store.go",
     "line": 93,
     "message": "Error return value of `d.Sync` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "store.go:93 best-effort directory fsync after the checked rename; file write, Sync, Close and Rename (:79-88) are all checked, so no wrong result or loss of a startable file."
   },
   {
     "id": "T07",
@@ -53,7 +59,8 @@
     "file": "store.go",
     "line": 94,
     "message": "Error return value of `d.Close` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "store.go:94 Close of a directory handle opened only for fsync; no practical effect."
   },
   {
     "id": "T08",
@@ -62,7 +69,8 @@
     "file": "main.go",
     "line": 189,
     "message": "G112: Potential Slowloris Attack because ReadHeaderTimeout is not configured in the http.Server",
-    "verdict": "pending"
+    "verdict": "confirmed",
+    "note": "main.go:189 http.Server has no ReadHeaderTimeout or any other timeout, so slow clients can hold connections forever."
   },
   {
     "id": "T09",
@@ -71,7 +79,8 @@
     "file": "store.go",
     "line": 33,
     "message": "G304: Potential file inclusion via variable",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "store.go:33 G304: path comes from the operator's -data flag (policy)."
   },
   {
     "id": "T10",
@@ -80,6 +89,236 @@
     "file": "store.go",
     "line": 92,
     "message": "G304: Potential file inclusion via variable",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "store.go:92 G304: opens the data file's directory derived from the -data flag (policy)."
+  },
+  {
+    "id": "A01",
+    "source": "agent",
+    "rule": "Error handling",
+    "file": "store.go",
+    "line": 150,
+    "message": "store.go:150-163 \u2014 Every redirect rewrites and fsyncs the whole data file, and a failed write returns a 500 instead of the redirect. A full disk or a read-only data directory therefore breaks all existing short links, just because a visit counter couldn't be saved. I ran this by deleting the data directory and requesting `/abc`. The response was `500 {\"error\":\"internal error\"}` and the log showed `open \u2026/d.json.tmp\u2026: no such file or directory` [verified]. Fix: treat the counter as best-effort. Log the save error and still return the URL, or keep counts in memory and flush them periodically in the background.",
+    "severity": "medium",
+    "verdict": "rejected",
+    "note": "store.go:150-163 saving each visit before redirecting and returning 500 when the save fails is spec-required."
+  },
+  {
+    "id": "A02",
+    "source": "agent",
+    "rule": "Error handling",
+    "file": "store.go",
+    "line": 47,
+    "message": "store.go:47-56 \u2014 On load, entries that are nil, have an empty code, or have a duplicate code are silently skipped. The next `save()` then rewrites the file without them, so data that was in the file is deleted without any message. I loaded a file with a duplicate and an empty-code entry, then created a link. The file no longer contained the skipped entries [verified]. Fix: return an error from `OpenStore` (or at least log each skipped entry), and don't overwrite the file until an operator has dealt with it.",
+    "severity": "medium",
+    "verdict": "rejected",
+    "note": "store.go:47-56 skipping nil/empty/duplicate entries only affects a hand-edited file; re-validating the data file is not in the spec."
+  },
+  {
+    "id": "A03",
+    "source": "agent",
+    "rule": "Error handling",
+    "file": "store.go",
+    "line": 92,
+    "message": "store.go:92-95 \u2014 The error from the directory `Sync` and `Open` is ignored, so the claim in the comment (the rename is durable) may not hold. Fix: return or log the error.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "store.go:92-95 best-effort directory fsync after a checked rename; same as T06, no wrong result."
+  },
+  {
+    "id": "A04",
+    "source": "agent",
+    "rule": "Error handling",
+    "file": "main.go",
+    "line": 28,
+    "message": "main.go:28 \u2014 The error from `Encode` is ignored. This is harmless for most cases, but a failed write to the client leaves no trace. Fix: log it.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "main.go:28 ignored Encode to the client has no practical effect (same as T01)."
+  },
+  {
+    "id": "A05",
+    "source": "agent",
+    "rule": "Secrets and sensitive data",
+    "file": "main.go",
+    "line": 179,
+    "message": "main.go:179-183 \u2014 The token comes from an environment variable and is never logged, which is fine. There is no minimum length check, so `ADMIN_TOKEN=x` is accepted and a trivially guessable admin token is possible. Fix: require a minimum length, such as 16 characters or more.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "main.go:179-183 minimum token length is not a spec requirement; spec only requires a non-empty token."
+  },
+  {
+    "id": "A06",
+    "source": "agent",
+    "rule": "Input validation",
+    "file": "main.go",
+    "line": 57,
+    "message": "main.go:57-58 \u2014 `POST /api/links` needs no authentication. Anyone who can reach the server can create unlimited links to any http(s) URL, such as phishing targets, and each one grows the data file. Since every write rewrites the whole file, this also makes the server slower for everyone. Fix: require auth for creation, or add rate limiting and a cap on the number of links, unless a public endpoint is intended (if so, document it).",
+    "severity": "medium",
+    "verdict": "rejected",
+    "note": "main.go:57-58 unauthenticated POST /api/links is required by the spec; rate limiting is not asked for."
+  },
+  {
+    "id": "A07",
+    "source": "agent",
+    "rule": "Input validation",
+    "file": "store.go",
+    "line": 43,
+    "message": "store.go:43-56 \u2014 URLs and visit counts loaded from the file are not validated. A hand-edited or corrupt file can put an arbitrary string into the `Location` header. Fix: run `validURL` on load and reject negative visits.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "store.go:43-56 validating URLs/visits from a hand-edited data file is a feature the spec didn't ask for."
+  },
+  {
+    "id": "A08",
+    "source": "agent",
+    "rule": "Input validation",
+    "file": "store.go",
+    "line": 33,
+    "message": "store.go:33-36 \u2014 `OpenStore` accepts a path whose directory doesn't exist, so the first write fails at runtime, not at startup [verified]. Fix: check at startup that the directory is writable.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "store.go:33-36 startup writability check is not in the spec; a failed save returns 500 correctly."
+  },
+  {
+    "id": "A09",
+    "source": "agent",
+    "rule": "External services",
+    "file": "main.go",
+    "line": 189,
+    "message": "main.go:189 \u2014 `http.Server` has no `ReadHeaderTimeout`, `ReadTimeout`, `WriteTimeout` or `IdleTimeout`. Slow clients (slowloris) can hold connections open indefinitely. Fix: set these fields, for example `ReadHeaderTimeout: 5s`, `ReadTimeout: 10s`, `WriteTimeout: 10s` and `IdleTimeout: 60s`.",
+    "severity": "high",
+    "verdict": "duplicate",
+    "note": "main.go:189 same missing-timeouts problem as T08."
+  },
+  {
+    "id": "A10",
+    "source": "agent",
+    "rule": "External services",
+    "file": "main.go",
+    "line": 189,
+    "message": "main.go:189-193 \u2014 There is no graceful shutdown. A SIGTERM during a save can kill the process mid-request. The temp-file rename keeps the data file intact, but it leaves stray `.tmp*` files and drops in-flight requests. Fix: handle signals and call `srv.Shutdown`.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "main.go:189-193 graceful shutdown is not in the spec; the atomic rename keeps the file startable."
+  },
+  {
+    "id": "A11",
+    "source": "agent",
+    "rule": "Resources and concurrency",
+    "file": "store.go",
+    "line": 118,
+    "message": "store.go:118-163 \u2014 The global mutex is held while doing disk I/O: marshal, write, fsync and rename. Every redirect, which is the hot path, queues behind a full rewrite of the file. Cost grows with the number of links, and `List` blocks as well. Fix: don't persist on visits (see above), or move writes to a single background writer.",
+    "severity": "medium",
+    "verdict": "rejected",
+    "note": "store.go:118-163 holding the lock across the save is the design that satisfies save-before-response with no lost updates; performance only."
+  },
+  {
+    "id": "A12",
+    "source": "agent",
+    "rule": "Resources and concurrency",
+    "file": "store.go",
+    "line": 73,
+    "message": "store.go:73-78, 91-95 \u2014 Temp files are cleaned up on error, but a crash between `CreateTemp` and `Rename` leaves `d.json.tmp*` files behind, and nothing removes them at startup. Fix: clean up stale temp files in `OpenStore`.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "store.go:73-78 stray tmp files after a crash do not prevent startup; cleanup is not a spec requirement."
+  },
+  {
+    "id": "A13",
+    "source": "agent",
+    "rule": "Tests",
+    "file": "main_test.go",
+    "message": "main_test.go \u2014 None of the persistence failure paths are tested. This covers the rollback in `Create` (store.go:141-145), `Visit` (158-161) and `Delete` (182-186), and the 500 responses. Fix: make the data directory unwritable (or delete it) and assert the in-memory state is unchanged and the status is 500.",
+    "severity": "medium",
+    "verdict": "rejected",
+    "note": "main_test.go missing failure-path tests: test coverage is scored elsewhere."
+  },
+  {
+    "id": "A14",
+    "source": "agent",
+    "rule": "Tests",
+    "file": "main_test.go",
+    "message": "main_test.go \u2014 No test for loading a corrupt file, a file with duplicate or empty codes, or `randomCode` output (length and alphabet). Fix: add table tests for these.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "main_test.go missing tests: coverage is scored elsewhere."
+  },
+  {
+    "id": "A15",
+    "source": "agent",
+    "rule": "Tests",
+    "file": "main_test.go",
+    "line": 45,
+    "message": "main_test.go:45, 70 \u2014 The `json.Unmarshal` errors are ignored, so a broken response body would only show up as a later, confusing assertion failure. Fix: check the errors.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "main_test.go:45,70 ignored Unmarshal in test code; the following assertions still fail on bad bodies."
+  },
+  {
+    "id": "A16",
+    "source": "agent",
+    "rule": "Tests",
+    "file": "main_test.go",
+    "line": 33,
+    "message": "main_test.go:33-93 \u2014 `TestFlow` is one long chain of assertions with bare `t.Fatal(w.Code)` messages. If it fails, it doesn't say which step broke. Fix: split it into subtests and use messages like `t.Fatalf(\"create duplicate: got %d, want 409\", w.Code)`.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "main_test.go:33-93 test structure/messages are style."
+  },
+  {
+    "id": "A17",
+    "source": "agent",
+    "rule": "Tests",
+    "file": "main_test.go",
+    "line": 120,
+    "message": "main_test.go:120 \u2014 `var _ = http.StatusOK` exists only to keep an unused import alive. Fix: remove it and the `net/http` import.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "main_test.go:120 unused-import workaround is style."
+  },
+  {
+    "id": "A18",
+    "source": "agent",
+    "rule": "Clarity",
+    "file": "store.go",
+    "line": 172,
+    "message": "store.go:172-186 \u2014 `Delete` does two odd things. It copies the whole slice into `old` for rollback, and it uses `append(s.links[:pos:pos], s.links[pos+1:]...)`. The three-index slice forces `append` to allocate a new array, which is why `old` stays valid. That reasoning is not obvious. Fix: keep the original slice as `old` and build the new one explicitly: `next := make([]*Link, 0, len(old)-1); next = append(next, old[:pos]...); next = append(next, old[pos+1:]...)`. Then only swap it in after a successful save.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "store.go:172-186 Delete is correct (three-index slice forces a copy, old is a separate copy); clarity only."
+  },
+  {
+    "id": "A19",
+    "source": "agent",
+    "rule": "Clarity",
+    "file": "main.go",
+    "line": 133,
+    "message": "main.go:133-150 \u2014 The \"request body too large\" handling is written twice. The trailing-data check `dec.Token(); err != io.EOF` is also hard to read: it means \"anything after the first JSON value is an error\". Fix: write a small `decodeBody(w, r, &req) bool` helper with a comment explaining the trailing-data check.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "main.go:133-150 duplicated 413 handling is a clarity issue; behaviour is correct."
+  },
+  {
+    "id": "A20",
+    "source": "agent",
+    "rule": "Clarity",
+    "file": "main.go",
+    "line": 38,
+    "message": "main.go:38-39 \u2014 The Bearer parsing is dense: a length check, a case-insensitive prefix compare and a constant-time compare, all in one condition. Fix: use `strings.CutPrefix`-style parsing in a separate `bearerToken(r)` function and call `subtle.ConstantTimeCompare` on the result.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "main.go:38-39 Bearer parsing is correct and constant-time; clarity only."
+  },
+  {
+    "id": "A21",
+    "source": "agent",
+    "rule": "Clarity",
+    "file": "store.go",
+    "line": 101,
+    "message": "store.go:101-116 \u2014 `randomCode` rejection sampling is correct but cryptic. `max` is the largest multiple of 62 that fits in a byte, and values at or above it are discarded to avoid modulo bias. Fix: add a one-line comment saying that. `max` also shadows the Go 1.21 builtin, so rename it to `limit`.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "store.go:101-116 rejection sampling is correct; comment/naming is style."
   }
 ]

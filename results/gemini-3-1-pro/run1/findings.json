@@ -5,7 +5,8 @@
     "file": "server.go",
     "line": 22,
     "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "Ignored Encode to the ResponseWriter has no practical effect (server.go:22)."
   },
   {
     "id": "T02",
@@ -13,7 +14,8 @@
     "file": "server.go",
     "line": 92,
     "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "Ignored Encode to the ResponseWriter has no practical effect (server.go:92)."
   },
   {
     "id": "T03",
@@ -21,7 +23,8 @@
     "file": "server.go",
     "line": 113,
     "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "Ignored Encode to the ResponseWriter has no practical effect (server.go:113)."
   },
   {
     "id": "T04",
@@ -29,7 +32,8 @@
     "file": "server.go",
     "line": 154,
     "message": "Error return value of `rw.ResponseWriter.Write` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "Ignored ResponseWriter.Write to the client has no practical effect (server.go:154)."
   },
   {
     "id": "T05",
@@ -37,7 +41,8 @@
     "file": "server.go",
     "line": 159,
     "message": "Error return value of `rw.ResponseWriter.Write` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "Ignored ResponseWriter.Write to the client has no practical effect (server.go:159)."
   },
   {
     "id": "T06",
@@ -45,7 +50,8 @@
     "file": "server_test.go",
     "line": 32,
     "message": "Error return value of `(*encoding/json.Decoder).Decode` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "Ignored error in test code (server_test.go:32)."
   },
   {
     "id": "T07",
@@ -53,7 +59,8 @@
     "file": "server_test.go",
     "line": 51,
     "message": "Error return value of `(*encoding/json.Decoder).Decode` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "Ignored error in test code (server_test.go:51)."
   },
   {
     "id": "T08",
@@ -61,7 +68,8 @@
     "file": "server_test.go",
     "line": 84,
     "message": "Error return value of `(*encoding/json.Decoder).Decode` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "Ignored error in test code (server_test.go:84)."
   },
   {
     "id": "T09",
@@ -69,7 +77,8 @@
     "file": "server_test.go",
     "line": 113,
     "message": "Error return value of `(*encoding/json.Decoder).Decode` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "Ignored error in test code (server_test.go:113)."
   },
   {
     "id": "T10",
@@ -77,7 +86,8 @@
     "file": "server_test.go",
     "line": 124,
     "message": "Error return value of `s1.Create` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "Ignored error in test code (server_test.go:124)."
   },
   {
     "id": "T11",
@@ -85,7 +95,8 @@
     "file": "server_test.go",
     "line": 125,
     "message": "Error return value of `s1.Create` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "Ignored error in test code (server_test.go:125)."
   },
   {
     "id": "T12",
@@ -93,7 +104,8 @@
     "file": "server_test.go",
     "line": 126,
     "message": "Error return value of `s1.GetAndVisit` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "Ignored error in test code (server_test.go:126)."
   },
   {
     "id": "T13",
@@ -101,7 +113,8 @@
     "file": "store.go",
     "line": 66,
     "message": "Error return value of `os.Remove` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "Deferred os.Remove of the temp file is best-effort cleanup (store.go:66)."
   },
   {
     "id": "T14",
@@ -109,7 +122,8 @@
     "file": "store.go",
     "line": 69,
     "message": "Error return value of `f.Close` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "f.Close on an error path that already returns the write error (store.go:69)."
   },
   {
     "id": "T15",
@@ -117,7 +131,8 @@
     "file": "store.go",
     "line": 73,
     "message": "Error return value of `f.Close` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "f.Close on an error path that already returns the sync error (store.go:73)."
   },
   {
     "id": "T16",
@@ -126,7 +141,8 @@
     "file": "main.go",
     "line": 30,
     "message": "G114: Use of net/http serve function that has no support for setting timeouts",
-    "verdict": "pending"
+    "verdict": "confirmed",
+    "note": "http.ListenAndServe with no server timeouts (main.go:30)."
   },
   {
     "id": "T17",
@@ -135,6 +151,270 @@
     "file": "store.go",
     "line": 35,
     "message": "G304: Potential file inclusion via variable",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "G304: the path comes from the operator -data flag, rejected per policy (store.go:35)."
+  },
+  {
+    "id": "A01",
+    "source": "agent",
+    "rule": "Error handling",
+    "file": "store.go",
+    "line": 131,
+    "message": "store.go:131-135, server.go:97-106 \u2014 Every redirect first rewrites the whole data file to bump the visit counter. If that write fails (disk full, read-only directory), `GetAndVisit` returns an error and the handler sends a 500. A working short link then stops redirecting because of a statistics failure. I made the data directory read-only and got a 500 on `GET /abc` [verified]. Fix: serve the redirect anyway and log the save error. Better, keep counts in memory and flush them periodically.",
+    "severity": "medium",
+    "verdict": "rejected",
+    "note": "Returning 500 when the visit save fails is spec-required behaviour (store.go:131)."
+  },
+  {
+    "id": "A02",
+    "source": "agent",
+    "rule": "Error handling",
+    "file": "store.go",
+    "line": 41,
+    "message": "store.go:41-47 \u2014 `NewStore` doesn't validate the loaded file. A file containing `[null]` makes it panic with a nil pointer dereference at line 46 instead of returning an error [verified]. Duplicate codes in the file silently overwrite each other in `linkMap` while both stay in `links`. Fix: reject nil entries and empty or duplicate codes, and return an error.",
+    "severity": "medium",
+    "verdict": "rejected",
+    "note": "Re-validating a hand-edited data file is not in the spec (store.go:41)."
+  },
+  {
+    "id": "A03",
+    "source": "agent",
+    "rule": "Error handling",
+    "file": "store.go",
+    "line": 199,
+    "message": "store.go:199 \u2014 `rand.Int` returns an error that is discarded. If it ever fails, `n` is nil and `n.Int64()` panics. Fix: return the error from `generateRandomCode` (or panic deliberately with a clear message). Also cap the retry loop at lines 94-99 so it can't spin forever.",
+    "severity": "medium",
+    "verdict": "rejected",
+    "note": "crypto/rand.Reader does not return errors in Go 1.24 (it crashes the program instead), and a 62^7 code space makes an endless retry loop impractical (store.go:199)."
+  },
+  {
+    "id": "A04",
+    "source": "agent",
+    "rule": "Error handling",
+    "file": "server.go",
+    "line": 81,
+    "message": "server.go:81, 99, 120 \u2014 Errors are matched by comparing `err.Error()` to the strings \"conflict\" and \"not found\". A reworded message silently turns a 409 or 404 into a 500. Fix: define `var ErrConflict = errors.New(...)` and `var ErrNotFound = errors.New(...)`, return them from the store, and test with `errors.Is`.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Errors matched by string, but every current mapping is correct (server.go:81); maintainability only."
+  },
+  {
+    "id": "A05",
+    "source": "agent",
+    "rule": "Error handling",
+    "file": "server.go",
+    "line": 22,
+    "message": "server.go:22, 92, 113 \u2014 `json.Encoder.Encode` errors are ignored. This is acceptable for a client disconnect, but at least log them.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Ignored Encode to the ResponseWriter has no practical effect (server.go:22)."
+  },
+  {
+    "id": "A06",
+    "source": "agent",
+    "rule": "Error handling",
+    "file": "store.go",
+    "line": 66,
+    "message": "store.go:66-80 \u2014 The temp file is renamed over the data file without fsyncing the directory, so the rename can be lost after a power failure. Also, `os.Remove(tmpName)` is deferred, so it runs after a successful rename and always fails harmlessly. Fix: fsync the directory if durability matters.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Temp file is fsynced before rename (store.go:72); directory fsync is extra, and the deferred Remove is harmless cleanup."
+  },
+  {
+    "id": "A07",
+    "source": "agent",
+    "rule": "Secrets and sensitive data",
+    "file": "server.go",
+    "line": 28,
+    "message": "server.go:28-29 \u2014 The admin token is compared with `!=`, which is not constant-time and so allows timing attacks. Fix: use `subtle.ConstantTimeCompare` on the supplied token and the expected token.",
+    "severity": "medium",
+    "verdict": "confirmed",
+    "note": "Admin token is compared with != rather than in constant time, which can leak it through timing (server.go:28-29)."
+  },
+  {
+    "id": "A08",
+    "source": "agent",
+    "rule": "Secrets and sensitive data",
+    "file": "main.go",
+    "line": 16,
+    "message": "main.go:16-20 \u2014 The token comes from the environment, which is reasonable. There is no TLS, and the bearer token travels in cleartext unless a reverse proxy terminates TLS. Document this requirement.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "TLS is out of the spec scope (main.go:16)."
+  },
+  {
+    "id": "A09",
+    "source": "agent",
+    "rule": "Input validation",
+    "file": "server.go",
+    "line": 176,
+    "message": "server.go:176 \u2014 `POST /api/links` has no auth, while list and delete do. I sent a create request with no token and got 201 [verified]. Anyone on the network can add redirects to any URL, which makes this an open redirector for phishing. They can also grow the data file without limit and reserve any alias. Every create also rewrites the whole file. If this is intentional, add rate limiting and a cap on the number of links. Otherwise wrap it in `requireAuth`.",
+    "severity": "high",
+    "verdict": "rejected",
+    "note": "Unauthenticated POST /api/links is spec-required (server.go:176)."
+  },
+  {
+    "id": "A10",
+    "source": "agent",
+    "rule": "Input validation",
+    "file": "server.go",
+    "line": 45,
+    "message": "server.go:45-55 \u2014 Only the first JSON value in the body is decoded, so trailing data such as `{\"url\":...}garbage` is accepted. Fix: after `Decode`, check that `dec.More()` is false, or that a second `Decode` returns `io.EOF`.",
+    "severity": "low",
+    "verdict": "duplicate",
+    "note": "Real, but already scored: the hidden test TestValidation_MalformedJSON/trailing_data fails for this. Only the first JSON value is decoded, so a malformed body like {...}garbage gets 201 instead of the spec-required 400 (server.go:45-55)."
+  },
+  {
+    "id": "A11",
+    "source": "agent",
+    "rule": "Input validation",
+    "file": "server.go",
+    "line": 62,
+    "message": "server.go:62-66 \u2014 The URL check accepts any http or https host, including `localhost`, internal IPs, and URLs with embedded credentials (`user:pass@host`). This matters mostly for the open create endpoint above. Fix: decide on a policy and reject those cases.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Blocking localhost or credential URLs is not required by the spec (server.go:62)."
+  },
+  {
+    "id": "A12",
+    "source": "agent",
+    "rule": "Input validation",
+    "file": "server.go",
+    "line": 68,
+    "message": "server.go:68-77 \u2014 Alias reservation only blocks `api`. That is enough for the current routes, but it is a hardcoded special case. Add new reserved names there when routes are added.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Reserving only \"api\" is exactly what the spec asks (server.go:68)."
+  },
+  {
+    "id": "A13",
+    "source": "agent",
+    "rule": "External services",
+    "file": "main.go",
+    "line": 30,
+    "message": "main.go:30 \u2014 `http.ListenAndServe` uses a server with no `ReadHeaderTimeout`, `ReadTimeout`, `WriteTimeout` or `IdleTimeout`. Slow clients can hold connections open indefinitely (slowloris). There is also no graceful shutdown on SIGINT or SIGTERM. Fix: build an `http.Server` with timeouts and call `Shutdown` on a signal.",
+    "severity": "medium",
+    "verdict": "duplicate",
+    "note": "Same missing-timeouts issue as T16 (main.go:30); graceful shutdown is out of scope."
+  },
+  {
+    "id": "A14",
+    "source": "agent",
+    "rule": "External services",
+    "file": "store.go",
+    "line": 54,
+    "message": "store.go:54-81, 122-138 \u2014 Each request that changes state (create, delete, and every redirect) marshals the entire list, writes a temp file, fsyncs it, and renames it while holding the global mutex. Throughput is limited by disk fsync latency and gets worse as the data grows. Public redirect traffic therefore serializes on disk I/O. Fix: use read-only lookups for redirects and batch or asynchronously flush the visit counts.",
+    "severity": "medium",
+    "verdict": "rejected",
+    "note": "Saving every change before responding is spec-required; this is performance only (store.go:54)."
+  },
+  {
+    "id": "A15",
+    "source": "agent",
+    "rule": "Resources and concurrency",
+    "file": "store.go",
+    "line": 140,
+    "message": "store.go:140-151 \u2014 `List` copies correctly under the lock, so there is no race. `GetAndVisit` returns the internal `*Link` pointer, and the handler reads `link.URL` after the lock is released. `URL` is never mutated, so this is safe today, but it is fragile. Fix: return a copy.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "The agent itself says it is safe: URL is never mutated after creation (store.go:140)."
+  },
+  {
+    "id": "A16",
+    "source": "agent",
+    "rule": "Resources and concurrency",
+    "file": "server_test.go",
+    "line": 24,
+    "message": "server_test.go:24-85 \u2014 Response bodies are never closed in the tests, which leaks connections within the test run. Close them with `defer res.Body.Close()`.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Unclosed response bodies in tests are test-code hygiene (server_test.go:24)."
+  },
+  {
+    "id": "A17",
+    "source": "agent",
+    "rule": "Resources and concurrency",
+    "file": "server.go",
+    "line": 130,
+    "message": "server.go:130-170 \u2014 `rwWrapper` hides the optional `http.Flusher` and `http.Hijacker` interfaces of the underlying writer. Nothing uses them now, but it can bite later.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Hidden Flusher/Hijacker interfaces are unused; hypothetical (server.go:130)."
+  },
+  {
+    "id": "A18",
+    "source": "agent",
+    "rule": "Tests",
+    "file": "large_test.go",
+    "line": 10,
+    "message": "large_test.go:10-24, server_test.go \u2014 No tests cover the failure paths. Missing cases: save failure with rollback in `Create`, `Delete` and `GetAndVisit`; corrupt or `null` data files; `DELETE` with a bad token; concurrent access (run with `-race`); and the 7-character random code collision loop. The rollback code at store.go:112-116, 183-189 has no coverage.",
+    "severity": "medium",
+    "verdict": "rejected",
+    "note": "Missing tests are scored elsewhere (large_test.go:10)."
+  },
+  {
+    "id": "A19",
+    "source": "agent",
+    "rule": "Tests",
+    "file": "time_test.go",
+    "line": 10,
+    "message": "time_test.go:10-16 \u2014 `TestRFC3339` can't meaningfully fail. `time.Now().UTC()` always marshals with `Z`, and the assertion also accepts any `+`. It doesn't test `Create`'s millisecond truncation either. Fix: create through the store and parse the output with `time.Parse(time.RFC3339Nano, ...)`.",
+    "severity": "low",
+    "verdict": "confirmed",
+    "note": "TestRFC3339 marshals a time it built itself and accepts any Z or +, so it cannot fail (time_test.go:10-16)."
+  },
+  {
+    "id": "A20",
+    "source": "agent",
+    "rule": "Tests",
+    "file": "server_test.go",
+    "line": 32,
+    "message": "server_test.go:32, 39, 46, 62, 72, 123-126 \u2014 Errors from `Decode`, `http.Post`, `NewStore` and `Create` are discarded. A failed request leaves `res` nil and the test panics with a nil dereference instead of a clear failure message.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Ignored errors in test code are rejected per policy (server_test.go:32)."
+  },
+  {
+    "id": "A21",
+    "source": "agent",
+    "rule": "Tests",
+    "file": "mux_test.go",
+    "message": "mux_test.go, test_mux.go, test_time.go \u2014 These files are empty stubs (the `test_*.go` ones are `//go:build ignore`). They are dead files that suggest tests which don't exist. Delete them.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Empty ignored stub files are style/clutter (mux_test.go)."
+  },
+  {
+    "id": "A22",
+    "source": "agent",
+    "rule": "Clarity",
+    "file": "server.go",
+    "line": 130,
+    "message": "server.go:130-170 \u2014 `rwWrapper` rewrites the response body for any 404 or 405. It discards whatever the handler wrote, and returns `len(b)` to pretend the write succeeded. The goal is JSON errors for the mux's built-in plain-text 404 and 405 responses. Because the wrapper replaces every 404 body, the handlers' own `writeJSONError` 404s are overwritten too. It works, but it is surprising. Plainer approach: register a catch-all `/` handler for 404, and give each route a method-not-allowed fallback that calls `writeJSONError`.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Wrapper replaces 404/405 bodies with an equivalent JSON error; surprising but correct (server.go:130)."
+  },
+  {
+    "id": "A23",
+    "source": "agent",
+    "rule": "Clarity",
+    "file": "store.go",
+    "line": 161,
+    "message": "store.go:161-171 \u2014 `Delete` already checks `linkMap`, then scans the slice again and has an \"impossible\" error branch. Keeping a slice and a map in sync costs extra code. Fix: store links in one structure, or use `slices.DeleteFunc`. The delete rollback at lines 185-188 (append nil, copy, assign) is also hard to read. Simpler: build the new slice first, save it, and only assign `s.links` on success.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Clarity of the slice/map bookkeeping; the rollback is correct (store.go:161)."
+  },
+  {
+    "id": "A24",
+    "source": "agent",
+    "rule": "Clarity",
+    "file": "store.go",
+    "line": 105,
+    "message": "store.go:105 \u2014 `time.Now().Truncate(time.Millisecond).UTC()` works but the order is odd. Use `time.Now().UTC().Truncate(time.Millisecond)`.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Expression order is style; the result is identical (store.go:105)."
   }
 ]
