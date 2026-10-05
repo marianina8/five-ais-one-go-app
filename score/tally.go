@@ -34,6 +34,8 @@ type Stats struct {
 	CostUSD      float64 `json:"cost_usd"`
 	Seconds      float64 `json:"seconds"`
 	Finished     bool    `json:"finished"` // the model said DONE, rather than running out of steps or time
+	StoppedBy    string  `json:"stopped_by"`
+	Error        string  `json:"error"`
 }
 
 // Review is one blind "Would I merge it?" score.
@@ -153,6 +155,9 @@ func loadRunFiles(runDir, name string, m Measurement, stats *Stats) ([]Finding, 
 		warnings = append(warnings, fmt.Sprintf("%s: no stats.json (cost and time unknown)", name))
 	case err != nil:
 		return nil, nil, err
+	}
+	if stats.StoppedBy == "error" {
+		warnings = append(warnings, fmt.Sprintf("%s: the model's API failed (%s); re-run it before trusting this score", name, truncate(stats.Error, 120)))
 	}
 	if m.Build.OK && !m.Style.Measured {
 		warnings = append(warnings, fmt.Sprintf("%s: style could not be measured; left out of the Readable Go ranking", name))

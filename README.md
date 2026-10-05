@@ -23,7 +23,7 @@ From the YouTube series **Build It in Go**, episode 2. Episode 1 built the revie
 
 ## The rules
 
-- **Same everything.** Every model gets the same spec, the same tools (list, read and write files; `go build`, `go test`, `go vet`), the same step and time limits, an empty folder and no network.
+- **Same everything.** Every model runs in the same harness with the same system prompt, the spec, the same six tools (list, read and write files; `go build`, `go test`, `go vet`), 40 model calls, 20 minutes, an empty folder and no network. Each model runs at its API's default settings.
 - **Hidden tests.** 55 tests written before the contest. They start the program and talk to it over HTTP, so they don't depend on how a model organized its code.
 - **Two runs per model.** The scorecard shows the average; a difference of a few points is noise.
 - **Blind review.** Before the human review, the projects are renamed to random letters.
@@ -57,11 +57,24 @@ SHORTENER_BIN=/tmp/shortener go -C acceptance test -v ./...   # 55/55 pass
 python3 mutants/mutants.py                                     # 15/15 bugs caught
 ```
 
+## How the contest runs
+
+[`harness/`](harness/) is the agent loop every model runs in, built from the [episode 1 review agent](https://github.com/marianina8/pr-review-agent): ask the model, run the tools it asks for, send the results back, until it says DONE or runs out of model calls or time. After every batch of tool results it tells the model what budget is left.
+
+- **One adapter per vendor API, same messages in and out:** Anthropic Messages, OpenAI Responses, Gemini generateContent and Amazon Bedrock Converse.
+- **No network for the model's code.** Every `go build`, `go test` and `go vet` runs in a fresh `golang:1.24` container with networking off, the workspace as its only folder, and no environment variables from the harness. API keys are taken out of the harness's environment before anything runs, and are removed from transcripts and logs, along with AWS account IDs.
+- **Output limit per call:** 16,000 tokens, or the model's own maximum if lower (8,192 for DeepSeek V3.2 on Bedrock). Reasoning and thinking tokens count as output, as every vendor bills them.
+- **Cost** is computed at each vendor's list price ([`harness/prices.json`](harness/prices.json)), with no cache discounts, so every model is priced the same way.
+
+The [Contest workflow](.github/workflows/contest.yml) runs it on GitHub Actions: one job per model and run, each with only its own model's API key; then a job with no secrets measures every run; then a job that runs no contestant code commits everything to a `contest-results/…` branch.
+
 ## What's here
 
 | Folder | What it is |
 |---|---|
-| [`spec/SPEC.md`](spec/SPEC.md) | The prompt every model received |
+| [`spec/SPEC.md`](spec/SPEC.md) | The spec every model received |
+| [`harness/`](harness/) | The agent loop, tools and vendor adapters every model runs in, and its system prompt ([`system.md`](harness/system.md)) |
+| [`contest/contestants.json`](contest/contestants.json) | The five models and their API model IDs |
 | [`acceptance/`](acceptance/) | The 55 hidden black-box tests |
 | [`reference/`](reference/) | A hand-written implementation that proves the tests are correct (never shown to the models) |
 | [`mutants/`](mutants/) | The planted-bug check |
