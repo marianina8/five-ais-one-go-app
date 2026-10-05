@@ -1,0 +1,12 @@
+{
+  "error": "model call (step 5): anthropic: HTTP 400: {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans \u0026 Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CfihZN7LVrxwGGgJCz4s9\"}",
+  "model": "claude-sonnet-5-5",
+  "provider": "claude",
+  "seconds": 36,
+  "steps": 4,
+  "tool_calls": 10,
+  "usage": {
+    "input_tokens": 48098,
+    "output_tokens": 3107
+  }
+}
