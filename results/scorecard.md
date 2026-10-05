@@ -10,9 +10,7 @@
 - deepseek-v3-2/run2: no blind review yet
 - gemini-3-1-pro/run1: no blind review yet
 - gemini-3-1-pro/run2: no blind review yet
-- gpt-6-1-sol/run1: 13 finding(s) still need a verdict
 - gpt-6-1-sol/run1: no blind review yet
-- gpt-6-1-sol/run2: 5 finding(s) still need a verdict
 - gpt-6-1-sol/run2: no blind review yet
 
 | # | Model | Works /40 | Bugs & security /20 | Readable /10 | Own tests /10 | Would I merge /20 | **Total /100** | Cost per run | Time per run | Model calls |

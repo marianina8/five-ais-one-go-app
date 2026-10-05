@@ -14,7 +14,7 @@
         "StyleScore": 6,
         "StyleMeasured": true,
         "Confirmed": null,
-        "Pending": 13,
+        "Pending": 0,
         "Stats": {
           "model_calls": 10,
           "input_tokens": 122363,
@@ -42,7 +42,7 @@
         "StyleScore": 7,
         "StyleMeasured": true,
         "Confirmed": null,
-        "Pending": 5,
+        "Pending": 0,
         "Stats": {
           "model_calls": 9,
           "input_tokens": 70571,

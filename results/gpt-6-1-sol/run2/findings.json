@@ -5,7 +5,8 @@
     "file": "store.go",
     "line": 101,
     "message": "Error return value of `dir.Close` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "Deferred Close of a directory handle opened only for Sync (store.go:101); ignoring it cannot change any result."
   },
   {
     "id": "T02",
@@ -13,7 +14,8 @@
     "file": "store.go",
     "line": 107,
     "message": "Error return value of `os.Remove` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "Cleanup of the temp file, which after a successful rename simply fails harmlessly (store.go:107)."
   },
   {
     "id": "T03",
@@ -21,7 +23,8 @@
     "file": "store.go",
     "line": 108,
     "message": "Error return value of `f.Close` is not checked",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "Redundant deferred Close; the real Close before rename is checked at store.go:115."
   },
   {
     "id": "T04",
@@ -30,7 +33,8 @@
     "file": "persistence_test.go",
     "line": 97,
     "message": "G204: Subprocess launched with a potential tainted input or cmd arguments",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "G204 in test code re-running the project's own test binary (persistence_test.go:97)."
   },
   {
     "id": "T05",
@@ -39,6 +43,205 @@
     "file": "store.go",
     "line": 44,
     "message": "G304: Potential file inclusion via variable",
-    "verdict": "pending"
+    "verdict": "rejected",
+    "note": "G304 on the operator-supplied -data path (store.go:44); policy rejects G304."
+  },
+  {
+    "id": "A01",
+    "source": "agent",
+    "rule": "Error handling",
+    "file": "store.go",
+    "line": 174,
+    "message": "store.go:174-194, http.go:114-118 \u2014 Every redirect writes to disk. If the write fails, `Visit` returns an error and the client gets a 500 instead of the redirect. A full or read-only disk therefore takes down all redirects, even though the URL is already in memory. `TestStorageFailuresAndCorruption` (http_test.go:257) confirms that `GET /present` returns 500 when saving fails. \u2014 Count visits in memory and flush them to disk periodically or in the background. If you keep the synchronous save, log the failure and still redirect.",
+    "severity": "medium",
+    "verdict": "rejected",
+    "note": "Spec requires the visit to be saved before the redirect, so a 500 on save failure is required behaviour (store.go:174-194)."
+  },
+  {
+    "id": "A02",
+    "source": "agent",
+    "rule": "Error handling",
+    "file": "store.go",
+    "line": 121,
+    "message": "store.go:121, 165-170, 187-192, 204-209 \u2014 If `dir.Sync()` fails after the rename, `saveLocked` returns `committed=true` with an error. The in-memory state is kept, but the caller gets a 500. For `Create`, the client sees a failure for a link that now exists and is persisted. A retry with the same alias then returns 409. \u2014 Treat a post-rename sync failure as success, and log it. Alternatively, return a distinct error and document it.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "After a successful rename memory and file both hold the change (store.go:121, 165-170); reporting the dir-sync error is conservative, not data loss or inconsistency."
+  },
+  {
+    "id": "A03",
+    "source": "agent",
+    "rule": "Error handling",
+    "file": "store.go",
+    "line": 181,
+    "message": "store.go:181-183 \u2014 When the visit counter is exhausted, `Visit` returns a plain error, so the redirect fails with 500 forever. The value is unreachable in practice. \u2014 Stop incrementing at the maximum but still redirect.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Visit counter reaching MaxUint64 is unreachable in practice (store.go:181)."
+  },
+  {
+    "id": "A04",
+    "source": "agent",
+    "rule": "Error handling",
+    "file": "http.go",
+    "line": 46,
+    "message": "http.go:46 \u2014 The `Encode` error is discarded. A client that disconnects mid-response leaves no trace. \u2014 Log it at debug level, or leave a comment explaining why it is ignored.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Ignored json Encode to ResponseWriter (http.go:46) has no practical effect."
+  },
+  {
+    "id": "A05",
+    "source": "agent",
+    "rule": "Secrets and sensitive data",
+    "file": "http.go",
+    "line": 31,
+    "message": "http.go:31, store.go:57 \u2014 `validURL` accepts URLs with embedded credentials, such as `https://user:pass@host/`. They are stored in plaintext in data.json and returned by `GET /api/links`. \u2014 Reject `u.User != nil`, or document that behaviour.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Rejecting user:pass@ URLs is a feature the spec didn't ask for (http.go:31)."
+  },
+  {
+    "id": "A06",
+    "source": "agent",
+    "rule": "Secrets and sensitive data",
+    "file": "store.go",
+    "line": 102,
+    "message": "store.go:102 \u2014 The temp file inherits `CreateTemp`'s 0600 mode, so data.json always ends up 0600 after a save. This is the safe default, but the README doesn't mention it. \u2014 Mention it in the README.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Documentation suggestion about file mode; G306/permissions are out of scope (store.go:102)."
+  },
+  {
+    "id": "A07",
+    "source": "agent",
+    "rule": "Input validation",
+    "file": "http.go",
+    "line": 85,
+    "message": "http.go:85-88, 126-171 \u2014 `POST /api/links` needs no authentication, and there is no rate limit and no cap on the number of links. Anyone can grow data.json without bound. Every later mutation rewrites the whole file and fsyncs it under the global lock, so the cost grows with each link. \u2014 Require the token for creation, or add a rate limit and a maximum link count. If open creation is intended, state that in the README.",
+    "severity": "medium",
+    "verdict": "rejected",
+    "note": "Unauthenticated POST is spec-required; rate limits/link caps are unrequested features (http.go:85)."
+  },
+  {
+    "id": "A08",
+    "source": "agent",
+    "rule": "Input validation",
+    "file": "http.go",
+    "line": 27,
+    "message": "http.go:27 \u2014 The 2048 limit counts runes, not bytes. A URL of 2048 multi-byte characters can be several times larger in bytes. The 1 MiB body limit still bounds it. \u2014 Use `len(raw)` if the intent is a byte limit.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Spec says at most 2048 characters; counting runes matches that (http.go:27)."
+  },
+  {
+    "id": "A09",
+    "source": "agent",
+    "rule": "External services",
+    "file": "store.go",
+    "line": 92,
+    "message": "store.go:92-122, 174-194 \u2014 Each unauthenticated `GET /{code}` takes the global mutex, then serializes and writes the entire link set, runs two fsyncs (file and directory), and does a rename. Throughput is limited by disk sync latency, and the cost grows with the number of links. Anyone can hammer a single short link to keep the disk and lock busy, and the 30s `WriteTimeout` can be reached under load. \u2014 Batch or defer visit persistence (see Error handling). If the design must stay synchronous, say so in the README, since \"saved before responding\" is a deliberate promise.",
+    "severity": "medium",
+    "verdict": "rejected",
+    "note": "Performance point about the spec-required synchronous save before each redirect (store.go:92-122)."
+  },
+  {
+    "id": "A10",
+    "source": "agent",
+    "rule": "External services",
+    "file": "main.go",
+    "line": 49,
+    "message": "main.go:49 \u2014 Compares `err != http.ErrServerClosed` directly. \u2014 Use `errors.Is`.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Style: ListenAndServe returns http.ErrServerClosed unwrapped, so != works (main.go:49)."
+  },
+  {
+    "id": "A11",
+    "source": "agent",
+    "rule": "Resources and concurrency",
+    "file": "store.go",
+    "line": 101,
+    "message": "store.go:101-108 \u2014 `defer dir.Close()`, `defer f.Close()` and `defer os.Remove(name)` all run, and `f.Close()` is called twice on the success path. The second close is harmless and its error is ignored, but the pattern is confusing. After a successful rename, `os.Remove` fails silently, which is correct. \u2014 Add a comment, or close once in a small helper.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Clarity point; the explicit Close is checked and the extra deferred calls are harmless (store.go:101-108)."
+  },
+  {
+    "id": "A12",
+    "source": "agent",
+    "rule": "Resources and concurrency",
+    "file": "store.go",
+    "line": 102,
+    "message": "store.go:102-107 \u2014 A process killed between `CreateTemp` and `Rename` leaves `.shortener-*.tmp` files behind. They are never cleaned up. The README says they are \"not used\", but not that they accumulate. \u2014 Remove stale `.shortener-*.tmp` files in `openStore`.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Cleaning stale temp files after a kill is an unrequested feature; they never affect startup (store.go:102)."
+  },
+  {
+    "id": "A13",
+    "source": "agent",
+    "rule": "Tests",
+    "file": "http_test.go",
+    "line": 243,
+    "message": "http_test.go:243-252 \u2014 The rollback test points `s.path` at a missing directory. The failure happens at `os.Open(dir)`, before any temp file is created. The failures after that point are never tested: write, sync, rename, and the `committed=true` directory-sync case. The `committed` branch logic in `Create`, `Visit` and `Delete` therefore has no test. \u2014 Inject a failure, for example by making a file's directory read-only, or by adding a small `syncDir`/`rename` hook. Assert the in-memory state for both the committed and uncommitted outcomes.",
+    "severity": "medium",
+    "verdict": "rejected",
+    "note": "Missing test coverage of post-temp-file failure paths (http_test.go:243)."
+  },
+  {
+    "id": "A14",
+    "source": "agent",
+    "rule": "Tests",
+    "file": "store.go",
+    "line": 181,
+    "message": "store.go:181 \u2014 The counter-exhausted path has no test. \u2014 Add one that sets `Visits` to `MaxUint64`.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Missing test for an unreachable path (store.go:181)."
+  },
+  {
+    "id": "A15",
+    "source": "agent",
+    "rule": "Tests",
+    "file": "persistence_test.go",
+    "line": 14,
+    "message": "persistence_test.go:14-55 \u2014 The atomic-replacement test can only fail if its reader happens to hit a window of partial data. It also never checks that temp files are removed after a save or a failed save. \u2014 Add an assertion that the directory contains only data.json after the operations.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Weak but not unfailable test: it asserts the file is always readable and valid JSON (persistence_test.go:26-35)."
+  },
+  {
+    "id": "A16",
+    "source": "agent",
+    "rule": "Tests",
+    "file": "main.go",
+    "line": 15,
+    "message": "main.go:15-57 \u2014 There is no test of graceful shutdown, or of the listen-failure path that releases the goroutine. Only the missing-token exit is tested (persistence_test.go:91). \u2014 Add a test that runs the server on an in-use port and checks that `run()` returns an error instead of hanging.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Missing tests for graceful shutdown, an unrequested feature (main.go:15-57)."
+  },
+  {
+    "id": "A17",
+    "source": "agent",
+    "rule": "Tests",
+    "file": "http_test.go",
+    "line": 128,
+    "message": "http_test.go:128, 175 \u2014 Layout like `struct { method, path string; status int }` and the misaligned struct fields suggests gofmt wasn't run on the test file. This is only a cleanliness point.",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Formatting/style only (http_test.go:128)."
+  },
+  {
+    "id": "A18",
+    "source": "agent",
+    "rule": "Clarity",
+    "file": "http.go",
+    "line": 96,
+    "message": "http.go:96 \u2014 This single `case` condition trims the same prefix twice, checks the length, and checks for a slash. In plain terms, it means \"the path is `/api/links/<id>` and `<id>` is non-empty and has no slash\". \u2014 Compute `id, ok := strings.CutPrefix(path, \"/api/links/\")`",
+    "severity": "low",
+    "verdict": "rejected",
+    "note": "Clarity of the path-matching condition (http.go:96)."
   }
 ]
