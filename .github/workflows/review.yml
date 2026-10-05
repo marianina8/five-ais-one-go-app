@@ -1,0 +1,132 @@
+# Runs the episode 1 review agent (github.com/marianina8/pr-review-agent, unchanged) on every
+# contestant's project in results/, and publishes the reviews to a review-results/ branch.
+#
+# The agent sees only the project's code: a copy of results/<model>/<run>/workspace, with no
+# transcript, stats or model name. Its findings count only after a person confirms them.
+#
+# Start it from the Actions tab (Run workflow), or by pushing to the review-run branch.
+name: Review
+
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: "Model behind the review agent (Anthropic API)"
+        default: claude-sonnet-5-5
+      max_steps:
+        description: "Model calls per review"
+        default: "20"
+  push:
+    branches: [review-run]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: review-${{ github.ref }}
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          sparse-checkout: results
+      - id: plan
+        run: |
+          matrix=$(for ws in results/*/*/workspace; do
+                     run=$(basename "$(dirname "$ws")"); model=$(basename "$(dirname "$(dirname "$ws")")")
+                     jq -nc --arg model "$model" --arg run "$run" '{model: $model, run: $run}'
+                   done | jq -sc '{include: .}')
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+          echo "$matrix" | jq -r '"Reviewing \(.include | length) projects"'
+
+  review:
+    name: review ${{ matrix.model }} ${{ matrix.run }}
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      max-parallel: 5   # stay well inside the API's rate limits
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          sparse-checkout: results/${{ matrix.model }}/${{ matrix.run }}/workspace
+
+      - uses: actions/checkout@v7
+        with:
+          repository: marianina8/pr-review-agent
+          path: .review-agent
+          persist-credentials: false
+
+      - uses: actions/setup-go@v7
+        with:
+          go-version: "1.24"
+          cache-dependency-path: .review-agent/go.sum
+
+      - name: Build the review agent
+        run: (cd .review-agent && go build -o "$RUNNER_TEMP/pr-review-agent" .)
+
+      # The agent can only see inside --repo, so it gets a copy of this one project and nothing else.
+      - name: Review
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          MODEL: ${{ inputs.model || 'claude-sonnet-5-5' }}
+          MAX_STEPS: ${{ inputs.max_steps || '20' }}
+          PROJECT: results/${{ matrix.model }}/${{ matrix.run }}/workspace
+        run: |
+          project="$RUNNER_TEMP/project" out="$RUNNER_TEMP/review"
+          mkdir -p "$out"
+          cp -R "$PROJECT" "$project"
+          set +e
+          "$RUNNER_TEMP/pr-review-agent" --model claude --model-name "$MODEL" --mode code --repo "$project" \
+            --max-steps "$MAX_STEPS" --stats "$out/review-stats.json" > "$out/review.md" 2> "$out/review-log.txt"
+          status=$?
+          set -e
+          cat "$out/review.md" >> "$GITHUB_STEP_SUMMARY"
+          exit $status
+
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: review__${{ matrix.model }}__${{ matrix.run }}
+          path: ${{ runner.temp }}/review
+
+  publish:
+    needs: review
+    if: always() && needs.review.result != 'skipped'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # push the review branch; this job runs no contestant code
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/download-artifact@v7
+        with:
+          pattern: review__*
+          path: ${{ runner.temp }}/reviews
+
+      - name: Commit the reviews to review-results/${{ github.run_number }}
+        run: |
+          for dir in "$RUNNER_TEMP"/reviews/review__*; do
+            name=${dir##*/review__}
+            cp "$dir"/* "results/${name%__*}/${name##*__}/"
+          done
+          git config user.name "github-actions[bot]"
+          git config user.email "41898299+github-actions[bot]@users.noreply.github.com"
+          branch="review-results/${{ github.run_number }}"
+          git checkout -b "$branch"
+          git add results
+          git commit --quiet -m "Review agent findings from run ${{ github.run_id }}"
+          git push origin "$branch"
