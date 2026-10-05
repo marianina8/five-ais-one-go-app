@@ -3,10 +3,12 @@
 //	score measure --project runs/<model>/<run>/workspace --out results/<model>/<run>
 //	score blind   --runs runs --results results --review blind-review
 //	score tally   --results results
+//	score import-review --run results/<model>/<run>
 //
 // measure checks everything a machine can (hidden tests, race detector, linters, coverage)
 // and writes measure.json, plus findings.json for a person's verdicts the first time.
 // blind copies each project to a random letter for the blind review.
+// import-review adds the review agent's findings (review.md) to findings.json.
 // tally adds the human parts (confirmed findings, blind review) and writes the scorecard.
 package main
 
@@ -30,6 +32,8 @@ func main() {
 		err = blindCommand(args)
 	case "tally":
 		err = tallyCommand(args)
+	case "import-review":
+		err = importReviewCommand(args)
 	default:
 		usage()
 	}
@@ -79,6 +83,20 @@ func blindCommand(args []string) error {
 	return blind(*resultsDir, *runsDir, *reviewDir)
 }
 
+func importReviewCommand(args []string) error {
+	flags := flag.NewFlagSet("import-review", flag.ExitOnError)
+	runDir := flags.String("run", "", "a run's results folder with review.md and findings.json, e.g. results/<model>/<run>")
+	_ = flags.Parse(args)
+	if *runDir == "" {
+		return fmt.Errorf("import-review needs --run")
+	}
+	count, err := importReview(*runDir)
+	if err == nil {
+		logf("%s: added %d agent finding(s), each pending a verdict", *runDir, count)
+	}
+	return err
+}
+
 func tallyCommand(args []string) error {
 	flags := flag.NewFlagSet("tally", flag.ExitOnError)
 	resultsDir := flags.String("results", "results", "results folder")
@@ -106,6 +124,6 @@ func seedFindings(outDir string) error {
 }
 
 func usage() {
-	fmt.Fprintln(os.Stderr, "usage: score measure|blind|tally [flags]   (score <command> -h for flags)")
+	fmt.Fprintln(os.Stderr, "usage: score measure|blind|import-review|tally [flags]   (score <command> -h for flags)")
 	os.Exit(2)
 }

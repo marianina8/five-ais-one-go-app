@@ -16,6 +16,9 @@ on:
       max_steps:
         description: "Model calls per review"
         default: "20"
+      only:
+        description: "Review only projects whose <model>/<run> contains this text, e.g. gpt-6-1-sol (empty = all)"
+        default: ""
   push:
     branches: [review-run]
 
@@ -41,11 +44,15 @@ jobs:
           persist-credentials: false
           sparse-checkout: results
       - id: plan
+        env:
+          ONLY: ${{ inputs.only }}
         run: |
           matrix=$(for ws in results/*/*/workspace; do
                      run=$(basename "$(dirname "$ws")"); model=$(basename "$(dirname "$(dirname "$ws")")")
+                     [[ "$model/$run" == *"$ONLY"* ]] || continue
                      jq -nc --arg model "$model" --arg run "$run" '{model: $model, run: $run}'
                    done | jq -sc '{include: .}')
+          [ "$(echo "$matrix" | jq '.include | length')" -gt 0 ] || { echo "::error::no projects match '$ONLY'"; exit 1; }
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
           echo "$matrix" | jq -r '"Reviewing \(.include | length) projects"'
 
