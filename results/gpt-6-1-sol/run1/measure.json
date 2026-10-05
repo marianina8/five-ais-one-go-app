@@ -1,0 +1,175 @@
+{
+  "label": "gpt-6-1-sol/run1",
+  "measured_at": "2026-10-05T01:15:18.666038799Z",
+  "size": {
+    "go_files": 2,
+    "code_lines": 148,
+    "test_lines": 51,
+    "test_files": 1,
+    "test_funcs": 4
+  },
+  "build": {
+    "ok": true
+  },
+  "hidden": {
+    "tests": {
+      "TestAdmin_Delete": "pass",
+      "TestAdmin_DeleteNeedsToken": "pass",
+      "TestAdmin_DeleteUnknown404": "pass",
+      "TestAdmin_ListEmptyIsArray": "pass",
+      "TestAdmin_ListNeedsToken/basic_scheme": "pass",
+      "TestAdmin_ListNeedsToken/no_bearer": "pass",
+      "TestAdmin_ListNeedsToken/no_header": "pass",
+      "TestAdmin_ListNeedsToken/token_longer": "pass",
+      "TestAdmin_ListNeedsToken/token_prefix": "pass",
+      "TestAdmin_ListNeedsToken/wrong_token": "pass",
+      "TestAdmin_ListOldestFirst": "pass",
+      "TestAdmin_StartWithoutTokenFails": "pass",
+      "TestConcurrency_MixedLoadNoServerErrors": "pass",
+      "TestConcurrency_ParallelCreates": "pass",
+      "TestConcurrency_ParallelVisitsExact": "pass",
+      "TestConcurrency_SameAliasOnceOnly": "pass",
+      "TestCore_CreateGeneratedCode": "pass",
+      "TestCore_CreateWithAlias": "pass",
+      "TestCore_GeneratedCodesUnique": "pass",
+      "TestCore_Redirect": "pass",
+      "TestCore_RedirectAlias": "pass",
+      "TestCore_RedirectUnknown404": "pass",
+      "TestCore_VisitsCounted": "pass",
+      "TestErrors_BodyTooLarge413": "pass",
+      "TestErrors_JSONErrorFormat": "pass",
+      "TestErrors_MethodNotAllowed": "pass",
+      "TestPersistence_DefaultDataFile": "pass",
+      "TestPersistence_DeleteSurvivesRestart": "pass",
+      "TestPersistence_KillAndRecoverWithoutRestartGrace": "pass",
+      "TestPersistence_KillDuringWrites": "pass",
+      "TestPersistence_SurvivesRestart": "pass",
+      "TestPersistence_UsesDataFlag": "pass",
+      "TestValidation_BadAliases/non_ascii": "pass",
+      "TestValidation_BadAliases/reserved_api": "pass",
+      "TestValidation_BadAliases/slash": "pass",
+      "TestValidation_BadAliases/space": "pass",
+      "TestValidation_BadAliases/too_long_33": "pass",
+      "TestValidation_BadAliases/too_short": "pass",
+      "TestValidation_BadURLs/data_url": "pass",
+      "TestValidation_BadURLs/empty": "pass",
+      "TestValidation_BadURLs/ftp_scheme": "pass",
+      "TestValidation_BadURLs/header_injection": "pass",
+      "TestValidation_BadURLs/javascript": "pass",
+      "TestValidation_BadURLs/no_host": "pass",
+      "TestValidation_BadURLs/not_a_url": "pass",
+      "TestValidation_BadURLs/port_only": "pass",
+      "TestValidation_BadURLs/relative": "pass",
+      "TestValidation_BadURLs/too_long_2049": "pass",
+      "TestValidation_DuplicateAlias409": "pass",
+      "TestValidation_EdgeAliasesAccepted": "pass",
+      "TestValidation_MalformedJSON/trailing_data": "pass",
+      "TestValidation_MalformedJSON/truncated": "pass",
+      "TestValidation_MaxLengthURLAccepted": "pass",
+      "TestValidation_MissingURL": "pass",
+      "TestValidation_UnknownField": "pass"
+    },
+    "categories": {
+      "Admin": [
+        12,
+        12
+      ],
+      "Concurrency": [
+        4,
+        4
+      ],
+      "Core": [
+        7,
+        7
+      ],
+      "Errors": [
+        3,
+        3
+      ],
+      "Persistence": [
+        6,
+        6
+      ],
+      "Validation": [
+        23,
+        23
+      ]
+    },
+    "points": {
+      "Admin": 7,
+      "Concurrency": 7,
+      "Core": 8,
+      "Errors": 3,
+      "Persistence": 7,
+      "Validation": 8
+    },
+    "total": 40,
+    "failures": {}
+  },
+  "style": {
+    "measured": true,
+    "issues": 2,
+    "issues_by_linter": {
+      "gofmt": 2
+    },
+    "max_complexity": 15,
+    "most_complex_func": "`(*Server).create`",
+    "score": 7,
+    "details": [
+      "main.go:4 File is not properly formatted (gofmt)",
+      "main_test.go:4 File is not properly formatted (gofmt)"
+    ]
+  },
+  "own_tests": {
+    "test_files": 1,
+    "test_funcs": 4,
+    "passed": true,
+    "coverage": 80.2,
+    "points": 10,
+    "output": "ok  \tshortener\t0.052s\tcoverage: 80.2% of statements"
+  },
+  "findings": [
+    {
+      "id": "T01",
+      "source": "errcheck",
+      "file": "main.go",
+      "line": 58,
+      "message": "Error return value of `os.Remove` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T02",
+      "source": "errcheck",
+      "file": "main.go",
+      "line": 59,
+      "message": "Error return value of `f.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T03",
+      "source": "errcheck",
+      "file": "main.go",
+      "line": 60,
+      "message": "Error return value of `f.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T04",
+      "source": "errcheck",
+      "file": "main.go",
+      "line": 65,
+      "message": "Error return value of `d.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T05",
+      "source": "gosec",
+      "rule": "G304",
+      "file": "main.go",
+      "line": 34,
+      "message": "G304: Potential file inclusion via variable",
+      "verdict": "pending"
+    }
+  ],
+  "elapsed_ns": 19026548316
+}

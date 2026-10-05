@@ -1,0 +1,28 @@
+{
+  "label": "deepseek-v3-2/run1",
+  "provider": "bedrock",
+  "model": "deepseek.v3.2",
+  "started_at": "2026-10-05T01:12:00.454374757Z",
+  "max_steps": 3,
+  "minutes": 5,
+  "max_output_tokens": 8192,
+  "model_calls": 3,
+  "tool_calls": 2,
+  "tool_calls_by_name": {
+    "list_files": 1,
+    "write_file": 1
+  },
+  "input_tokens": 5479,
+  "output_tokens": 2871,
+  "cached_tokens": 0,
+  "price": {
+    "input": 0.62,
+    "output": 1.85,
+    "max_output_tokens": 8192,
+    "source": "Amazon Bedrock pricing, us-west-2"
+  },
+  "cost_usd": 0.0087,
+  "seconds": 92,
+  "finished": false,
+  "stopped_by": "steps"
+}

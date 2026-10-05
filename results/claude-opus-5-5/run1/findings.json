@@ -1,0 +1,76 @@
+[
+  {
+    "id": "T01",
+    "source": "errcheck",
+    "file": "server.go",
+    "line": 25,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T02",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 46,
+    "message": "Error return value of `json.Unmarshal` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T03",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 59,
+    "message": "Error return value of `json.Unmarshal` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T04",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 82,
+    "message": "Error return value of `f.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T05",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 83,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T06",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 100,
+    "message": "Error return value of `d.Sync` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T07",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 101,
+    "message": "Error return value of `d.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T08",
+    "source": "gosec",
+    "rule": "G304",
+    "file": "store.go",
+    "line": 37,
+    "message": "G304: Potential file inclusion via variable",
+    "verdict": "pending"
+  },
+  {
+    "id": "T09",
+    "source": "gosec",
+    "rule": "G304",
+    "file": "store.go",
+    "line": 99,
+    "message": "G304: Potential file inclusion via variable",
+    "verdict": "pending"
+  }
+]

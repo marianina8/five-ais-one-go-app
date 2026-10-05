@@ -1,0 +1,43 @@
+[
+  {
+    "id": "T01",
+    "source": "errcheck",
+    "file": "main.go",
+    "line": 58,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T02",
+    "source": "errcheck",
+    "file": "main.go",
+    "line": 59,
+    "message": "Error return value of `f.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T03",
+    "source": "errcheck",
+    "file": "main.go",
+    "line": 60,
+    "message": "Error return value of `f.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T04",
+    "source": "errcheck",
+    "file": "main.go",
+    "line": 65,
+    "message": "Error return value of `d.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T05",
+    "source": "gosec",
+    "rule": "G304",
+    "file": "main.go",
+    "line": 34,
+    "message": "G304: Potential file inclusion via variable",
+    "verdict": "pending"
+  }
+]
