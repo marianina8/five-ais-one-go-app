@@ -1,0 +1,75 @@
+[
+  {
+    "Model": "gemini-3-1-pro",
+    "Runs": [
+      {
+        "Model": "gemini-3-1-pro",
+        "Run": "run1",
+        "Built": true,
+        "Works": 39.3,
+        "Bugs": 20,
+        "OwnTests": 9.6,
+        "Merge": 0,
+        "Reviewed": false,
+        "StyleScore": 5,
+        "StyleMeasured": true,
+        "Confirmed": null,
+        "Pending": 17,
+        "Stats": {
+          "model_calls": 40,
+          "input_tokens": 607349,
+          "output_tokens": 36705,
+          "cost_usd": 1.6552,
+          "seconds": 346,
+          "finished": true,
+          "stopped_by": "done",
+          "error": ""
+        },
+        "HiddenPassed": 53,
+        "HiddenTotal": 55,
+        "Coverage": 76.8,
+        "OwnTestsPassed": true
+      },
+      {
+        "Model": "gemini-3-1-pro",
+        "Run": "run2",
+        "Built": true,
+        "Works": 39.3,
+        "Bugs": 20,
+        "OwnTests": 7.7,
+        "Merge": 0,
+        "Reviewed": false,
+        "StyleScore": 10,
+        "StyleMeasured": true,
+        "Confirmed": null,
+        "Pending": 22,
+        "Stats": {
+          "model_calls": 32,
+          "input_tokens": 495377,
+          "output_tokens": 26124,
+          "cost_usd": 1.3042,
+          "seconds": 246,
+          "finished": true,
+          "stopped_by": "done",
+          "error": ""
+        },
+        "HiddenPassed": 53,
+        "HiddenTotal": 55,
+        "Coverage": 61.9,
+        "OwnTestsPassed": true
+      }
+    ],
+    "Works": 39.3,
+    "Bugs": 20,
+    "Readable": 10,
+    "OwnTests": 8.65,
+    "Merge": 0,
+    "Total": 77.95,
+    "StyleScore": 7.5,
+    "AnyBuilt": true,
+    "ConfirmedHigh": 0,
+    "CostUSD": 1.4797,
+    "Seconds": 296,
+    "ModelCalls": 36
+  }
+]

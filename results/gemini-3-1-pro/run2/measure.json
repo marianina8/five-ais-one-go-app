@@ -1,0 +1,318 @@
+{
+  "label": "gemini-3-1-pro/run2",
+  "measured_at": "2026-10-05T07:24:35.054284256Z",
+  "size": {
+    "go_files": 7,
+    "code_lines": 413,
+    "test_lines": 201,
+    "test_files": 4,
+    "test_funcs": 3
+  },
+  "build": {
+    "ok": true
+  },
+  "hidden": {
+    "tests": {
+      "TestAdmin_Delete": "pass",
+      "TestAdmin_DeleteNeedsToken": "pass",
+      "TestAdmin_DeleteUnknown404": "pass",
+      "TestAdmin_ListEmptyIsArray": "pass",
+      "TestAdmin_ListNeedsToken/basic_scheme": "pass",
+      "TestAdmin_ListNeedsToken/no_bearer": "pass",
+      "TestAdmin_ListNeedsToken/no_header": "pass",
+      "TestAdmin_ListNeedsToken/token_longer": "pass",
+      "TestAdmin_ListNeedsToken/token_prefix": "pass",
+      "TestAdmin_ListNeedsToken/wrong_token": "pass",
+      "TestAdmin_ListOldestFirst": "pass",
+      "TestAdmin_StartWithoutTokenFails": "pass",
+      "TestConcurrency_MixedLoadNoServerErrors": "pass",
+      "TestConcurrency_ParallelCreates": "pass",
+      "TestConcurrency_ParallelVisitsExact": "pass",
+      "TestConcurrency_SameAliasOnceOnly": "pass",
+      "TestCore_CreateGeneratedCode": "pass",
+      "TestCore_CreateWithAlias": "pass",
+      "TestCore_GeneratedCodesUnique": "pass",
+      "TestCore_Redirect": "pass",
+      "TestCore_RedirectAlias": "pass",
+      "TestCore_RedirectUnknown404": "pass",
+      "TestCore_VisitsCounted": "pass",
+      "TestErrors_BodyTooLarge413": "pass",
+      "TestErrors_JSONErrorFormat": "pass",
+      "TestErrors_MethodNotAllowed": "pass",
+      "TestPersistence_DefaultDataFile": "pass",
+      "TestPersistence_DeleteSurvivesRestart": "pass",
+      "TestPersistence_KillAndRecoverWithoutRestartGrace": "pass",
+      "TestPersistence_KillDuringWrites": "pass",
+      "TestPersistence_SurvivesRestart": "pass",
+      "TestPersistence_UsesDataFlag": "pass",
+      "TestValidation_BadAliases/non_ascii": "pass",
+      "TestValidation_BadAliases/reserved_api": "pass",
+      "TestValidation_BadAliases/slash": "pass",
+      "TestValidation_BadAliases/space": "pass",
+      "TestValidation_BadAliases/too_long_33": "pass",
+      "TestValidation_BadAliases/too_short": "pass",
+      "TestValidation_BadURLs/data_url": "pass",
+      "TestValidation_BadURLs/empty": "pass",
+      "TestValidation_BadURLs/ftp_scheme": "pass",
+      "TestValidation_BadURLs/header_injection": "pass",
+      "TestValidation_BadURLs/javascript": "pass",
+      "TestValidation_BadURLs/no_host": "pass",
+      "TestValidation_BadURLs/not_a_url": "pass",
+      "TestValidation_BadURLs/port_only": "fail",
+      "TestValidation_BadURLs/relative": "pass",
+      "TestValidation_BadURLs/too_long_2049": "pass",
+      "TestValidation_DuplicateAlias409": "pass",
+      "TestValidation_EdgeAliasesAccepted": "pass",
+      "TestValidation_MalformedJSON/trailing_data": "fail",
+      "TestValidation_MalformedJSON/truncated": "pass",
+      "TestValidation_MaxLengthURLAccepted": "pass",
+      "TestValidation_MissingURL": "pass",
+      "TestValidation_UnknownField": "pass"
+    },
+    "categories": {
+      "Admin": [
+        12,
+        12
+      ],
+      "Concurrency": [
+        4,
+        4
+      ],
+      "Core": [
+        7,
+        7
+      ],
+      "Errors": [
+        3,
+        3
+      ],
+      "Persistence": [
+        6,
+        6
+      ],
+      "Validation": [
+        21,
+        23
+      ]
+    },
+    "points": {
+      "Admin": 7,
+      "Concurrency": 7,
+      "Core": 8,
+      "Errors": 3,
+      "Persistence": 7,
+      "Validation": 7.3
+    },
+    "total": 39.3,
+    "failures": {
+      "TestValidation_BadURLs/port_only": "acceptance_test.go:125: url \"http://:80/x\": want 400, got 201: {\"code\":\"44FdUv3\",\"url\":\"http://:80/x\",\"created_at\":\"2026-10-05T07:24:36.554830634Z\",\"visits\":0}",
+      "TestValidation_MalformedJSON/trailing_data": "acceptance_test.go:187: malformed JSON: trailing_data: want 400, got 201: {\"code\":\"1EEkKUC\",\"url\":\"https://example.com/trailing\",\"created_at\":\"2026-10-05T07:24:37.183039933Z\",\"visits\":0}"
+    }
+  },
+  "style": {
+    "measured": true,
+    "issues": 3,
+    "issues_by_linter": {
+      "gofmt": 3
+    },
+    "max_complexity": 17,
+    "most_complex_func": "`(*Server).handleCreateLink`",
+    "score": 10,
+    "details": [
+      "mux_intercept_test.go:1 File is not properly formatted (gofmt)",
+      "mux_test.go:1 File is not properly formatted (gofmt)",
+      "store.go:144 File is not properly formatted (gofmt)"
+    ]
+  },
+  "own_tests": {
+    "test_files": 4,
+    "test_funcs": 3,
+    "passed": true,
+    "coverage": 61.9,
+    "points": 7.7,
+    "output": "ok  \tshortener\t0.060s\tcoverage: 61.9% of statements"
+  },
+  "findings": [
+    {
+      "id": "T01",
+      "source": "race",
+      "rule": "DATA RACE",
+      "file": "store.go",
+      "line": 116,
+      "message": "WARNING: DATA RACE\nWrite at 0x00c00006a4f8 by goroutine 51:\n  main.(*Store).Visit()\n      /tmp/score-2354122949/code/store.go:116 +0x16b\n  main.(*Server).handleFollowLink()\n      /tmp/score-2354122949/code/server.go:117 +0x24b\n  main.(*Server).handleFollowLink-fm()\n      \u003cautogenerated\u003e:1 +0x51\n  net/http.HandlerFunc.ServeHTTP()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:2294 +0x47\n  net/http.(*ServeMux).ServeHTTP()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:2822 +0x23e\n  main.main.wrapInterceptor.func2()\n      /tmp/score-2354122949/code/server.go:198 +0xe2\n  net/http.HandlerFunc.ServeHTTP()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:2294 +0x47\n  net/http.serverHandler.ServeHTTP()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:3301 +0x2a1\n  net/http.(*conn).serve()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:2102 +0x1304\n  net/http.(*Server).Serve.gowrap3()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:3454 +0x4f\n\nPrevious read at 0x00c00006a4f8 by goroutine 43:\n  reflect.Value.Int()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/reflect/value.go:1455 +0x1b3\n  encoding/json.intEncoder()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/encoding/json/encode.go:525 +0x185\n  encoding/json.structEncoder.encode()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/encoding/json/encode.go:727 +0x3c7\n  encoding/json.structEncoder.encode-fm()\n      \u003cautogenerated\u003e:1 +0xe4\n …[trimmed]",
+      "verdict": "pending"
+    },
+    {
+      "id": "T02",
+      "source": "errcheck",
+      "file": "server.go",
+      "line": 21,
+      "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T03",
+      "source": "errcheck",
+      "file": "server.go",
+      "line": 38,
+      "message": "Error return value of `rand.Read` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T04",
+      "source": "errcheck",
+      "file": "server.go",
+      "line": 188,
+      "message": "Error return value of `w.ResponseWriter.Write` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T05",
+      "source": "errcheck",
+      "file": "server.go",
+      "line": 189,
+      "message": "Error return value of `w.ResponseWriter.Write` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T06",
+      "source": "errcheck",
+      "file": "server_test.go",
+      "line": 18,
+      "message": "Error return value of `tmpFile.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T07",
+      "source": "errcheck",
+      "file": "server_test.go",
+      "line": 19,
+      "message": "Error return value of `os.Remove` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T08",
+      "source": "errcheck",
+      "file": "server_test.go",
+      "line": 57,
+      "message": "Error return value of `(*encoding/json.Decoder).Decode` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T09",
+      "source": "errcheck",
+      "file": "server_test.go",
+      "line": 58,
+      "message": "Error return value of `resp.Body.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T10",
+      "source": "errcheck",
+      "file": "server_test.go",
+      "line": 76,
+      "message": "Error return value of `resp.Body.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T11",
+      "source": "errcheck",
+      "file": "server_test.go",
+      "line": 90,
+      "message": "Error return value of `(*encoding/json.Decoder).Decode` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T12",
+      "source": "errcheck",
+      "file": "server_test.go",
+      "line": 91,
+      "message": "Error return value of `resp.Body.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T13",
+      "source": "errcheck",
+      "file": "server_test.go",
+      "line": 117,
+      "message": "Error return value of `resp.Body.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T14",
+      "source": "errcheck",
+      "file": "server_test.go",
+      "line": 133,
+      "message": "Error return value of `(*encoding/json.Decoder).Decode` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T15",
+      "source": "errcheck",
+      "file": "server_test.go",
+      "line": 141,
+      "message": "Error return value of `tmpFile.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T16",
+      "source": "errcheck",
+      "file": "server_test.go",
+      "line": 142,
+      "message": "Error return value of `os.Remove` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T17",
+      "source": "errcheck",
+      "file": "server_test.go",
+      "line": 153,
+      "message": "Error return value of `store.Visit` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T18",
+      "source": "errcheck",
+      "file": "store.go",
+      "line": 66,
+      "message": "Error return value of `f.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T19",
+      "source": "errcheck",
+      "file": "store.go",
+      "line": 70,
+      "message": "Error return value of `f.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T20",
+      "source": "gosec",
+      "rule": "G114",
+      "file": "main.go",
+      "line": 39,
+      "message": "G114: Use of net/http serve function that has no support for setting timeouts",
+      "verdict": "pending"
+    },
+    {
+      "id": "T21",
+      "source": "gosec",
+      "rule": "G304",
+      "file": "store.go",
+      "line": 34,
+      "message": "G304: Potential file inclusion via variable",
+      "verdict": "pending"
+    },
+    {
+      "id": "T22",
+      "source": "gosec",
+      "rule": "G304",
+      "file": "store.go",
+      "line": 61,
+      "message": "G304: Potential file inclusion via variable",
+      "verdict": "pending"
+    }
+  ],
+  "elapsed_ns": 21947889691
+}
