@@ -1,0 +1,79 @@
+[
+  {
+    "id": "T01",
+    "source": "errcheck",
+    "file": "handler_test.go",
+    "line": 329,
+    "message": "Error return value of `os.Unsetenv` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T02",
+    "source": "errcheck",
+    "file": "handler_test.go",
+    "line": 330,
+    "message": "Error return value of `os.Setenv` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T03",
+    "source": "errcheck",
+    "file": "main.go",
+    "line": 84,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T04",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 304,
+    "message": "Error return value of `store.IncrementVisits` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T05",
+    "source": "gosec",
+    "rule": "G114",
+    "file": "main.go",
+    "line": 30,
+    "message": "G114: Use of net/http serve function that has no support for setting timeouts",
+    "verdict": "pending"
+  },
+  {
+    "id": "T06",
+    "source": "gosec",
+    "rule": "G306",
+    "file": "store.go",
+    "line": 81,
+    "message": "G306: Expect WriteFile permissions to be 0600 or less",
+    "verdict": "pending"
+  },
+  {
+    "id": "T07",
+    "source": "gosec",
+    "rule": "G306",
+    "file": "store.go",
+    "line": 107,
+    "message": "G306: Expect WriteFile permissions to be 0600 or less",
+    "verdict": "pending"
+  },
+  {
+    "id": "T08",
+    "source": "gosec",
+    "rule": "G404",
+    "file": "store.go",
+    "line": 289,
+    "message": "G404: Use of weak random number generator (math/rand or math/rand/v2 instead of crypto/rand)",
+    "verdict": "pending"
+  },
+  {
+    "id": "T09",
+    "source": "staticcheck",
+    "rule": "SA1019",
+    "file": "store.go",
+    "line": 298,
+    "message": "SA1019: rand.Seed has been deprecated since Go 1.20 and an alternative has been available since Go 1.0: As of Go 1.20 there is no reason to call Seed with a random value. Programs that call Seed with a known value to get a specific sequence of results should use New(NewSource(seed)) to obtain a local random generator.",
+    "verdict": "pending"
+  }
+]

@@ -1,0 +1,133 @@
+{
+  "label": "gemini-3-1-pro/run2",
+  "measured_at": "2026-10-05T01:45:04.085001923Z",
+  "size": {
+    "go_files": 0,
+    "code_lines": 0,
+    "test_lines": 0,
+    "test_files": 0,
+    "test_funcs": 0
+  },
+  "build": {
+    "ok": false,
+    "output": "go: go.mod file not found in current directory or any parent directory; see 'go help modules'"
+  },
+  "hidden": {
+    "tests": {
+      "TestAdmin_Delete": "fail",
+      "TestAdmin_DeleteNeedsToken": "fail",
+      "TestAdmin_DeleteUnknown404": "fail",
+      "TestAdmin_ListEmptyIsArray": "fail",
+      "TestAdmin_ListNeedsToken/basic_scheme": "fail",
+      "TestAdmin_ListNeedsToken/no_bearer": "fail",
+      "TestAdmin_ListNeedsToken/no_header": "fail",
+      "TestAdmin_ListNeedsToken/token_longer": "fail",
+      "TestAdmin_ListNeedsToken/token_prefix": "fail",
+      "TestAdmin_ListNeedsToken/wrong_token": "fail",
+      "TestAdmin_ListOldestFirst": "fail",
+      "TestAdmin_StartWithoutTokenFails": "fail",
+      "TestConcurrency_MixedLoadNoServerErrors": "fail",
+      "TestConcurrency_ParallelCreates": "fail",
+      "TestConcurrency_ParallelVisitsExact": "fail",
+      "TestConcurrency_SameAliasOnceOnly": "fail",
+      "TestCore_CreateGeneratedCode": "fail",
+      "TestCore_CreateWithAlias": "fail",
+      "TestCore_GeneratedCodesUnique": "fail",
+      "TestCore_Redirect": "fail",
+      "TestCore_RedirectAlias": "fail",
+      "TestCore_RedirectUnknown404": "fail",
+      "TestCore_VisitsCounted": "fail",
+      "TestErrors_BodyTooLarge413": "fail",
+      "TestErrors_JSONErrorFormat": "fail",
+      "TestErrors_MethodNotAllowed": "fail",
+      "TestPersistence_DefaultDataFile": "fail",
+      "TestPersistence_DeleteSurvivesRestart": "fail",
+      "TestPersistence_KillAndRecoverWithoutRestartGrace": "fail",
+      "TestPersistence_KillDuringWrites": "fail",
+      "TestPersistence_SurvivesRestart": "fail",
+      "TestPersistence_UsesDataFlag": "fail",
+      "TestValidation_BadAliases/non_ascii": "fail",
+      "TestValidation_BadAliases/reserved_api": "fail",
+      "TestValidation_BadAliases/slash": "fail",
+      "TestValidation_BadAliases/space": "fail",
+      "TestValidation_BadAliases/too_long_33": "fail",
+      "TestValidation_BadAliases/too_short": "fail",
+      "TestValidation_BadURLs/data_url": "fail",
+      "TestValidation_BadURLs/empty": "fail",
+      "TestValidation_BadURLs/ftp_scheme": "fail",
+      "TestValidation_BadURLs/header_injection": "fail",
+      "TestValidation_BadURLs/javascript": "fail",
+      "TestValidation_BadURLs/no_host": "fail",
+      "TestValidation_BadURLs/not_a_url": "fail",
+      "TestValidation_BadURLs/port_only": "fail",
+      "TestValidation_BadURLs/relative": "fail",
+      "TestValidation_BadURLs/too_long_2049": "fail",
+      "TestValidation_DuplicateAlias409": "fail",
+      "TestValidation_EdgeAliasesAccepted": "fail",
+      "TestValidation_MalformedJSON/trailing_data": "fail",
+      "TestValidation_MalformedJSON/truncated": "fail",
+      "TestValidation_MaxLengthURLAccepted": "fail",
+      "TestValidation_MissingURL": "fail",
+      "TestValidation_UnknownField": "fail"
+    },
+    "categories": {
+      "Admin": [
+        0,
+        12
+      ],
+      "Concurrency": [
+        0,
+        4
+      ],
+      "Core": [
+        0,
+        7
+      ],
+      "Errors": [
+        0,
+        3
+      ],
+      "Persistence": [
+        0,
+        6
+      ],
+      "Validation": [
+        0,
+        23
+      ]
+    },
+    "points": {
+      "Admin": 0,
+      "Concurrency": 0,
+      "Core": 0,
+      "Errors": 0,
+      "Persistence": 0,
+      "Validation": 0
+    },
+    "total": 0,
+    "failures": {
+      "*": "does not build"
+    }
+  },
+  "style": {
+    "measured": false,
+    "issues": 0,
+    "issues_by_linter": null,
+    "max_complexity": 0,
+    "most_complex_func": "",
+    "score": 0,
+    "details": null
+  },
+  "own_tests": {
+    "test_files": 0,
+    "test_funcs": 0,
+    "passed": false,
+    "coverage": 0,
+    "points": 0
+  },
+  "findings": [],
+  "elapsed_ns": 8321050,
+  "scorer_notes": [
+    "does not build: every measured category scores 0"
+  ]
+}

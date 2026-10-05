@@ -1,0 +1,44 @@
+[
+  {
+    "id": "T01",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 101,
+    "message": "Error return value of `dir.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T02",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 107,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T03",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 108,
+    "message": "Error return value of `f.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T04",
+    "source": "gosec",
+    "rule": "G204",
+    "file": "persistence_test.go",
+    "line": 97,
+    "message": "G204: Subprocess launched with a potential tainted input or cmd arguments",
+    "verdict": "pending"
+  },
+  {
+    "id": "T05",
+    "source": "gosec",
+    "rule": "G304",
+    "file": "store.go",
+    "line": 44,
+    "message": "G304: Potential file inclusion via variable",
+    "verdict": "pending"
+  }
+]

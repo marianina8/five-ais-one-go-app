@@ -1,0 +1,114 @@
+[
+  {
+    "id": "T01",
+    "source": "errcheck",
+    "file": "main_test.go",
+    "line": 77,
+    "message": "Error return value of `response.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T02",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 63,
+    "message": "Error return value of `f.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T03",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 127,
+    "message": "Error return value of `dir.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T04",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 132,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T05",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 133,
+    "message": "Error return value of `f.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T06",
+    "source": "gosec",
+    "rule": "G115",
+    "file": "http_test.go",
+    "line": 83,
+    "message": "G115: integer overflow conversion int -\u003e uint64",
+    "verdict": "pending"
+  },
+  {
+    "id": "T07",
+    "source": "gosec",
+    "rule": "G204",
+    "file": "main_test.go",
+    "line": 34,
+    "message": "G204: Subprocess launched with a potential tainted input or cmd arguments",
+    "verdict": "pending"
+  },
+  {
+    "id": "T08",
+    "source": "gosec",
+    "rule": "G304",
+    "file": "store.go",
+    "line": 56,
+    "message": "G304: Potential file inclusion via variable",
+    "verdict": "pending"
+  },
+  {
+    "id": "T09",
+    "source": "gosec",
+    "rule": "G304",
+    "file": "store_test.go",
+    "line": 47,
+    "message": "G304: Potential file inclusion via variable",
+    "verdict": "pending"
+  },
+  {
+    "id": "T10",
+    "source": "gosec",
+    "rule": "G304",
+    "file": "store_test.go",
+    "line": 60,
+    "message": "G304: Potential file inclusion via variable",
+    "verdict": "pending"
+  },
+  {
+    "id": "T11",
+    "source": "gosec",
+    "rule": "G304",
+    "file": "store_test.go",
+    "line": 86,
+    "message": "G304: Potential file inclusion via variable",
+    "verdict": "pending"
+  },
+  {
+    "id": "T12",
+    "source": "gosec",
+    "rule": "G304",
+    "file": "store_test.go",
+    "line": 113,
+    "message": "G304: Potential file inclusion via variable",
+    "verdict": "pending"
+  },
+  {
+    "id": "T13",
+    "source": "staticcheck",
+    "rule": "SA4006",
+    "file": "store_test.go",
+    "line": 15,
+    "message": "SA4006: this value of s is never used",
+    "verdict": "pending"
+  }
+]

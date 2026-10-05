@@ -1,0 +1,141 @@
+[
+  {
+    "id": "T01",
+    "source": "errcheck",
+    "file": "handler.go",
+    "line": 102,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T02",
+    "source": "errcheck",
+    "file": "handler.go",
+    "line": 139,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T03",
+    "source": "errcheck",
+    "file": "handler.go",
+    "line": 187,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T04",
+    "source": "errcheck",
+    "file": "integration_test.go",
+    "line": 19,
+    "message": "Error return value of `os.Setenv` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T05",
+    "source": "errcheck",
+    "file": "integration_test.go",
+    "line": 44,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T06",
+    "source": "errcheck",
+    "file": "integration_test.go",
+    "line": 73,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T07",
+    "source": "errcheck",
+    "file": "integration_test.go",
+    "line": 94,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T08",
+    "source": "errcheck",
+    "file": "integration_test.go",
+    "line": 111,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T09",
+    "source": "errcheck",
+    "file": "integration_test.go",
+    "line": 140,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T10",
+    "source": "errcheck",
+    "file": "integration_test.go",
+    "line": 152,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T11",
+    "source": "errcheck",
+    "file": "integration_test.go",
+    "line": 169,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T12",
+    "source": "errcheck",
+    "file": "integration_test.go",
+    "line": 186,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T13",
+    "source": "errcheck",
+    "file": "integration_test.go",
+    "line": 216,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T14",
+    "source": "errcheck",
+    "file": "integration_test.go",
+    "line": 248,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T15",
+    "source": "gosec",
+    "rule": "G114",
+    "file": "main.go",
+    "line": 28,
+    "message": "G114: Use of net/http serve function that has no support for setting timeouts",
+    "verdict": "pending"
+  },
+  {
+    "id": "T16",
+    "source": "gosec",
+    "rule": "G306",
+    "file": "store.go",
+    "line": 84,
+    "message": "G306: Expect WriteFile permissions to be 0600 or less",
+    "verdict": "pending"
+  },
+  {
+    "id": "T17",
+    "source": "gosec",
+    "rule": "G306",
+    "file": "store_test.go",
+    "line": 233,
+    "message": "G306: Expect WriteFile permissions to be 0600 or less",
+    "verdict": "pending"
+  }
+]
