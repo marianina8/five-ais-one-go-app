@@ -1,0 +1,31 @@
+{
+  "label": "gemini-3-1-pro/run1",
+  "provider": "gemini",
+  "model": "gemini-3.1-pro-preview",
+  "started_at": "2026-10-05T07:16:58.472158095Z",
+  "max_steps": 40,
+  "minutes": 20,
+  "max_output_tokens": 16000,
+  "model_calls": 40,
+  "tool_calls": 39,
+  "tool_calls_by_name": {
+    "go_build": 6,
+    "go_test": 11,
+    "go_vet": 1,
+    "list_files": 1,
+    "write_file": 20
+  },
+  "input_tokens": 607349,
+  "output_tokens": 36705,
+  "cached_tokens": 449519,
+  "price": {
+    "input": 2,
+    "output": 12,
+    "source": "https://ai.google.dev/gemini-api/docs/pricing (prompts up to 200k tokens)"
+  },
+  "cost_usd": 1.6552,
+  "seconds": 346,
+  "finished": true,
+  "stopped_by": "done",
+  "final_text": "\n"
+}

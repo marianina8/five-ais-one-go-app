@@ -1,0 +1,224 @@
+{
+  "label": "deepseek-v3-2/run1",
+  "measured_at": "2026-10-05T01:44:17.859960454Z",
+  "size": {
+    "go_files": 4,
+    "code_lines": 492,
+    "test_lines": 675,
+    "test_files": 2,
+    "test_funcs": 17
+  },
+  "build": {
+    "ok": true
+  },
+  "hidden": {
+    "tests": {
+      "TestAdmin_Delete": "pass",
+      "TestAdmin_DeleteNeedsToken": "pass",
+      "TestAdmin_DeleteUnknown404": "pass",
+      "TestAdmin_ListEmptyIsArray": "pass",
+      "TestAdmin_ListNeedsToken/basic_scheme": "pass",
+      "TestAdmin_ListNeedsToken/no_bearer": "pass",
+      "TestAdmin_ListNeedsToken/no_header": "pass",
+      "TestAdmin_ListNeedsToken/token_longer": "pass",
+      "TestAdmin_ListNeedsToken/token_prefix": "pass",
+      "TestAdmin_ListNeedsToken/wrong_token": "pass",
+      "TestAdmin_ListOldestFirst": "pass",
+      "TestAdmin_StartWithoutTokenFails": "pass",
+      "TestConcurrency_MixedLoadNoServerErrors": "pass",
+      "TestConcurrency_ParallelCreates": "pass",
+      "TestConcurrency_ParallelVisitsExact": "fail",
+      "TestConcurrency_SameAliasOnceOnly": "pass",
+      "TestCore_CreateGeneratedCode": "pass",
+      "TestCore_CreateWithAlias": "pass",
+      "TestCore_GeneratedCodesUnique": "pass",
+      "TestCore_Redirect": "pass",
+      "TestCore_RedirectAlias": "pass",
+      "TestCore_RedirectUnknown404": "pass",
+      "TestCore_VisitsCounted": "pass",
+      "TestErrors_BodyTooLarge413": "fail",
+      "TestErrors_JSONErrorFormat": "fail",
+      "TestErrors_MethodNotAllowed": "fail",
+      "TestPersistence_DefaultDataFile": "pass",
+      "TestPersistence_DeleteSurvivesRestart": "pass",
+      "TestPersistence_KillAndRecoverWithoutRestartGrace": "fail",
+      "TestPersistence_KillDuringWrites": "pass",
+      "TestPersistence_SurvivesRestart": "pass",
+      "TestPersistence_UsesDataFlag": "pass",
+      "TestValidation_BadAliases/non_ascii": "pass",
+      "TestValidation_BadAliases/reserved_api": "pass",
+      "TestValidation_BadAliases/slash": "pass",
+      "TestValidation_BadAliases/space": "pass",
+      "TestValidation_BadAliases/too_long_33": "pass",
+      "TestValidation_BadAliases/too_short": "pass",
+      "TestValidation_BadURLs/data_url": "pass",
+      "TestValidation_BadURLs/empty": "pass",
+      "TestValidation_BadURLs/ftp_scheme": "pass",
+      "TestValidation_BadURLs/header_injection": "pass",
+      "TestValidation_BadURLs/javascript": "pass",
+      "TestValidation_BadURLs/no_host": "pass",
+      "TestValidation_BadURLs/not_a_url": "pass",
+      "TestValidation_BadURLs/port_only": "fail",
+      "TestValidation_BadURLs/relative": "pass",
+      "TestValidation_BadURLs/too_long_2049": "pass",
+      "TestValidation_DuplicateAlias409": "pass",
+      "TestValidation_EdgeAliasesAccepted": "pass",
+      "TestValidation_MalformedJSON/trailing_data": "fail",
+      "TestValidation_MalformedJSON/truncated": "pass",
+      "TestValidation_MaxLengthURLAccepted": "pass",
+      "TestValidation_MissingURL": "pass",
+      "TestValidation_UnknownField": "fail"
+    },
+    "categories": {
+      "Admin": [
+        12,
+        12
+      ],
+      "Concurrency": [
+        3,
+        4
+      ],
+      "Core": [
+        7,
+        7
+      ],
+      "Errors": [
+        0,
+        3
+      ],
+      "Persistence": [
+        5,
+        6
+      ],
+      "Validation": [
+        20,
+        23
+      ]
+    },
+    "points": {
+      "Admin": 7,
+      "Concurrency": 5.3,
+      "Core": 8,
+      "Errors": 0,
+      "Persistence": 5.8,
+      "Validation": 7
+    },
+    "total": 33.1,
+    "failures": {
+      "TestConcurrency_ParallelVisitsExact": "acceptance_test.go:529: visits: want 500, got 40 (lost updates)",
+      "TestErrors_BodyTooLarge413": "acceptance_test.go:337: 2 MiB body: want 413, got 400: {\"error\":\"Invalid JSON\"}",
+      "TestErrors_JSONErrorFormat": "acceptance_test.go:326: wrong method: want 405, got 404: {\"error\":\"Not found\"}",
+      "TestErrors_MethodNotAllowed": "acceptance_test.go:343: PUT /api/links: want 405, got 404: {\"error\":\"Not found\"}",
+      "TestPersistence_KillAndRecoverWithoutRestartGrace": "acceptance_test.go:418: a visit answered with 302 was lost after SIGKILL: visits 0, want 1",
+      "TestValidation_BadURLs/port_only": "acceptance_test.go:125: url \"http://:80/x\": want 400, got 201: {\"code\":\"BQiMVT5\",\"url\":\"http://:80/x\",\"created_at\":\"2026-10-05T01:44:19.172219767Z\",\"visits\":0}",
+      "TestValidation_MalformedJSON/trailing_data": "acceptance_test.go:187: malformed JSON: trailing_data: want 400, got 201: {\"code\":\"O0k81nA\",\"url\":\"https://example.com/trailing\",\"created_at\":\"2026-10-05T01:44:19.960350964Z\",\"visits\":0}",
+      "TestValidation_UnknownField": "acceptance_test.go:195: unknown field: want 400, got 201: {\"code\":\"HXOxxMX\",\"url\":\"https://example.com\",\"created_at\":\"2026-10-05T01:44:20.012831342Z\",\"visits\":0}"
+    }
+  },
+  "style": {
+    "measured": true,
+    "issues": 5,
+    "issues_by_linter": {
+      "gofmt": 4,
+      "unused": 1
+    },
+    "max_complexity": 11,
+    "most_complex_func": "`(*Handler).ServeHTTP`",
+    "score": 6,
+    "details": [
+      "handler_test.go:27 File is not properly formatted (gofmt)",
+      "main.go:106 File is not properly formatted (gofmt)",
+      "store.go:299 File is not properly formatted (gofmt)",
+      "store_test.go:218 File is not properly formatted (gofmt)",
+      "store.go:66 func (*JSONStore).save is unused (unused)"
+    ]
+  },
+  "own_tests": {
+    "test_files": 2,
+    "test_funcs": 17,
+    "passed": true,
+    "coverage": 77.9,
+    "points": 9.7,
+    "output": "ok  \tshortener\t0.197s\tcoverage: 77.9% of statements"
+  },
+  "findings": [
+    {
+      "id": "T01",
+      "source": "errcheck",
+      "file": "handler_test.go",
+      "line": 329,
+      "message": "Error return value of `os.Unsetenv` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T02",
+      "source": "errcheck",
+      "file": "handler_test.go",
+      "line": 330,
+      "message": "Error return value of `os.Setenv` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T03",
+      "source": "errcheck",
+      "file": "main.go",
+      "line": 84,
+      "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T04",
+      "source": "errcheck",
+      "file": "store_test.go",
+      "line": 304,
+      "message": "Error return value of `store.IncrementVisits` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T05",
+      "source": "gosec",
+      "rule": "G114",
+      "file": "main.go",
+      "line": 30,
+      "message": "G114: Use of net/http serve function that has no support for setting timeouts",
+      "verdict": "pending"
+    },
+    {
+      "id": "T06",
+      "source": "gosec",
+      "rule": "G306",
+      "file": "store.go",
+      "line": 81,
+      "message": "G306: Expect WriteFile permissions to be 0600 or less",
+      "verdict": "pending"
+    },
+    {
+      "id": "T07",
+      "source": "gosec",
+      "rule": "G306",
+      "file": "store.go",
+      "line": 107,
+      "message": "G306: Expect WriteFile permissions to be 0600 or less",
+      "verdict": "pending"
+    },
+    {
+      "id": "T08",
+      "source": "gosec",
+      "rule": "G404",
+      "file": "store.go",
+      "line": 289,
+      "message": "G404: Use of weak random number generator (math/rand or math/rand/v2 instead of crypto/rand)",
+      "verdict": "pending"
+    },
+    {
+      "id": "T09",
+      "source": "staticcheck",
+      "rule": "SA1019",
+      "file": "store.go",
+      "line": 298,
+      "message": "SA1019: rand.Seed has been deprecated since Go 1.20 and an alternative has been available since Go 1.0: As of Go 1.20 there is no reason to call Seed with a random value. Programs that call Seed with a known value to get a specific sequence of results should use New(NewSource(seed)) to obtain a local random generator.",
+      "verdict": "pending"
+    }
+  ],
+  "elapsed_ns": 23341919742
+}

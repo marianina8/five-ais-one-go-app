@@ -1,0 +1,85 @@
+[
+  {
+    "id": "T01",
+    "source": "errcheck",
+    "file": "main.go",
+    "line": 28,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T02",
+    "source": "errcheck",
+    "file": "main_test.go",
+    "line": 45,
+    "message": "Error return value of `json.Unmarshal` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T03",
+    "source": "errcheck",
+    "file": "main_test.go",
+    "line": 70,
+    "message": "Error return value of `json.Unmarshal` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T04",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 75,
+    "message": "Error return value of `f.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T05",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 76,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T06",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 93,
+    "message": "Error return value of `d.Sync` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T07",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 94,
+    "message": "Error return value of `d.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T08",
+    "source": "gosec",
+    "rule": "G112",
+    "file": "main.go",
+    "line": 189,
+    "message": "G112: Potential Slowloris Attack because ReadHeaderTimeout is not configured in the http.Server",
+    "verdict": "pending"
+  },
+  {
+    "id": "T09",
+    "source": "gosec",
+    "rule": "G304",
+    "file": "store.go",
+    "line": 33,
+    "message": "G304: Potential file inclusion via variable",
+    "verdict": "pending"
+  },
+  {
+    "id": "T10",
+    "source": "gosec",
+    "rule": "G304",
+    "file": "store.go",
+    "line": 92,
+    "message": "G304: Potential file inclusion via variable",
+    "verdict": "pending"
+  }
+]

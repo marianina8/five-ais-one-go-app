@@ -1,0 +1,93 @@
+[
+  {
+    "id": "T01",
+    "source": "errcheck",
+    "file": "main.go",
+    "line": 28,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T02",
+    "source": "errcheck",
+    "file": "main_test.go",
+    "line": 51,
+    "message": "Error return value of `json.Unmarshal` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T03",
+    "source": "errcheck",
+    "file": "main_test.go",
+    "line": 85,
+    "message": "Error return value of `json.Unmarshal` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T04",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 80,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T05",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 84,
+    "message": "Error return value of `f.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T06",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 88,
+    "message": "Error return value of `f.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T07",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 99,
+    "message": "Error return value of `d.Sync` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T08",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 100,
+    "message": "Error return value of `d.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T09",
+    "source": "gosec",
+    "rule": "G114",
+    "file": "main.go",
+    "line": 194,
+    "message": "G114: Use of net/http serve function that has no support for setting timeouts",
+    "verdict": "pending"
+  },
+  {
+    "id": "T10",
+    "source": "gosec",
+    "rule": "G304",
+    "file": "store.go",
+    "line": 37,
+    "message": "G304: Potential file inclusion via variable",
+    "verdict": "pending"
+  },
+  {
+    "id": "T11",
+    "source": "gosec",
+    "rule": "G304",
+    "file": "store.go",
+    "line": 98,
+    "message": "G304: Potential file inclusion via variable",
+    "verdict": "pending"
+  }
+]

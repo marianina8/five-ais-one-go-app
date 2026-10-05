@@ -1,0 +1,140 @@
+[
+  {
+    "id": "T01",
+    "source": "errcheck",
+    "file": "server.go",
+    "line": 22,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T02",
+    "source": "errcheck",
+    "file": "server.go",
+    "line": 92,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T03",
+    "source": "errcheck",
+    "file": "server.go",
+    "line": 113,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T04",
+    "source": "errcheck",
+    "file": "server.go",
+    "line": 154,
+    "message": "Error return value of `rw.ResponseWriter.Write` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T05",
+    "source": "errcheck",
+    "file": "server.go",
+    "line": 159,
+    "message": "Error return value of `rw.ResponseWriter.Write` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T06",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 32,
+    "message": "Error return value of `(*encoding/json.Decoder).Decode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T07",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 51,
+    "message": "Error return value of `(*encoding/json.Decoder).Decode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T08",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 84,
+    "message": "Error return value of `(*encoding/json.Decoder).Decode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T09",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 113,
+    "message": "Error return value of `(*encoding/json.Decoder).Decode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T10",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 124,
+    "message": "Error return value of `s1.Create` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T11",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 125,
+    "message": "Error return value of `s1.Create` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T12",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 126,
+    "message": "Error return value of `s1.GetAndVisit` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T13",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 66,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T14",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 69,
+    "message": "Error return value of `f.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T15",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 73,
+    "message": "Error return value of `f.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T16",
+    "source": "gosec",
+    "rule": "G114",
+    "file": "main.go",
+    "line": 30,
+    "message": "G114: Use of net/http serve function that has no support for setting timeouts",
+    "verdict": "pending"
+  },
+  {
+    "id": "T17",
+    "source": "gosec",
+    "rule": "G304",
+    "file": "store.go",
+    "line": 35,
+    "message": "G304: Potential file inclusion via variable",
+    "verdict": "pending"
+  }
+]
