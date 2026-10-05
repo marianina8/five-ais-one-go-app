@@ -2,6 +2,8 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
+	"net/http"
 	"net/http/httptest"
 	"path/filepath"
 	"strings"
@@ -9,95 +11,98 @@ import (
 	"testing"
 )
 
-func setup(t *testing.T) (*Server, string) {
-	p := filepath.Join(t.TempDir(), "d.json")
-	st, err := OpenStore(p)
+func do(t *testing.T, h http.Handler, method, path, body string, admin bool) *httptest.ResponseRecorder {
+	t.Helper()
+	req := httptest.NewRequest(method, path, strings.NewReader(body))
+	if admin {
+		req.Header.Set("Authorization", "Bearer secret")
+	}
+	rec := httptest.NewRecorder()
+	h.ServeHTTP(rec, req)
+	return rec
+}
+
+func newSrv(t *testing.T, path string) *Server {
+	st, err := OpenStore(path)
 	if err != nil {
 		t.Fatal(err)
 	}
-	return &Server{store: st, token: "secret"}, p
-}
-
-func do(s *Server, method, path, body string, auth bool) *httptest.ResponseRecorder {
-	r := httptest.NewRequest(method, path, strings.NewReader(body))
-	if auth {
-		r.Header.Set("Authorization", "Bearer secret")
-	}
-	w := httptest.NewRecorder()
-	s.ServeHTTP(w, r)
-	return w
+	return &Server{store: st, token: "secret"}
 }
 
 func TestFlow(t *testing.T) {
-	s, p := setup(t)
-	w := do(s, "POST", "/api/links", `{"url":"https://example.com/x","alias":"my-page"}`, false)
-	if w.Code != 201 {
-		t.Fatal(w.Code, w.Body)
+	path := filepath.Join(t.TempDir(), "d.json")
+	s := newSrv(t, path)
+	r := do(t, s, "POST", "/api/links", `{"url":"https://example.com/x","alias":"my-page"}`, false)
+	if r.Code != 201 {
+		t.Fatal(r.Code, r.Body.String())
 	}
-	if do(s, "POST", "/api/links", `{"url":"https://example.com/x","alias":"my-page"}`, false).Code != 409 {
-		t.Fatal("want 409")
+	if r := do(t, s, "POST", "/api/links", `{"url":"https://example.com/x","alias":"my-page"}`, false); r.Code != 409 {
+		t.Fatal(r.Code)
 	}
-	for _, b := range []string{`{"url":"ftp://x.com"}`, `{"url":"https://a.com","alias":"api"}`, `{"url":"https://a.com","alias":"a"}`, `{"url":"https://a.com","x":1}`, `{`, `{"url":"/rel"}`} {
-		if c := do(s, "POST", "/api/links", b, false).Code; c != 400 {
-			t.Fatal(b, c)
+	for _, b := range []string{`{"url":"ftp://x.com"}`, `{"url":"https://x.com","alias":"api"}`, `{"url":"https://x.com","alias":"a"}`, `{"url":"x"}`, `{bad`, `{"url":"https://x.com","zzz":1}`, `{"url":"http://"}`} {
+		if r := do(t, s, "POST", "/api/links", b, false); r.Code != 400 {
+			t.Fatal(b, r.Code)
 		}
 	}
-	if c := do(s, "POST", "/api/links", `{"url":"https://a.com/`+strings.Repeat("a", 2<<20)+`"}`, false).Code; c != 413 {
-		t.Fatal(c)
+	if r := do(t, s, "POST", "/api/links", `{"url":"https://x.com/`+strings.Repeat("a", 2<<20)+`"}`, false); r.Code != 413 {
+		t.Fatal(r.Code)
 	}
-	w = do(s, "GET", "/my-page", "", false)
-	if w.Code != 302 || w.Header().Get("Location") != "https://example.com/x" {
-		t.Fatal(w.Code)
+	r = do(t, s, "POST", "/api/links", `{"url":"https://example.org"}`, false)
+	var l Link
+	json.Unmarshal(r.Body.Bytes(), &l)
+	if len(l.Code) != 7 {
+		t.Fatal(l)
 	}
-	if do(s, "GET", "/nope", "", false).Code != 404 {
-		t.Fatal()
+	r = do(t, s, "GET", "/my-page", "", false)
+	if r.Code != 302 || r.Header().Get("Location") != "https://example.com/x" {
+		t.Fatal(r.Code, r.Header())
 	}
-	if do(s, "GET", "/api/links", "", false).Code != 401 {
-		t.Fatal()
+	do(t, s, "GET", "/my-page", "", false)
+	if do(t, s, "GET", "/api/links", "", false).Code != 401 {
+		t.Fatal("auth")
 	}
-	if do(s, "PUT", "/api/links", "", false).Code != 405 {
-		t.Fatal()
+	if do(t, s, "PUT", "/api/links", "", true).Code != 405 {
+		t.Fatal("405")
 	}
 	// restart
-	st2, err := OpenStore(p)
-	if err != nil {
-		t.Fatal(err)
+	s = newSrv(t, path)
+	var list []Link
+	json.Unmarshal(do(t, s, "GET", "/api/links", "", true).Body.Bytes(), &list)
+	if len(list) != 2 || list[0].Code != "my-page" || list[0].Visits != 2 {
+		t.Fatal(list)
 	}
-	s2 := &Server{store: st2, token: "secret"}
-	w = do(s2, "GET", "/api/links", "", true)
-	var ls []Link
-	json.Unmarshal(w.Body.Bytes(), &ls)
-	if len(ls) != 1 || ls[0].Visits != 1 {
-		t.Fatal(w.Body.String())
+	if do(t, s, "DELETE", "/api/links/my-page", "", false).Code != 401 {
+		t.Fatal("auth")
 	}
-	if do(s2, "DELETE", "/api/links/my-page", "", true).Code != 204 {
-		t.Fatal()
+	if do(t, s, "DELETE", "/api/links/my-page", "", true).Code != 204 {
+		t.Fatal("del")
 	}
-	if do(s2, "GET", "/my-page", "", false).Code != 404 {
-		t.Fatal()
+	if do(t, s, "DELETE", "/api/links/my-page", "", true).Code != 404 {
+		t.Fatal("del2")
 	}
-	if do(s2, "DELETE", "/api/links/my-page", "", true).Code != 404 {
-		t.Fatal()
+	if do(t, s, "GET", "/my-page", "", false).Code != 404 {
+		t.Fatal("gone")
 	}
 }
 
 func TestConcurrent(t *testing.T) {
-	s, _ := setup(t)
-	do(s, "POST", "/api/links", `{"url":"https://e.com","alias":"abc"}`, false)
+	path := filepath.Join(t.TempDir(), "d.json")
+	s := newSrv(t, path)
+	do(t, s, "POST", "/api/links", `{"url":"https://a.com","alias":"abc"}`, false)
 	var wg sync.WaitGroup
-	for i := 0; i < 40; i++ {
+	for i := 0; i < 30; i++ {
 		wg.Add(2)
-		go func() { defer wg.Done(); do(s, "GET", "/abc", "", false) }()
-		go func() {
+		go func() { defer wg.Done(); do(t, s, "GET", "/abc", "", false) }()
+		go func(i int) {
 			defer wg.Done()
-			if do(s, "POST", "/api/links", `{"url":"https://e.com"}`, false).Code != 201 {
-				t.Error("create")
-			}
-		}()
+			do(t, s, "POST", "/api/links", fmt.Sprintf(`{"url":"https://a.com/%d"}`, i), false)
+		}(i)
 	}
 	wg.Wait()
-	ls := s.store.List()
-	if len(ls) != 41 || ls[0].Visits != 40 {
-		t.Fatal(len(ls), ls[0].Visits)
+	s = newSrv(t, path)
+	l := s.store.List()
+	if len(l) != 31 || l[0].Visits != 30 {
+		t.Fatal(len(l), l[0].Visits)
 	}
 }

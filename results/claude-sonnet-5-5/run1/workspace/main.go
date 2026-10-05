@@ -32,78 +32,69 @@ func writeErr(w http.ResponseWriter, status int, msg string) {
 	writeJSON(w, status, map[string]string{"error": msg})
 }
 
-func (s *Server) isAdmin(r *http.Request) bool {
-	h := r.Header.Get("Authorization")
-	const p = "Bearer "
-	if !strings.HasPrefix(h, p) {
+func methodNotAllowed(w http.ResponseWriter, allow string) {
+	w.Header().Set("Allow", allow)
+	writeErr(w, http.StatusMethodNotAllowed, "method not allowed")
+}
+
+func (s *Server) admin(w http.ResponseWriter, r *http.Request) bool {
+	want := "Bearer " + s.token
+	if subtle.ConstantTimeCompare([]byte(r.Header.Get("Authorization")), []byte(want)) != 1 {
+		w.Header().Set("WWW-Authenticate", "Bearer")
+		writeErr(w, http.StatusUnauthorized, "unauthorized")
 		return false
 	}
-	return subtle.ConstantTimeCompare([]byte(h[len(p):]), []byte(s.token)) == 1
+	return true
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	path := r.URL.Path
+	p := r.URL.Path
 	switch {
-	case path == "/api/links":
+	case p == "/api/links":
 		switch r.Method {
 		case http.MethodPost:
 			s.create(w, r)
-		case http.MethodGet:
-			if !s.isAdmin(r) {
-				writeErr(w, 401, "unauthorized")
-				return
+		case http.MethodGet, http.MethodHead:
+			if s.admin(w, r) {
+				writeJSON(w, http.StatusOK, s.store.List())
 			}
-			writeJSON(w, 200, s.store.List())
 		default:
-			w.Header().Set("Allow", "GET, POST")
-			writeErr(w, 405, "method not allowed")
+			methodNotAllowed(w, "GET, HEAD, POST")
 		}
-	case strings.HasPrefix(path, "/api/links/"):
-		code := strings.TrimPrefix(path, "/api/links/")
-		if code == "" || strings.Contains(code, "/") {
-			writeErr(w, 404, "not found")
-			return
-		}
+	case strings.HasPrefix(p, "/api/links/") && len(p) > len("/api/links/") && !strings.Contains(p[len("/api/links/"):], "/"):
+		code := p[len("/api/links/"):]
 		if r.Method != http.MethodDelete {
-			w.Header().Set("Allow", "DELETE")
-			writeErr(w, 405, "method not allowed")
+			methodNotAllowed(w, "DELETE")
 			return
 		}
-		if !s.isAdmin(r) {
-			writeErr(w, 401, "unauthorized")
+		if !s.admin(w, r) {
 			return
 		}
-		if err := s.store.Delete(code); err != nil {
-			if errors.Is(err, ErrNotFound) {
-				writeErr(w, 404, "not found")
-			} else {
-				writeErr(w, 500, "internal error")
-			}
-			return
+		switch err := s.store.Delete(code); {
+		case errors.Is(err, ErrNotFound):
+			writeErr(w, http.StatusNotFound, "not found")
+		case err != nil:
+			writeErr(w, http.StatusInternalServerError, "internal error")
+		default:
+			w.WriteHeader(http.StatusNoContent)
 		}
-		w.WriteHeader(204)
-	default:
-		code := strings.TrimPrefix(path, "/")
-		if code == "" || strings.Contains(code, "/") || code == "api" {
-			writeErr(w, 404, "not found")
-			return
-		}
+	case len(p) > 1 && p[0] == '/' && !strings.Contains(p[1:], "/"):
 		if r.Method != http.MethodGet && r.Method != http.MethodHead {
-			w.Header().Set("Allow", "GET, HEAD")
-			writeErr(w, 405, "method not allowed")
+			methodNotAllowed(w, "GET, HEAD")
 			return
 		}
-		u, err := s.store.Visit(code)
-		if err != nil {
-			if errors.Is(err, ErrNotFound) {
-				writeErr(w, 404, "not found")
-			} else {
-				writeErr(w, 500, "internal error")
-			}
-			return
+		target, err := s.store.Visit(p[1:], r.Method == http.MethodGet)
+		switch {
+		case errors.Is(err, ErrNotFound):
+			writeErr(w, http.StatusNotFound, "not found")
+		case err != nil:
+			writeErr(w, http.StatusInternalServerError, "internal error")
+		default:
+			w.Header().Set("Location", target)
+			w.WriteHeader(http.StatusFound)
 		}
-		w.Header().Set("Location", u)
-		w.WriteHeader(http.StatusFound)
+	default:
+		writeErr(w, http.StatusNotFound, "not found")
 	}
 }
 
@@ -113,59 +104,50 @@ type createReq struct {
 }
 
 func (s *Server) create(w http.ResponseWriter, r *http.Request) {
-	body, err := io.ReadAll(http.MaxBytesReader(w, r.Body, 1<<20))
-	if err != nil {
+	r.Body = http.MaxBytesReader(w, r.Body, 1<<20)
+	dec := json.NewDecoder(r.Body)
+	dec.DisallowUnknownFields()
+	var req createReq
+	if err := dec.Decode(&req); err != nil {
 		var mbe *http.MaxBytesError
 		if errors.As(err, &mbe) {
-			writeErr(w, 413, "request body too large")
-		} else {
-			writeErr(w, 400, "could not read body")
+			writeErr(w, http.StatusRequestEntityTooLarge, "request body too large")
+			return
 		}
-		return
-	}
-	var req createReq
-	dec := json.NewDecoder(strings.NewReader(string(body)))
-	dec.DisallowUnknownFields()
-	if err := dec.Decode(&req); err != nil {
-		writeErr(w, 400, "invalid JSON")
+		writeErr(w, http.StatusBadRequest, "invalid JSON")
 		return
 	}
 	if _, err := dec.Token(); err != io.EOF {
-		writeErr(w, 400, "invalid JSON")
+		var mbe *http.MaxBytesError
+		if errors.As(err, &mbe) {
+			writeErr(w, http.StatusRequestEntityTooLarge, "request body too large")
+			return
+		}
+		writeErr(w, http.StatusBadRequest, "invalid JSON")
 		return
 	}
-	if msg := validateURL(req.URL); msg != "" {
-		writeErr(w, 400, msg)
+	if len(req.URL) > 2048 || req.URL == "" {
+		writeErr(w, http.StatusBadRequest, "invalid url")
+		return
+	}
+	u, err := url.Parse(req.URL)
+	if err != nil || (u.Scheme != "http" && u.Scheme != "https") || u.Hostname() == "" {
+		writeErr(w, http.StatusBadRequest, "url must be an absolute http or https URL")
 		return
 	}
 	if req.Alias != "" && (!aliasRe.MatchString(req.Alias) || req.Alias == "api") {
-		writeErr(w, 400, "invalid alias")
+		writeErr(w, http.StatusBadRequest, "invalid alias")
 		return
 	}
 	l, err := s.store.Create(req.URL, req.Alias)
-	if err != nil {
-		if errors.Is(err, ErrExists) {
-			writeErr(w, 409, "alias already taken")
-		} else {
-			writeErr(w, 500, "internal error")
-		}
-		return
+	switch {
+	case errors.Is(err, ErrExists):
+		writeErr(w, http.StatusConflict, "alias already taken")
+	case err != nil:
+		writeErr(w, http.StatusInternalServerError, "internal error")
+	default:
+		writeJSON(w, http.StatusCreated, l)
 	}
-	writeJSON(w, 201, l)
-}
-
-func validateURL(s string) string {
-	if s == "" {
-		return "url is required"
-	}
-	if len(s) > 2048 {
-		return "url too long"
-	}
-	u, err := url.Parse(s)
-	if err != nil || (u.Scheme != "http" && u.Scheme != "https") || u.Hostname() == "" {
-		return "url must be an absolute http or https URL"
-	}
-	return ""
 }
 
 func main() {

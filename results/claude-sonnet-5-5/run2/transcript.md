@@ -63,7 +63,7 @@
 > 
 > Budget: 40 model calls and 20 minutes.
 
-## Step 1 · 42s in · 2294 tokens in, 7575 out · stop: tool_use · 19m18s left
+## Step 1 · 36s in · 2294 tokens in, 7047 out · stop: tool_use · 19m24s left
 
 <details><summary>→ write_file <code>go.mod</code> (26 bytes)</summary>
 
@@ -75,7 +75,7 @@ go 1.24
 ```
 </details>
 
-<details><summary>→ write_file <code>store.go</code> (3730 bytes)</summary>
+<details><summary>→ write_file <code>store.go</code> (3881 bytes)</summary>
 
 ```go
 package main
@@ -92,59 +92,69 @@ import (
 )
 
 type Link struct {
-	Code      string `json:"code"`
-	URL       string `json:"url"`
-	CreatedAt string `json:"created_at"`
-	Visits    int64  `json:"visits"`
+	Code      string    `json:"code"`
+	URL       string    `json:"url"`
+	CreatedAt time.Time `json:"created_at"`
+	Visits    int64     `json:"visits"`
 }
 
-var ErrExists = errors.New("alias already taken")
-var ErrNotFound = errors.New("not found")
+var (
+	ErrExists   = errors.New("alias already taken")
+	ErrNotFound = errors.New("not found")
+)
 
 type Store struct {
 	mu    sync.Mutex
 	path  string
-	links []*Link
-	index map[string]*Link
+	links map[string]*Link
+	order []*Link
+}
+
+type fileFormat struct {
+	Links []*Link `json:"links"`
 }
 
 func OpenStore(path string) (*Store, error) {
-	s := &Store{path: path, index: map[string]*Link{}}
+	s := &Store{path: path, links: map[string]*Link{}}
 	b, err := os.ReadFile(path)
-	if errors.Is(err, os.ErrNotExist) {
-		return s, nil
-	}
 	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return s, nil
+		}
 		return nil, err
 	}
 	if len(b) == 0 {
 		return s, nil
 	}
-	var ls []*Link
-	if err := json.Unmarshal(b, &ls); err != nil {
+	var ff fileFormat
+	if err := json.Unmarshal(b, &ff); err != nil {
 		return nil, fmt.Errorf("parse %s: %w", path, err)
 	}
-	for _, l := range ls {
+	for _, l := range ff.Links {
 		if l == nil || l.Code == "" {
 			continue
 		}
-		if _, dup := s.index[l.Code]; dup {
+		if _, dup := s.links[l.Code]; dup {
 			continue
 		}
-		s.links = append(s.links, l)
-		s.index[l.Code] = l
+		s.links[l.Code] = l
+		s.order = append(s.order, l)
 	}
 	return s, nil
 }
 
-// save writes atomically: temp file, fsync, rename, fsync dir. Caller holds mu.
-func (s *Store) save() error {
-	data, err := json.Marshal(s.links)
+// saveLocked writes the whole state atomically. Caller holds s.mu.
+func (s *Store) saveLocked() error {
+	ff := fileFormat{Links: s.order}
+	if ff.Links == nil {
+		ff.Links = []*Link{}
+	}
+	b, err := json.Marshal(ff)
 	if err != nil {
 		return err
 	}
 	dir := filepath.Dir(s.path)
-	f, err := os.CreateTemp(dir, filepath.Base(s.path)+".tmp*")
+	f, err := os.CreateTemp(dir, ".shortener-*.tmp")
 	if err != nil {
 		return err
 	}
@@ -156,7 +166,7 @@ func (s *Store) save() error {
 			os.Remove(tmp)
 		}
 	}()
-	if _, err := f.Write(data); err != nil {
+	if _, err := f.Write(b); err != nil {
 		return err
 	}
 	if err := f.Sync(); err != nil {
@@ -179,16 +189,19 @@ func (s *Store) save() error {
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
 
 func randomCode() (string, error) {
-	var b [7]byte
-	max := byte(256 - 256%len(alphabet))
 	out := make([]byte, 0, 7)
+	buf := make([]byte, 16)
 	for len(out) < 7 {
-		if _, err := rand.Read(b[:]); err != nil {
+		if _, err := rand.Read(buf); err != nil {
 			return "", err
 		}
-		for _, c := range b {
-			if c < max && len(out) < 7 {
-				out = append(out, alphabet[int(c)%len(alphabet)])
+		for _, c := range buf {
+			if c >= 248 { // 248 = 62*4, avoid modulo bias
+				continue
+			}
+			out = append(out, alphabet[int(c)%62])
+			if len(out) == 7 {
+				break
 			}
 		}
 	}
@@ -200,7 +213,7 @@ func (s *Store) Create(url, alias string) (Link, error) {
 	defer s.mu.Unlock()
 	code := alias
 	if code != "" {
-		if _, ok := s.index[code]; ok {
+		if _, ok := s.links[code]; ok {
 			return Link{}, ErrExists
 		}
 	} else {
@@ -209,59 +222,58 @@ func (s *Store) Create(url, alias string) (Link, error) {
 			if err != nil {
 				return Link{}, err
 			}
-			if _, ok := s.index[c]; !ok {
+			if _, ok := s.links[c]; !ok && c != "api" {
 				code = c
 				break
 			}
 		}
 	}
-	l := &Link{Code: code, URL: url, CreatedAt: time.Now().UTC().Format(time.RFC3339)}
-	s.links = append(s.links, l)
-	s.index[code] = l
-	if err := s.save(); err != nil {
-		s.links = s.links[:len(s.links)-1]
-		delete(s.index, code)
+	l := &Link{Code: code, URL: url, CreatedAt: time.Now().UTC().Truncate(time.Second)}
+	s.links[code] = l
+	s.order = append(s.order, l)
+	if err := s.saveLocked(); err != nil {
+		delete(s.links, code)
+		s.order = s.order[:len(s.order)-1]
 		return Link{}, err
 	}
 	return *l, nil
 }
 
-// Visit increments the visit counter and returns the URL.
-func (s *Store) Visit(code string) (string, error) {
+func (s *Store) Visit(code string) (Link, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	l, ok := s.index[code]
+	l, ok := s.links[code]
 	if !ok {
-		return "", ErrNotFound
+		return Link{}, ErrNotFound
 	}
 	l.Visits++
-	if err := s.save(); err != nil {
+	if err := s.saveLocked(); err != nil {
 		l.Visits--
-		return "", err
+		return Link{}, err
 	}
-	return l.URL, nil
+	return *l, nil
 }
 
 func (s *Store) Delete(code string) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	l, ok := s.index[code]
+	l, ok := s.links[code]
 	if !ok {
 		return ErrNotFound
 	}
-	pos := -1
-	for i, x := range s.links {
+	idx := -1
+	for i, x := range s.order {
 		if x == l {
-			pos = i
+			idx = i
 			break
 		}
 	}
-	old := append([]*Link(nil), s.links...)
-	s.links = append(s.links[:pos:pos], s.links[pos+1:]...)
-	delete(s.index, code)
-	if err := s.save(); err != nil {
-		s.links = old
-		s.index[code] = l
+	oldOrder := append([]*Link(nil), s.order...)
+	delete(s.links, code)
+	s.order = append(s.order[:idx], s.order[idx+1:]...)
+	if err := s.saveLocked(); err != nil {
+		s.links[code] = l
+		s.order = oldOrder
 		return err
 	}
 	return nil
@@ -270,8 +282,8 @@ func (s *Store) Delete(code string) error {
 func (s *Store) List() []Link {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	out := make([]Link, 0, len(s.links))
-	for _, l := range s.links {
+	out := make([]Link, 0, len(s.order))
+	for _, l := range s.order {
 		out = append(out, *l)
 	}
 	return out
@@ -280,7 +292,7 @@ func (s *Store) List() []Link {
 ```
 </details>
 
-<details><summary>→ write_file <code>main.go</code> (4946 bytes)</summary>
+<details><summary>→ write_file <code>main.go</code> (4228 bytes)</summary>
 
 ```go
 package main
@@ -317,6 +329,11 @@ func writeErr(w http.ResponseWriter, status int, msg string) {
 	writeJSON(w, status, map[string]string{"error": msg})
 }
 
+func (s *Server) methodNotAllowed(w http.ResponseWriter, allow string) {
+	w.Header().Set("Allow", allow)
+	writeErr(w, http.StatusMethodNotAllowed, "method not allowed")
+}
+
 func (s *Server) admin(w http.ResponseWriter, r *http.Request) bool {
 	h := r.Header.Get("Authorization")
 	const p = "Bearer "
@@ -329,11 +346,6 @@ func (s *Server) admin(w http.ResponseWriter, r *http.Request) bool {
 	return false
 }
 
-func methodNotAllowed(w http.ResponseWriter, allow string) {
-	w.Header().Set("Allow", allow)
-	writeErr(w, http.StatusMethodNotAllowed, "method not allowed")
-}
-
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path
 	switch {
@@ -343,71 +355,53 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			s.create(w, r)
 		case http.MethodGet, http.MethodHead:
 			if s.admin(w, r) {
-				writeJSON(w, http.StatusOK, s.store.List())
+				writeJSON(w, 200, s.store.List())
 			}
 		default:
-			methodNotAllowed(w, "GET, HEAD, POST")
+			s.methodNotAllowed(w, "GET, HEAD, POST")
 		}
-	case strings.HasPrefix(path, "/api/links/"):
-		code := strings.TrimPrefix(path, "/api/links/")
-		if code == "" || strings.Contains(code, "/") {
-			writeErr(w, http.StatusNotFound, "not found")
-			return
-		}
+	case strings.HasPrefix(path, "/api/links/") && !strings.Contains(path[len("/api/links/"):], "/"):
+		code := path[len("/api/links/"):]
 		if r.Method != http.MethodDelete {
-			methodNotAllowed(w, "DELETE")
+			s.methodNotAllowed(w, "DELETE")
 			return
 		}
 		if !s.admin(w, r) {
 			return
 		}
-		switch err := s.store.Delete(code); {
-		case err == nil:
-			w.WriteHeader(http.StatusNoContent)
-		case errors.Is(err, ErrNotFound):
-			writeErr(w, http.StatusNotFound, "not found")
-		default:
-			log.Printf("delete: %v", err)
-			writeErr(w, http.StatusInternalServerError, "internal error")
-		}
-	default:
-		code := strings.TrimPrefix(path, "/")
-		if code == "" || code == "api" || strings.Contains(code, "/") {
-			writeErr(w, http.StatusNotFound, "not found")
+		if err := s.store.Delete(code); err != nil {
+			if errors.Is(err, ErrNotFound) {
+				writeErr(w, 404, "not found")
+			} else {
+				writeErr(w, 500, "internal error")
+			}
 			return
 		}
+		w.WriteHeader(http.StatusNoContent)
+	case len(path) > 1 && !strings.Contains(path[1:], "/") && path != "/api":
 		if r.Method != http.MethodGet && r.Method != http.MethodHead {
-			methodNotAllowed(w, "GET, HEAD")
+			s.methodNotAllowed(w, "GET, HEAD")
 			return
 		}
-		u, err := s.store.Visit(code)
-		switch {
-		case err == nil:
-			w.Header().Set("Location", u)
-			w.WriteHeader(http.StatusFound)
-		case errors.Is(err, ErrNotFound):
-			writeErr(w, http.StatusNotFound, "not found")
-		default:
-			log.Printf("visit: %v", err)
-			writeErr(w, http.StatusInternalServerError, "internal error")
+		l, err := s.store.Visit(path[1:])
+		if err != nil {
+			if errors.Is(err, ErrNotFound) {
+				writeErr(w, 404, "not found")
+			} else {
+				writeErr(w, 500, "internal error")
+			}
+			return
 		}
+		w.Header().Set("Location", l.URL)
+		w.WriteHeader(http.StatusFound)
+	default:
+		writeErr(w, 404, "not found")
 	}
 }
 
 type createReq struct {
-	URL   *string `json:"url"`
-	Alias *string `json:"alias"`
-}
-
-func validURL(s string) bool {
-	if s == "" || len(s) > 2048 {
-		return false
-	}
-	u, err := url.Parse(s)
-	if err != nil || !u.IsAbs() || u.Host == "" || u.Hostname() == "" {
-		return false
-	}
-	return u.Scheme == "http" || u.Scheme == "https"
+	URL   string `json:"url"`
+	Alias string `json:"alias"`
 }
 
 func (s *Server) create(w http.ResponseWriter, r *http.Request) {
@@ -418,43 +412,44 @@ func (s *Server) create(w http.ResponseWriter, r *http.Request) {
 	if err := dec.Decode(&req); err != nil {
 		var mbe *http.MaxBytesError
 		if errors.As(err, &mbe) {
-			writeErr(w, http.StatusRequestEntityTooLarge, "request body too large")
+			writeErr(w, 413, "request body too large")
 			return
 		}
-		writeErr(w, http.StatusBadRequest, "invalid JSON")
+		writeErr(w, 400, "invalid JSON")
 		return
 	}
 	if _, err := dec.Token(); err != io.EOF {
 		var mbe *http.MaxBytesError
 		if errors.As(err, &mbe) {
-			writeErr(w, http.StatusRequestEntityTooLarge, "request body too large")
+			writeErr(w, 413, "request body too large")
 			return
 		}
-		writeErr(w, http.StatusBadRequest, "invalid JSON")
+		writeErr(w, 400, "invalid JSON")
 		return
 	}
-	if req.URL == nil || !validURL(*req.URL) {
-		writeErr(w, http.StatusBadRequest, "url must be an absolute http or https URL (max 2048 chars)")
+	if len(req.URL) > 2048 || req.URL == "" {
+		writeErr(w, 400, "invalid url")
 		return
 	}
-	alias := ""
-	if req.Alias != nil {
-		alias = *req.Alias
-		if !aliasRe.MatchString(alias) || alias == "api" {
-			writeErr(w, http.StatusBadRequest, "invalid alias")
-			return
+	u, err := url.Parse(req.URL)
+	if err != nil || (u.Scheme != "http" && u.Scheme != "https") || u.Hostname() == "" {
+		writeErr(w, 400, "url must be an absolute http or https URL")
+		return
+	}
+	if req.Alias != "" && (!aliasRe.MatchString(req.Alias) || req.Alias == "api") {
+		writeErr(w, 400, "invalid alias")
+		return
+	}
+	l, err := s.store.Create(req.URL, req.Alias)
+	if err != nil {
+		if errors.Is(err, ErrExists) {
+			writeErr(w, 409, "alias already taken")
+		} else {
+			writeErr(w, 500, "internal error")
 		}
+		return
 	}
-	l, err := s.store.Create(*req.URL, alias)
-	switch {
-	case err == nil:
-		writeJSON(w, http.StatusCreated, l)
-	case errors.Is(err, ErrExists):
-		writeErr(w, http.StatusConflict, "alias already taken")
-	default:
-		log.Printf("create: %v", err)
-		writeErr(w, http.StatusInternalServerError, "internal error")
-	}
+	writeJSON(w, 201, l)
 }
 
 func main() {
@@ -471,17 +466,13 @@ func main() {
 		fmt.Fprintln(os.Stderr, "error:", err)
 		os.Exit(1)
 	}
-	srv := &http.Server{Addr: *addr, Handler: &Server{store: st, token: token}}
-	if err := srv.ListenAndServe(); err != nil {
-		fmt.Fprintln(os.Stderr, "error:", err)
-		os.Exit(1)
-	}
+	log.Fatal(http.ListenAndServe(*addr, &Server{store: st, token: token}))
 }
 
 ```
 </details>
 
-<details><summary>→ write_file <code>main_test.go</code> (3409 bytes)</summary>
+<details><summary>→ write_file <code>main_test.go</code> (3139 bytes)</summary>
 
 ```go
 package main
@@ -497,19 +488,18 @@ import (
 	"testing"
 )
 
-func setup(t *testing.T, path string) (*Server, *Store) {
-	t.Helper()
+func newSrv(t *testing.T, path string) *Server {
 	st, err := OpenStore(path)
 	if err != nil {
 		t.Fatal(err)
 	}
-	return &Server{store: st, token: "secret"}, st
+	return &Server{store: st, token: "secret"}
 }
 
-func do(s *Server, method, path, body, auth string) *httptest.ResponseRecorder {
+func do(s *Server, method, path, body string, auth bool) *httptest.ResponseRecorder {
 	r := httptest.NewRequest(method, path, strings.NewReader(body))
-	if auth != "" {
-		r.Header.Set("Authorization", "Bearer "+auth)
+	if auth {
+		r.Header.Set("Authorization", "Bearer secret")
 	}
 	w := httptest.NewRecorder()
 	s.ServeHTTP(w, r)
@@ -518,92 +508,86 @@ func do(s *Server, method, path, body, auth string) *httptest.ResponseRecorder {
 
 func TestFlow(t *testing.T) {
 	p := filepath.Join(t.TempDir(), "d.json")
-	s, _ := setup(t, p)
-	w := do(s, "POST", "/api/links", `{"url":"https://example.com/x","alias":"my-page"}`, "")
+	s := newSrv(t, p)
+	w := do(s, "POST", "/api/links", `{"url":"https://example.com/x","alias":"my-page"}`, false)
 	if w.Code != 201 {
 		t.Fatal(w.Code, w.Body)
 	}
-	if w = do(s, "POST", "/api/links", `{"url":"https://example.com/x","alias":"my-page"}`, ""); w.Code != 409 {
+	if w := do(s, "POST", "/api/links", `{"url":"https://example.com/x","alias":"my-page"}`, false); w.Code != 409 {
 		t.Fatal(w.Code)
 	}
-	w = do(s, "POST", "/api/links", `{"url":"http://a.b"}`, "")
-	var l Link
-	json.Unmarshal(w.Body.Bytes(), &l)
-	if w.Code != 201 || len(l.Code) != 7 {
-		t.Fatal(w.Code, w.Body)
-	}
-	for _, b := range []string{`{"url":"ftp://x.com"}`, `{"url":"/rel"}`, `{"url":"https://a.com","alias":"api"}`,
-		`{"url":"https://a.com","alias":"ab"}`, `{"url":"https://a.com","x":1}`, `{bad`, `{"url":"https://a.com"} x`, `{}`, `{"url":"http://"}`} {
-		if w = do(s, "POST", "/api/links", b, ""); w.Code != 400 {
+	for _, b := range []string{`{"url":"ftp://a.com"}`, `{"url":"/x"}`, `{"url":"https://a.com","alias":"api"}`,
+		`{"url":"https://a.com","alias":"a b"}`, `{"url":"https://a.com","x":1}`, `nope`, `{"url":"https://a.com"} x`} {
+		if w := do(s, "POST", "/api/links", b, false); w.Code != 400 {
 			t.Fatal(b, w.Code)
 		}
 	}
-	if w = do(s, "POST", "/api/links", `{"url":"https://a.com/`+strings.Repeat("a", 2<<20)+`"}`, ""); w.Code != 413 {
+	if w := do(s, "POST", "/api/links", `{"url":"https://a.com/`+strings.Repeat("a", 2<<20)+`"}`, false); w.Code != 413 {
 		t.Fatal(w.Code)
 	}
-	w = do(s, "GET", "/my-page", "", "")
-	if w.Code != 302 || w.Header().Get("Location") != "https://example.com/x" {
+	w = do(s, "POST", "/api/links", `{"url":"https://a.com"}`, false)
+	var l Link
+	json.Unmarshal(w.Body.Bytes(), &l)
+	if len(l.Code) != 7 {
+		t.Fatal(l)
+	}
+	if w := do(s, "GET", "/my-page", "", false); w.Code != 302 || w.Header().Get("Location") != "https://example.com/x" {
 		t.Fatal(w.Code)
 	}
-	if do(s, "GET", "/nope", "", "").Code != 404 {
-		t.Fatal("404")
+	if w := do(s, "GET", "/nope", "", false); w.Code != 404 {
+		t.Fatal(w.Code)
 	}
-	if do(s, "GET", "/api/links", "", "").Code != 401 || do(s, "GET", "/api/links", "", "bad").Code != 401 {
-		t.Fatal("401")
+	if w := do(s, "GET", "/api/links", "", false); w.Code != 401 {
+		t.Fatal(w.Code)
 	}
-	w = do(s, "GET", "/api/links", "", "secret")
-	var ls []Link
-	json.Unmarshal(w.Body.Bytes(), &ls)
-	if w.Code != 200 || len(ls) != 2 || ls[0].Code != "my-page" || ls[0].Visits != 1 {
-		t.Fatal(w.Code, w.Body)
+	if w := do(s, "PUT", "/api/links", "", true); w.Code != 405 {
+		t.Fatal(w.Code)
+	}
+	if w := do(s, "POST", "/my-page", "", false); w.Code != 405 {
+		t.Fatal(w.Code)
 	}
 	// restart
-	s2, _ := setup(t, p)
-	ls = s2.store.List()
-	if len(ls) != 2 || ls[0].Visits != 1 {
-		t.Fatal(ls)
+	s = newSrv(t, p)
+	w = do(s, "GET", "/api/links", "", true)
+	var ls []Link
+	json.Unmarshal(w.Body.Bytes(), &ls)
+	if len(ls) != 2 || ls[0].Code != "my-page" || ls[0].Visits != 1 {
+		t.Fatal(w.Body)
 	}
-	if do(s2, "PUT", "/my-page", "", "").Code != 405 || do(s2, "PUT", "/api/links", "", "").Code != 405 ||
-		do(s2, "POST", "/api/links/my-page", "", "secret").Code != 405 {
-		t.Fatal("405")
+	if w := do(s, "DELETE", "/api/links/my-page", "", false); w.Code != 401 {
+		t.Fatal(w.Code)
 	}
-	if do(s2, "DELETE", "/api/links/my-page", "", "").Code != 401 {
-		t.Fatal("401 del")
+	if w := do(s, "DELETE", "/api/links/my-page", "", true); w.Code != 204 {
+		t.Fatal(w.Code)
 	}
-	if do(s2, "DELETE", "/api/links/my-page", "", "secret").Code != 204 {
-		t.Fatal("del")
+	if w := do(s, "DELETE", "/api/links/my-page", "", true); w.Code != 404 {
+		t.Fatal(w.Code)
 	}
-	if do(s2, "DELETE", "/api/links/my-page", "", "secret").Code != 404 || do(s2, "GET", "/my-page", "", "").Code != 404 {
-		t.Fatal("after del")
+	if w := do(s, "GET", "/my-page", "", false); w.Code != 404 {
+		t.Fatal(w.Code)
 	}
 }
 
 func TestConcurrent(t *testing.T) {
 	p := filepath.Join(t.TempDir(), "d.json")
-	s, st := setup(t, p)
-	do(s, "POST", "/api/links", `{"url":"https://a.com","alias":"abc"}`, "")
+	s := newSrv(t, p)
+	do(s, "POST", "/api/links", `{"url":"https://a.com","alias":"hot"}`, false)
 	var wg sync.WaitGroup
-	for i := 0; i < 50; i++ {
+	for i := 0; i < 40; i++ {
 		wg.Add(1)
-		go func() {
+		go func(i int) {
 			defer wg.Done()
-			do(s, "GET", "/abc", "", "")
-			do(s, "POST", "/api/links", `{"url":"https://a.com"}`, "")
-		}()
+			do(s, "POST", "/api/links", fmt.Sprintf(`{"url":"https://a.com/%d"}`, i), false)
+			do(s, "GET", "/hot", "", false)
+		}(i)
 	}
 	wg.Wait()
-	ls := st.List()
-	if len(ls) != 51 || ls[0].Visits != 50 {
+	s = newSrv(t, p)
+	ls := s.store.List()
+	if len(ls) != 41 || ls[0].Visits != 40 {
 		t.Fatal(len(ls), ls[0].Visits)
 	}
-	s2, _ := setup(t, p)
-	ls = s2.store.List()
-	if len(ls) != 51 || ls[0].Visits != 50 {
-		t.Fatal(fmt.Sprint(len(ls)))
-	}
 }
-
-var _ = http.StatusOK
 
 ```
 </details>
@@ -618,37 +602,194 @@ wrote go.mod (26 bytes)
 <details><summary>write_file result (27 bytes)</summary>
 
 ```text
-wrote store.go (3730 bytes)
+wrote store.go (3881 bytes)
 ```
 </details>
 
 <details><summary>write_file result (26 bytes)</summary>
 
 ```text
-wrote main.go (4946 bytes)
+wrote main.go (4228 bytes)
 ```
 </details>
 
 <details><summary>write_file result (31 bytes)</summary>
 
 ```text
-wrote main_test.go (3409 bytes)
+wrote main_test.go (3139 bytes)
 ```
 </details>
 
-_Budget: 39 model calls and 19m18s left._
+_Budget: 39 model calls and 19m24s left._
 
-## Step 2 · 43s in · 10055 tokens in, 50 out · stop: tool_use · 19m17s left
+## Step 2 · 38s in · 9527 tokens in, 75 out · stop: tool_use · 19m22s left
+
+→ `go_vet` `{}`
+
+→ `go_test` `{"packages":"./... -race"}`
+
+<details><summary>go_vet result (121 bytes)</summary>
+
+```text
+$ go vet ./...
+exit code 1 after 11s
+# shortener
+# [shortener]
+vet: ./main_test.go:6:2: "net/http" imported and not used
+
+```
+</details>
+
+<details><summary>go_test error (61 bytes)</summary>
+
+```text
+error: "-race" is not a package pattern like ./... or ./store
+```
+</details>
+
+_Budget: 38 model calls and 19m11s left._
+
+## Step 3 · 57s in · 9760 tokens in, 1835 out · stop: tool_use · 19m3s left
+
+<details><summary>→ write_file <code>main_test.go</code> (3127 bytes)</summary>
+
+```go
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"net/http/httptest"
+	"path/filepath"
+	"strings"
+	"sync"
+	"testing"
+)
+
+func newSrv(t *testing.T, path string) *Server {
+	st, err := OpenStore(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return &Server{store: st, token: "secret"}
+}
+
+func do(s *Server, method, path, body string, auth bool) *httptest.ResponseRecorder {
+	r := httptest.NewRequest(method, path, strings.NewReader(body))
+	if auth {
+		r.Header.Set("Authorization", "Bearer secret")
+	}
+	w := httptest.NewRecorder()
+	s.ServeHTTP(w, r)
+	return w
+}
+
+func TestFlow(t *testing.T) {
+	p := filepath.Join(t.TempDir(), "d.json")
+	s := newSrv(t, p)
+	w := do(s, "POST", "/api/links", `{"url":"https://example.com/x","alias":"my-page"}`, false)
+	if w.Code != 201 {
+		t.Fatal(w.Code, w.Body)
+	}
+	if w := do(s, "POST", "/api/links", `{"url":"https://example.com/x","alias":"my-page"}`, false); w.Code != 409 {
+		t.Fatal(w.Code)
+	}
+	for _, b := range []string{`{"url":"ftp://a.com"}`, `{"url":"/x"}`, `{"url":"https://a.com","alias":"api"}`,
+		`{"url":"https://a.com","alias":"a b"}`, `{"url":"https://a.com","x":1}`, `nope`, `{"url":"https://a.com"} x`} {
+		if w := do(s, "POST", "/api/links", b, false); w.Code != 400 {
+			t.Fatal(b, w.Code)
+		}
+	}
+	if w := do(s, "POST", "/api/links", `{"url":"https://a.com/`+strings.Repeat("a", 2<<20)+`"}`, false); w.Code != 413 {
+		t.Fatal(w.Code)
+	}
+	w = do(s, "POST", "/api/links", `{"url":"https://a.com"}`, false)
+	var l Link
+	json.Unmarshal(w.Body.Bytes(), &l)
+	if len(l.Code) != 7 {
+		t.Fatal(l)
+	}
+	if w := do(s, "GET", "/my-page", "", false); w.Code != 302 || w.Header().Get("Location") != "https://example.com/x" {
+		t.Fatal(w.Code)
+	}
+	if w := do(s, "GET", "/nope", "", false); w.Code != 404 {
+		t.Fatal(w.Code)
+	}
+	if w := do(s, "GET", "/api/links", "", false); w.Code != 401 {
+		t.Fatal(w.Code)
+	}
+	if w := do(s, "PUT", "/api/links", "", true); w.Code != 405 {
+		t.Fatal(w.Code)
+	}
+	if w := do(s, "POST", "/my-page", "", false); w.Code != 405 {
+		t.Fatal(w.Code)
+	}
+	// restart
+	s = newSrv(t, p)
+	w = do(s, "GET", "/api/links", "", true)
+	var ls []Link
+	json.Unmarshal(w.Body.Bytes(), &ls)
+	if len(ls) != 2 || ls[0].Code != "my-page" || ls[0].Visits != 1 {
+		t.Fatal(w.Body)
+	}
+	if w := do(s, "DELETE", "/api/links/my-page", "", false); w.Code != 401 {
+		t.Fatal(w.Code)
+	}
+	if w := do(s, "DELETE", "/api/links/my-page", "", true); w.Code != 204 {
+		t.Fatal(w.Code)
+	}
+	if w := do(s, "DELETE", "/api/links/my-page", "", true); w.Code != 404 {
+		t.Fatal(w.Code)
+	}
+	if w := do(s, "GET", "/my-page", "", false); w.Code != 404 {
+		t.Fatal(w.Code)
+	}
+}
+
+func TestConcurrent(t *testing.T) {
+	p := filepath.Join(t.TempDir(), "d.json")
+	s := newSrv(t, p)
+	do(s, "POST", "/api/links", `{"url":"https://a.com","alias":"hot"}`, false)
+	var wg sync.WaitGroup
+	for i := 0; i < 40; i++ {
+		wg.Add(1)
+		go func(i int) {
+			defer wg.Done()
+			do(s, "POST", "/api/links", fmt.Sprintf(`{"url":"https://a.com/%d"}`, i), false)
+			do(s, "GET", "/hot", "", false)
+		}(i)
+	}
+	wg.Wait()
+	s = newSrv(t, p)
+	ls := s.store.List()
+	if len(ls) != 41 || ls[0].Visits != 40 {
+		t.Fatal(len(ls), ls[0].Visits)
+	}
+}
+
+```
+</details>
+
+<details><summary>write_file result (31 bytes)</summary>
+
+```text
+wrote main_test.go (3127 bytes)
+```
+</details>
+
+_Budget: 37 model calls and 19m3s left._
+
+## Step 4 · 58s in · 11638 tokens in, 50 out · stop: tool_use · 19m2s left
 
 → `go_vet` `{}`
 
 → `go_test` `{}`
 
-<details><summary>go_vet result (37 bytes)</summary>
+<details><summary>go_vet result (36 bytes)</summary>
 
 ```text
 $ go vet ./...
-exit code 0 after 11s
+exit code 0 after 0s
 
 ```
 </details>
@@ -658,24 +799,22 @@ exit code 0 after 11s
 ```text
 $ go test -count=1 -timeout=120s ./...
 exit code 0 after 3s
-ok  	shortener	0.093s
+ok  	shortener	0.080s
 
 ```
 </details>
 
-_Budget: 38 model calls and 19m3s left._
+_Budget: 36 model calls and 18m59s left._
 
-## Step 3 · 1m3s in · 10248 tokens in, 585 out · stop: end_turn · 18m57s left
+## Step 5 · 1m6s in · 11831 tokens in, 496 out · stop: end_turn · 18m54s left
 
-> DONE. I built the URL shortener in the workspace root: `main.go` holds the HTTP handler and `store.go` holds the storage. `go vet` is clean and `go test ./...` passes. I did not run `go build -o shortener .` itself or start the binary, and I did not run the tests with `-race`.
+> DONE. I built the URL shortener as specified, using only the standard library. `go vet` is clean and `go test` passes. I didn't get a `-race` run: the test tool rejected the flag. I also never ran `go build -o shortener .` or started the binary. The tests call the handler directly, so the flags and the `ADMIN_TOKEN` exit path haven't been exercised.
 > 
-> - **Startup:** it exits with an error if `ADMIN_TOKEN` is unset or empty. Flags are `-addr` (default `:8080`) and `-data` (default `data.json`).
-> - **Endpoints:** the five endpoints and the 400, 401, 404, 405, 409 and 413 error cases follow the spec. Error bodies are `{"error": ...}`.
-> - **Persistence:** every create, visit and delete is written to the data file before the response goes out. The write goes to a temp file, is synced, then renamed over the data file, so a crash can't leave a broken file. If the save fails, the change is undone in memory and the request returns 500.
-> - **Concurrency:** one mutex covers the store, so concurrent requests can't lose links or visit counts or produce duplicate codes. Generated codes are 7 characters from `[A-Za-z0-9]`, drawn with `crypto/rand` and checked for uniqueness.
-> - **Tests:** `main_test.go` covers the full create, follow, list and delete flow, the validation errors, auth, 405s, and a restart that reloads the saved file. A concurrency test sends 50 parallel visits and 50 parallel creates, then checks that none were lost, including after a reload.
+> - **API:** All the specified routes and status codes are there (create, follow, list, delete), with 405 on wrong methods and 401 on a missing or wrong token. The method check comes before the auth check. `HEAD` is treated like `GET`, so a `HEAD` on a short link also counts as a visit.
+> - **Storage:** State lives in the `-data` JSON file. Every create, visit and delete is saved before the response is sent. A save writes a temp file, syncs it, then renames it over the data file, so a crash can't leave a broken file. If a save fails, the change is rolled back and the request gets a 500.
+> - **Concurrency:** One mutex covers the in-memory state and the file write, so concurrent requests can't lose links or visit counts or produce duplicate codes. Visits are therefore written one at a time.
+> - **Tests:** `main_test.go` covers the full flow, validation errors, the 413 limit, persistence across a restart, and a concurrent test with 40 parallel creates and visits that checks nothing is lost after reloading from disk.
 > 
-> - **HEAD:** a HEAD request on `/{code}` counts as a visit, since the spec lets it be answered like the GET.
-> - **Wrong method:** a wrong method on an admin path returns 405 before the token is checked.
+> The code is in `main.go` (HTTP handling) and `store.go` (storage).
 
-## Stopped: done after 3 model calls and 1m3s
+## Stopped: done after 5 model calls and 1m6s

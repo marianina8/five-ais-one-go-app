@@ -1,10 +1,10 @@
 {
   "label": "claude-sonnet-5-5/run1",
-  "measured_at": "2026-10-05T01:43:31.035399114Z",
+  "measured_at": "2026-10-05T07:43:36.959065812Z",
   "size": {
     "go_files": 3,
-    "code_lines": 388,
-    "test_lines": 103,
+    "code_lines": 370,
+    "test_lines": 108,
     "test_files": 1,
     "test_funcs": 2
   },
@@ -119,9 +119,9 @@
     "test_files": 1,
     "test_funcs": 2,
     "passed": true,
-    "coverage": 74.4,
-    "points": 9.3,
-    "output": "ok  \tshortener\t0.070s\tcoverage: 74.4% of statements"
+    "coverage": 72.4,
+    "points": 9.1,
+    "output": "ok  \tshortener\t0.055s\tcoverage: 72.4% of statements"
   },
   "findings": [
     {
@@ -136,53 +136,69 @@
       "id": "T02",
       "source": "errcheck",
       "file": "main_test.go",
-      "line": 69,
+      "line": 53,
       "message": "Error return value of `json.Unmarshal` is not checked",
       "verdict": "pending"
     },
     {
       "id": "T03",
       "source": "errcheck",
-      "file": "store.go",
-      "line": 84,
-      "message": "Error return value of `f.Close` is not checked",
+      "file": "main_test.go",
+      "line": 71,
+      "message": "Error return value of `json.Unmarshal` is not checked",
       "verdict": "pending"
     },
     {
       "id": "T04",
       "source": "errcheck",
       "file": "store.go",
-      "line": 85,
-      "message": "Error return value of `os.Remove` is not checked",
+      "line": 81,
+      "message": "Error return value of `tmp.Close` is not checked",
       "verdict": "pending"
     },
     {
       "id": "T05",
       "source": "errcheck",
       "file": "store.go",
-      "line": 102,
-      "message": "Error return value of `d.Sync` is not checked",
+      "line": 91,
+      "message": "Error return value of `os.Remove` is not checked",
       "verdict": "pending"
     },
     {
       "id": "T06",
       "source": "errcheck",
       "file": "store.go",
-      "line": 103,
-      "message": "Error return value of `d.Close` is not checked",
+      "line": 95,
+      "message": "Error return value of `os.Remove` is not checked",
       "verdict": "pending"
     },
     {
       "id": "T07",
-      "source": "gosec",
-      "rule": "G114",
-      "file": "main.go",
-      "line": 185,
-      "message": "G114: Use of net/http serve function that has no support for setting timeouts",
+      "source": "errcheck",
+      "file": "store.go",
+      "line": 99,
+      "message": "Error return value of `d.Sync` is not checked",
       "verdict": "pending"
     },
     {
       "id": "T08",
+      "source": "errcheck",
+      "file": "store.go",
+      "line": 100,
+      "message": "Error return value of `d.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T09",
+      "source": "gosec",
+      "rule": "G114",
+      "file": "main.go",
+      "line": 167,
+      "message": "G114: Use of net/http serve function that has no support for setting timeouts",
+      "verdict": "pending"
+    },
+    {
+      "id": "T10",
       "source": "gosec",
       "rule": "G304",
       "file": "store.go",
@@ -191,14 +207,14 @@
       "verdict": "pending"
     },
     {
-      "id": "T09",
+      "id": "T11",
       "source": "gosec",
       "rule": "G304",
       "file": "store.go",
-      "line": 101,
+      "line": 98,
       "message": "G304: Potential file inclusion via variable",
       "verdict": "pending"
     }
   ],
-  "elapsed_ns": 23335049304
+  "elapsed_ns": 43925227084
 }

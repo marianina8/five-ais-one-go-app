@@ -1,10 +1,10 @@
 {
   "label": "claude-sonnet-5-5/run2",
-  "measured_at": "2026-10-05T01:43:54.379996606Z",
+  "measured_at": "2026-10-05T07:44:20.893757638Z",
   "size": {
     "go_files": 3,
-    "code_lines": 392,
-    "test_lines": 120,
+    "code_lines": 383,
+    "test_lines": 112,
     "test_files": 1,
     "test_funcs": 2
   },
@@ -110,18 +110,18 @@
     "measured": true,
     "issues": 0,
     "issues_by_linter": {},
-    "max_complexity": 19,
+    "max_complexity": 18,
     "most_complex_func": "`(*Server).ServeHTTP`",
-    "score": 9,
+    "score": 8,
     "details": null
   },
   "own_tests": {
     "test_files": 1,
     "test_funcs": 2,
     "passed": true,
-    "coverage": 75.9,
-    "points": 9.5,
-    "output": "ok  \tshortener\t0.086s\tcoverage: 75.9% of statements"
+    "coverage": 77.7,
+    "points": 9.7,
+    "output": "ok  \tshortener\t0.067s\tcoverage: 77.7% of statements"
   },
   "findings": [
     {
@@ -136,7 +136,7 @@
       "id": "T02",
       "source": "errcheck",
       "file": "main_test.go",
-      "line": 45,
+      "line": 52,
       "message": "Error return value of `json.Unmarshal` is not checked",
       "verdict": "pending"
     },
@@ -144,7 +144,7 @@
       "id": "T03",
       "source": "errcheck",
       "file": "main_test.go",
-      "line": 70,
+      "line": 75,
       "message": "Error return value of `json.Unmarshal` is not checked",
       "verdict": "pending"
     },
@@ -152,7 +152,7 @@
       "id": "T04",
       "source": "errcheck",
       "file": "store.go",
-      "line": 75,
+      "line": 85,
       "message": "Error return value of `f.Close` is not checked",
       "verdict": "pending"
     },
@@ -160,7 +160,7 @@
       "id": "T05",
       "source": "errcheck",
       "file": "store.go",
-      "line": 76,
+      "line": 86,
       "message": "Error return value of `os.Remove` is not checked",
       "verdict": "pending"
     },
@@ -168,7 +168,7 @@
       "id": "T06",
       "source": "errcheck",
       "file": "store.go",
-      "line": 93,
+      "line": 103,
       "message": "Error return value of `d.Sync` is not checked",
       "verdict": "pending"
     },
@@ -176,17 +176,17 @@
       "id": "T07",
       "source": "errcheck",
       "file": "store.go",
-      "line": 94,
+      "line": 104,
       "message": "Error return value of `d.Close` is not checked",
       "verdict": "pending"
     },
     {
       "id": "T08",
       "source": "gosec",
-      "rule": "G112",
+      "rule": "G114",
       "file": "main.go",
-      "line": 189,
-      "message": "G112: Potential Slowloris Attack because ReadHeaderTimeout is not configured in the http.Server",
+      "line": 172,
+      "message": "G114: Use of net/http serve function that has no support for setting timeouts",
       "verdict": "pending"
     },
     {
@@ -194,7 +194,7 @@
       "source": "gosec",
       "rule": "G304",
       "file": "store.go",
-      "line": 33,
+      "line": 39,
       "message": "G304: Potential file inclusion via variable",
       "verdict": "pending"
     },
@@ -203,10 +203,10 @@
       "source": "gosec",
       "rule": "G304",
       "file": "store.go",
-      "line": 92,
+      "line": 102,
       "message": "G304: Potential file inclusion via variable",
       "verdict": "pending"
     }
   ],
-  "elapsed_ns": 23466947120
+  "elapsed_ns": 22918553316
 }

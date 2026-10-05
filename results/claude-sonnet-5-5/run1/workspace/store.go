@@ -13,10 +13,10 @@ import (
 )
 
 type Link struct {
-	Code      string `json:"code"`
-	URL       string `json:"url"`
-	CreatedAt string `json:"created_at"`
-	Visits    int64  `json:"visits"`
+	Code      string    `json:"code"`
+	URL       string    `json:"url"`
+	CreatedAt time.Time `json:"created_at"`
+	Visits    int64     `json:"visits"`
 }
 
 type fileFormat struct {
@@ -32,16 +32,16 @@ type Store struct {
 	mu    sync.Mutex
 	path  string
 	links map[string]*Link
-	order []string
+	order []*Link
 }
 
 func OpenStore(path string) (*Store, error) {
 	s := &Store{path: path, links: map[string]*Link{}}
 	b, err := os.ReadFile(path)
+	if errors.Is(err, os.ErrNotExist) {
+		return s, nil
+	}
 	if err != nil {
-		if errors.Is(err, os.ErrNotExist) {
-			return s, nil
-		}
 		return nil, err
 	}
 	if len(b) == 0 {
@@ -54,10 +54,10 @@ func OpenStore(path string) (*Store, error) {
 	for i := range ff.Links {
 		l := ff.Links[i]
 		if _, dup := s.links[l.Code]; dup {
-			continue
+			return nil, fmt.Errorf("duplicate code %q in %s", l.Code, path)
 		}
 		s.links[l.Code] = &l
-		s.order = append(s.order, l.Code)
+		s.order = append(s.order, &l)
 	}
 	return s, nil
 }
@@ -65,39 +65,36 @@ func OpenStore(path string) (*Store, error) {
 // saveLocked atomically writes the whole state. Caller holds s.mu.
 func (s *Store) saveLocked() error {
 	ff := fileFormat{Links: make([]Link, 0, len(s.order))}
-	for _, c := range s.order {
-		ff.Links = append(ff.Links, *s.links[c])
+	for _, l := range s.order {
+		ff.Links = append(ff.Links, *l)
 	}
 	b, err := json.Marshal(ff)
 	if err != nil {
 		return err
 	}
 	dir := filepath.Dir(s.path)
-	f, err := os.CreateTemp(dir, filepath.Base(s.path)+".tmp*")
+	tmp, err := os.CreateTemp(dir, filepath.Base(s.path)+".tmp*")
 	if err != nil {
 		return err
 	}
-	tmp := f.Name()
-	ok := false
-	defer func() {
-		if !ok {
-			f.Close()
-			os.Remove(tmp)
-		}
-	}()
-	if _, err := f.Write(b); err != nil {
+	name := tmp.Name()
+	cleanup := func() { tmp.Close(); os.Remove(name) }
+	if _, err := tmp.Write(b); err != nil {
+		cleanup()
 		return err
 	}
-	if err := f.Sync(); err != nil {
+	if err := tmp.Sync(); err != nil {
+		cleanup()
 		return err
 	}
-	if err := f.Close(); err != nil {
+	if err := tmp.Close(); err != nil {
+		os.Remove(name)
 		return err
 	}
-	if err := os.Rename(tmp, s.path); err != nil {
+	if err := os.Rename(name, s.path); err != nil {
+		os.Remove(name)
 		return err
 	}
-	ok = true
 	if d, err := os.Open(dir); err == nil {
 		d.Sync()
 		d.Close()
@@ -120,28 +117,29 @@ func randomCode() (string, error) {
 	return string(b), nil
 }
 
-// Create adds a link. If alias is empty a random code is generated.
 func (s *Store) Create(url, alias string) (Link, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	code := alias
-	if code == "" {
+	if code != "" {
+		if _, ok := s.links[code]; ok {
+			return Link{}, ErrExists
+		}
+	} else {
 		for {
 			c, err := randomCode()
 			if err != nil {
 				return Link{}, err
 			}
-			if _, taken := s.links[c]; !taken && c != "api" {
+			if _, ok := s.links[c]; !ok && c != "api" {
 				code = c
 				break
 			}
 		}
-	} else if _, taken := s.links[code]; taken {
-		return Link{}, ErrExists
 	}
-	l := &Link{Code: code, URL: url, CreatedAt: time.Now().UTC().Format(time.RFC3339), Visits: 0}
+	l := &Link{Code: code, URL: url, CreatedAt: time.Now().UTC().Truncate(time.Second)}
 	s.links[code] = l
-	s.order = append(s.order, code)
+	s.order = append(s.order, l)
 	if err := s.saveLocked(); err != nil {
 		delete(s.links, code)
 		s.order = s.order[:len(s.order)-1]
@@ -150,18 +148,20 @@ func (s *Store) Create(url, alias string) (Link, error) {
 	return *l, nil
 }
 
-// Visit increments the visit count, persists, and returns the URL.
-func (s *Store) Visit(code string) (string, error) {
+// Visit increments the visit counter and returns the URL.
+func (s *Store) Visit(code string, count bool) (string, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	l, ok := s.links[code]
 	if !ok {
 		return "", ErrNotFound
 	}
-	l.Visits++
-	if err := s.saveLocked(); err != nil {
-		l.Visits--
-		return "", err
+	if count {
+		l.Visits++
+		if err := s.saveLocked(); err != nil {
+			l.Visits--
+			return "", err
+		}
 	}
 	return l.URL, nil
 }
@@ -174,18 +174,18 @@ func (s *Store) Delete(code string) error {
 		return ErrNotFound
 	}
 	idx := -1
-	for i, c := range s.order {
-		if c == code {
+	for i, x := range s.order {
+		if x == l {
 			idx = i
 			break
 		}
 	}
-	oldOrder := append([]string(nil), s.order...)
+	old := append([]*Link(nil), s.order...)
 	delete(s.links, code)
 	s.order = append(s.order[:idx], s.order[idx+1:]...)
 	if err := s.saveLocked(); err != nil {
 		s.links[code] = l
-		s.order = oldOrder
+		s.order = old
 		return err
 	}
 	return nil
@@ -195,8 +195,8 @@ func (s *Store) List() []Link {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	out := make([]Link, 0, len(s.order))
-	for _, c := range s.order {
-		out = append(out, *s.links[c])
+	for _, l := range s.order {
+		out = append(out, *l)
 	}
 	return out
 }
