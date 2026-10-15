@@ -1,0 +1,31 @@
+{
+  "label": "tdd/run1",
+  "provider": "bedrock",
+  "model": "deepseek.v3.2",
+  "started_at": "2026-10-15T20:13:06.630847884Z",
+  "max_steps": 3,
+  "minutes": 5,
+  "max_output_tokens": 8192,
+  "model_calls": 3,
+  "tool_calls": 2,
+  "tool_calls_by_name": {
+    "list_files": 1,
+    "write_file": 1
+  },
+  "input_tokens": 6053,
+  "output_tokens": 1383,
+  "cached_tokens": 0,
+  "price": {
+    "input": 0.62,
+    "output": 1.85,
+    "max_output_tokens": 8192,
+    "source": "Amazon Bedrock pricing, us-west-2"
+  },
+  "cost_usd": 0.0063,
+  "seconds": 25,
+  "finished": false,
+  "stopped_by": "steps",
+  "skills": [
+    "tdd"
+  ]
+}
