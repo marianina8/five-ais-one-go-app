@@ -83,6 +83,8 @@ The [Contest workflow](.github/workflows/contest.yml) runs it on GitHub Actions:
 | [`score/`](score/) | The scorer, in Go: `measure` (tests, race detector, linters, coverage), `blind` (renames projects for review), `tally` (the scorecard) |
 | [`results/`](results/) | Each model's code, logs, findings and scores |
 
+**Coming in episode 4 (not part of the Ep02 contest):** the [`skills/`](skills/) and [`ep04/`](ep04/) folders and the "Skills test (Ep04)" workflow in the Actions tab are for the next video, which reruns this same contest with popular Claude skills installed. Nothing above changes: the Ep02 harness, tests, scorer and results work exactly as before.
+
 ## Scoring a project yourself
 
 ```bash
