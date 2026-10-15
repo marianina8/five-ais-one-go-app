@@ -1,6 +1,6 @@
 {
-  "label": "gpt-6-1-sol/run1",
-  "measured_at": "2026-10-05T01:45:04.103523666Z",
+  "label": "project C",
+  "measured_at": "2026-10-05T21:21:25.641266Z",
   "size": {
     "go_files": 6,
     "code_lines": 445,
@@ -119,9 +119,9 @@
     "test_files": 3,
     "test_funcs": 14,
     "passed": true,
-    "coverage": 92.7,
+    "coverage": 91.6,
     "points": 10,
-    "output": "ok  \tshortener\t0.182s\tcoverage: 92.7% of statements"
+    "output": "ok  \tshortener\t2.478s\tcoverage: 91.6% of statements"
   },
   "findings": [
     {
@@ -167,15 +167,6 @@
     {
       "id": "T06",
       "source": "gosec",
-      "rule": "G115",
-      "file": "http_test.go",
-      "line": 83,
-      "message": "G115: integer overflow conversion int -\u003e uint64",
-      "verdict": "pending"
-    },
-    {
-      "id": "T07",
-      "source": "gosec",
       "rule": "G204",
       "file": "main_test.go",
       "line": 34,
@@ -183,7 +174,7 @@
       "verdict": "pending"
     },
     {
-      "id": "T08",
+      "id": "T07",
       "source": "gosec",
       "rule": "G304",
       "file": "store.go",
@@ -192,7 +183,7 @@
       "verdict": "pending"
     },
     {
-      "id": "T09",
+      "id": "T08",
       "source": "gosec",
       "rule": "G304",
       "file": "store_test.go",
@@ -201,7 +192,7 @@
       "verdict": "pending"
     },
     {
-      "id": "T10",
+      "id": "T09",
       "source": "gosec",
       "rule": "G304",
       "file": "store_test.go",
@@ -210,7 +201,7 @@
       "verdict": "pending"
     },
     {
-      "id": "T11",
+      "id": "T10",
       "source": "gosec",
       "rule": "G304",
       "file": "store_test.go",
@@ -219,7 +210,7 @@
       "verdict": "pending"
     },
     {
-      "id": "T12",
+      "id": "T11",
       "source": "gosec",
       "rule": "G304",
       "file": "store_test.go",
@@ -228,7 +219,7 @@
       "verdict": "pending"
     },
     {
-      "id": "T13",
+      "id": "T12",
       "source": "staticcheck",
       "rule": "SA4006",
       "file": "store_test.go",
@@ -237,5 +228,5 @@
       "verdict": "pending"
     }
   ],
-  "elapsed_ns": 25540290020
+  "elapsed_ns": 49018415917
 }

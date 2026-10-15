@@ -5,13 +5,15 @@ Five AI models got the same one-page spec and built the same small Go service, a
 - the spec, word for word what every model received
 - the hidden tests the models never saw
 - the scorer
-- each model's code, logs and scores (in `results/`, once the runs are done)
+- each model's code, logs and scores (in `results/`)
 
 From the YouTube series **Build It in Go**, episode 2. Episode 1 built the review agent that grades the code here: [marianina8/pr-review-agent](https://github.com/marianina8/pr-review-agent).
 
 ## Results
 
-> **The runs haven't happened yet.** Everything below was written and checked *before* any model ran. The scorecard, each model's code and every finding with its verdict will appear in [`results/`](results/).
+> **The results are in.** Final scores (average of two runs, out of 100): GPT-6.1 Sol 81.0, Claude Sonnet 5.5 69.4, DeepSeek V3.2 67.5, Gemini 3.1 Pro 65.2, Claude Opus 5.5 61.9. The full breakdown is in [`results/scorecard.md`](results/scorecard.md), and the blind-review key is in [`results/blind/`](results/blind/) (check it against the fingerprint published before the review: `sha256sum -c map.json.sha256`).
+>
+> Everything below was written and checked *before* any model ran.
 
 | Contestant | Provider |
 |---|---|
@@ -79,7 +81,7 @@ The [Contest workflow](.github/workflows/contest.yml) runs it on GitHub Actions:
 | [`reference/`](reference/) | A hand-written implementation that proves the tests are correct (never shown to the models) |
 | [`mutants/`](mutants/) | The planted-bug check |
 | [`score/`](score/) | The scorer, in Go: `measure` (tests, race detector, linters, coverage), `blind` (renames projects for review), `tally` (the scorecard) |
-| [`results/`](results/) | Each model's code, logs, findings and scores, after the runs |
+| [`results/`](results/) | Each model's code, logs, findings and scores |
 
 ## Scoring a project yourself
 

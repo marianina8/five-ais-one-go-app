@@ -1,6 +1,6 @@
 {
-  "label": "gpt-6-1-sol/run2",
-  "measured_at": "2026-10-05T01:45:29.65758553Z",
+  "label": "project G",
+  "measured_at": "2026-10-05T21:23:53.023791Z",
   "size": {
     "go_files": 5,
     "code_lines": 446,
@@ -123,9 +123,9 @@
     "test_files": 2,
     "test_funcs": 8,
     "passed": true,
-    "coverage": 83.6,
+    "coverage": 82.1,
     "points": 10,
-    "output": "ok  \tshortener\t0.228s\tcoverage: 83.6% of statements"
+    "output": "ok  \tshortener\t3.496s\tcoverage: 82.1% of statements"
   },
   "findings": [
     {
@@ -171,5 +171,5 @@
       "verdict": "pending"
     }
   ],
-  "elapsed_ns": 29887836714
+  "elapsed_ns": 50877887125
 }

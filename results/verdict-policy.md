@@ -1,5 +1,7 @@
 # How findings were judged
 
+> **What the final scorecard actually uses.** The Bugs & security score counts the tool findings (errcheck, gosec, staticcheck and the race detector) in each project's shipped code. Each one costs 2 points. Findings in test files don't count. This is the rule shown in the video. The review agent's findings and the more detailed policy below were drafted first, but they weren't used for the final score. The agent's reports are still in each run's folder for reference.
+
 Every possible bug, whether from a tool (go vet, staticcheck, gosec, errcheck, the race detector) or the review agent, gets one verdict in its run's `findings.json`. Only `confirmed` findings cost points. These rules were written before any verdict was given, and apply the same way to every model.
 
 ## Confirmed: a real defect in this code

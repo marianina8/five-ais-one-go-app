@@ -1,6 +1,6 @@
 {
-  "label": "deepseek-v3-2/run1",
-  "measured_at": "2026-10-05T01:44:17.859960454Z",
+  "label": "project A",
+  "measured_at": "2026-10-05T21:20:00.764184Z",
   "size": {
     "go_files": 4,
     "code_lines": 492,
@@ -43,7 +43,7 @@
       "TestPersistence_DeleteSurvivesRestart": "pass",
       "TestPersistence_KillAndRecoverWithoutRestartGrace": "fail",
       "TestPersistence_KillDuringWrites": "pass",
-      "TestPersistence_SurvivesRestart": "pass",
+      "TestPersistence_SurvivesRestart": "fail",
       "TestPersistence_UsesDataFlag": "pass",
       "TestValidation_BadAliases/non_ascii": "pass",
       "TestValidation_BadAliases/reserved_api": "pass",
@@ -87,7 +87,7 @@
         3
       ],
       "Persistence": [
-        5,
+        4,
         6
       ],
       "Validation": [
@@ -100,19 +100,20 @@
       "Concurrency": 5.3,
       "Core": 8,
       "Errors": 0,
-      "Persistence": 5.8,
+      "Persistence": 4.7,
       "Validation": 7
     },
-    "total": 33.1,
+    "total": 32,
     "failures": {
-      "TestConcurrency_ParallelVisitsExact": "acceptance_test.go:529: visits: want 500, got 40 (lost updates)",
+      "TestConcurrency_ParallelVisitsExact": "acceptance_test.go:529: visits: want 500, got 39 (lost updates)",
       "TestErrors_BodyTooLarge413": "acceptance_test.go:337: 2 MiB body: want 413, got 400: {\"error\":\"Invalid JSON\"}",
       "TestErrors_JSONErrorFormat": "acceptance_test.go:326: wrong method: want 405, got 404: {\"error\":\"Not found\"}",
       "TestErrors_MethodNotAllowed": "acceptance_test.go:343: PUT /api/links: want 405, got 404: {\"error\":\"Not found\"}",
       "TestPersistence_KillAndRecoverWithoutRestartGrace": "acceptance_test.go:418: a visit answered with 302 was lost after SIGKILL: visits 0, want 1",
-      "TestValidation_BadURLs/port_only": "acceptance_test.go:125: url \"http://:80/x\": want 400, got 201: {\"code\":\"BQiMVT5\",\"url\":\"http://:80/x\",\"created_at\":\"2026-10-05T01:44:19.172219767Z\",\"visits\":0}",
-      "TestValidation_MalformedJSON/trailing_data": "acceptance_test.go:187: malformed JSON: trailing_data: want 400, got 201: {\"code\":\"O0k81nA\",\"url\":\"https://example.com/trailing\",\"created_at\":\"2026-10-05T01:44:19.960350964Z\",\"visits\":0}",
-      "TestValidation_UnknownField": "acceptance_test.go:195: unknown field: want 400, got 201: {\"code\":\"HXOxxMX\",\"url\":\"https://example.com\",\"created_at\":\"2026-10-05T01:44:20.012831342Z\",\"visits\":0}"
+      "TestPersistence_SurvivesRestart": "acceptance_test.go:362: visits after restart: want 2, got 1",
+      "TestValidation_BadURLs/port_only": "acceptance_test.go:125: url \"http://:80/x\": want 400, got 201: {\"code\":\"kEebU4b\",\"url\":\"http://:80/x\",\"created_at\":\"2026-10-05T21:20:03.223888Z\",\"visits\":0}",
+      "TestValidation_MalformedJSON/trailing_data": "acceptance_test.go:187: malformed JSON: trailing_data: want 400, got 201: {\"code\":\"wAjNecp\",\"url\":\"https://example.com/trailing\",\"created_at\":\"2026-10-05T21:20:04.322143Z\",\"visits\":0}",
+      "TestValidation_UnknownField": "acceptance_test.go:195: unknown field: want 400, got 201: {\"code\":\"bF2vtC0\",\"url\":\"https://example.com\",\"created_at\":\"2026-10-05T21:20:04.377507Z\",\"visits\":0}"
     }
   },
   "style": {
@@ -136,10 +137,10 @@
   "own_tests": {
     "test_files": 2,
     "test_funcs": 17,
-    "passed": true,
-    "coverage": 77.9,
-    "points": 9.7,
-    "output": "ok  \tshortener\t0.197s\tcoverage: 77.9% of statements"
+    "passed": false,
+    "coverage": 78.8,
+    "points": 0,
+    "output": "--- FAIL: TestHandler_RedirectLink (0.00s)\n    testing.go:1617: TempDir RemoveAll cleanup: unlinkat /tmp/TestHandler_RedirectLink2912470941/001: directory not empty\nFAIL\ncoverage: 78.8% of statements\nFAIL\tshortener\t0.500s\nFAIL"
   },
   "findings": [
     {
@@ -186,6 +187,24 @@
     {
       "id": "T06",
       "source": "gosec",
+      "rule": "G706",
+      "file": "main.go",
+      "line": 190,
+      "message": "G706: Log injection via taint analysis",
+      "verdict": "pending"
+    },
+    {
+      "id": "T07",
+      "source": "gosec",
+      "rule": "G710",
+      "file": "main.go",
+      "line": 194,
+      "message": "G710: Open redirect via taint analysis",
+      "verdict": "pending"
+    },
+    {
+      "id": "T08",
+      "source": "gosec",
       "rule": "G306",
       "file": "store.go",
       "line": 81,
@@ -193,7 +212,7 @@
       "verdict": "pending"
     },
     {
-      "id": "T07",
+      "id": "T09",
       "source": "gosec",
       "rule": "G306",
       "file": "store.go",
@@ -202,7 +221,16 @@
       "verdict": "pending"
     },
     {
-      "id": "T08",
+      "id": "T10",
+      "source": "gosec",
+      "rule": "G703",
+      "file": "store.go",
+      "line": 112,
+      "message": "G703: Path traversal via taint analysis",
+      "verdict": "pending"
+    },
+    {
+      "id": "T11",
       "source": "gosec",
       "rule": "G404",
       "file": "store.go",
@@ -211,14 +239,14 @@
       "verdict": "pending"
     },
     {
-      "id": "T09",
+      "id": "T12",
       "source": "staticcheck",
       "rule": "SA1019",
       "file": "store.go",
       "line": 298,
-      "message": "SA1019: rand.Seed has been deprecated since Go 1.20 and an alternative has been available since Go 1.0: As of Go 1.20 there is no reason to call Seed with a random value. Programs that call Seed with a known value to get a specific sequence of results should use New(NewSource(seed)) to obtain a local random generator.",
+      "message": "SA1019: math/rand.Seed has been deprecated since Go 1.20 and an alternative has been available since Go 1.0: As of Go 1.20 there is no reason to call Seed with a random value. Programs that call Seed with a known value to get a specific sequence of results should use New(NewSource(seed)) to obtain a local random generator.",
       "verdict": "pending"
     }
   ],
-  "elapsed_ns": 23341919742
+  "elapsed_ns": 34892061542
 }

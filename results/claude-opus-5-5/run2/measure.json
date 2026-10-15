@@ -1,6 +1,6 @@
 {
-  "label": "claude-opus-5-5/run2",
-  "measured_at": "2026-10-05T01:43:05.080146023Z",
+  "label": "project I",
+  "measured_at": "2026-10-05T21:25:16.574788Z",
   "size": {
     "go_files": 4,
     "code_lines": 451,
@@ -123,9 +123,9 @@
     "test_files": 1,
     "test_funcs": 3,
     "passed": true,
-    "coverage": 69.5,
-    "points": 8.7,
-    "output": "ok  \tshortener\t0.610s\tcoverage: 69.5% of statements"
+    "coverage": 67.2,
+    "points": 8.4,
+    "output": "ok  \tshortener\t1.926s\tcoverage: 67.2% of statements"
   },
   "findings": [
     {
@@ -243,5 +243,5 @@
       "verdict": "pending"
     }
   ],
-  "elapsed_ns": 25945400670
+  "elapsed_ns": 45834911541
 }

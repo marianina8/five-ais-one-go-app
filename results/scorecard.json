@@ -7,13 +7,55 @@
         "Run": "run1",
         "Built": true,
         "Works": 40,
-        "Bugs": 20,
+        "Bugs": 10,
         "OwnTests": 10,
-        "Merge": 0,
-        "Reviewed": false,
+        "Merge": 14,
+        "Reviewed": true,
         "StyleScore": 6,
         "StyleMeasured": true,
-        "Confirmed": null,
+        "Confirmed": [
+          {
+            "id": "T02",
+            "source": "errcheck",
+            "file": "store.go",
+            "line": 63,
+            "message": "Error return value of `f.Close` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T03",
+            "source": "errcheck",
+            "file": "store.go",
+            "line": 127,
+            "message": "Error return value of `dir.Close` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T04",
+            "source": "errcheck",
+            "file": "store.go",
+            "line": 132,
+            "message": "Error return value of `os.Remove` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T05",
+            "source": "errcheck",
+            "file": "store.go",
+            "line": 133,
+            "message": "Error return value of `f.Close` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T07",
+            "source": "gosec",
+            "rule": "G304",
+            "file": "store.go",
+            "line": 56,
+            "message": "G304: Potential file inclusion via variable",
+            "verdict": "confirmed"
+          }
+        ],
         "Pending": 0,
         "Stats": {
           "model_calls": 10,
@@ -27,7 +69,7 @@
         },
         "HiddenPassed": 55,
         "HiddenTotal": 55,
-        "Coverage": 92.7,
+        "Coverage": 91.6,
         "OwnTestsPassed": true
       },
       {
@@ -35,13 +77,47 @@
         "Run": "run2",
         "Built": true,
         "Works": 40,
-        "Bugs": 20,
+        "Bugs": 12,
         "OwnTests": 10,
-        "Merge": 0,
-        "Reviewed": false,
+        "Merge": 6,
+        "Reviewed": true,
         "StyleScore": 7,
         "StyleMeasured": true,
-        "Confirmed": null,
+        "Confirmed": [
+          {
+            "id": "T01",
+            "source": "errcheck",
+            "file": "store.go",
+            "line": 101,
+            "message": "Error return value of `dir.Close` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T02",
+            "source": "errcheck",
+            "file": "store.go",
+            "line": 107,
+            "message": "Error return value of `os.Remove` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T03",
+            "source": "errcheck",
+            "file": "store.go",
+            "line": 108,
+            "message": "Error return value of `f.Close` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T05",
+            "source": "gosec",
+            "rule": "G304",
+            "file": "store.go",
+            "line": 44,
+            "message": "G304: Potential file inclusion via variable",
+            "verdict": "confirmed"
+          }
+        ],
         "Pending": 0,
         "Stats": {
           "model_calls": 9,
@@ -55,16 +131,16 @@
         },
         "HiddenPassed": 55,
         "HiddenTotal": 55,
-        "Coverage": 83.6,
+        "Coverage": 82.1,
         "OwnTestsPassed": true
       }
     ],
     "Works": 40,
-    "Bugs": 20,
+    "Bugs": 11,
     "Readable": 10,
     "OwnTests": 10,
-    "Merge": 0,
-    "Total": 80,
+    "Merge": 10,
+    "Total": 81,
     "StyleScore": 6.5,
     "AnyBuilt": true,
     "ConfirmedHigh": 0,
@@ -80,13 +156,53 @@
         "Run": "run1",
         "Built": true,
         "Works": 40,
-        "Bugs": 18,
+        "Bugs": 4,
         "OwnTests": 9.3,
-        "Merge": 0,
-        "Reviewed": false,
+        "Merge": 10,
+        "Reviewed": true,
         "StyleScore": 9,
         "StyleMeasured": true,
         "Confirmed": [
+          {
+            "id": "T01",
+            "source": "errcheck",
+            "file": "main.go",
+            "line": 28,
+            "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T03",
+            "source": "errcheck",
+            "file": "store.go",
+            "line": 84,
+            "message": "Error return value of `f.Close` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T04",
+            "source": "errcheck",
+            "file": "store.go",
+            "line": 85,
+            "message": "Error return value of `os.Remove` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T05",
+            "source": "errcheck",
+            "file": "store.go",
+            "line": 102,
+            "message": "Error return value of `d.Sync` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T06",
+            "source": "errcheck",
+            "file": "store.go",
+            "line": 103,
+            "message": "Error return value of `d.Close` is not checked",
+            "verdict": "confirmed"
+          },
           {
             "id": "T07",
             "source": "gosec",
@@ -94,8 +210,25 @@
             "file": "main.go",
             "line": 185,
             "message": "G114: Use of net/http serve function that has no support for setting timeouts",
-            "verdict": "confirmed",
-            "note": "main.go:185 http.ListenAndServe uses a server with no timeouts."
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T08",
+            "source": "gosec",
+            "rule": "G304",
+            "file": "store.go",
+            "line": 40,
+            "message": "G304: Potential file inclusion via variable",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T09",
+            "source": "gosec",
+            "rule": "G304",
+            "file": "store.go",
+            "line": 101,
+            "message": "G304: Potential file inclusion via variable",
+            "verdict": "confirmed"
           }
         ],
         "Pending": 0,
@@ -119,13 +252,53 @@
         "Run": "run2",
         "Built": true,
         "Works": 40,
-        "Bugs": 18,
+        "Bugs": 4,
         "OwnTests": 9.5,
-        "Merge": 0,
-        "Reviewed": false,
+        "Merge": 10,
+        "Reviewed": true,
         "StyleScore": 9,
         "StyleMeasured": true,
         "Confirmed": [
+          {
+            "id": "T01",
+            "source": "errcheck",
+            "file": "main.go",
+            "line": 28,
+            "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T04",
+            "source": "errcheck",
+            "file": "store.go",
+            "line": 75,
+            "message": "Error return value of `f.Close` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T05",
+            "source": "errcheck",
+            "file": "store.go",
+            "line": 76,
+            "message": "Error return value of `os.Remove` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T06",
+            "source": "errcheck",
+            "file": "store.go",
+            "line": 93,
+            "message": "Error return value of `d.Sync` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T07",
+            "source": "errcheck",
+            "file": "store.go",
+            "line": 94,
+            "message": "Error return value of `d.Close` is not checked",
+            "verdict": "confirmed"
+          },
           {
             "id": "T08",
             "source": "gosec",
@@ -133,8 +306,25 @@
             "file": "main.go",
             "line": 189,
             "message": "G112: Potential Slowloris Attack because ReadHeaderTimeout is not configured in the http.Server",
-            "verdict": "confirmed",
-            "note": "main.go:189 http.Server has no ReadHeaderTimeout or any other timeout, so slow clients can hold connections forever."
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T09",
+            "source": "gosec",
+            "rule": "G304",
+            "file": "store.go",
+            "line": 33,
+            "message": "G304: Potential file inclusion via variable",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T10",
+            "source": "gosec",
+            "rule": "G304",
+            "file": "store.go",
+            "line": 92,
+            "message": "G304: Potential file inclusion via variable",
+            "verdict": "confirmed"
           }
         ],
         "Pending": 0,
@@ -155,11 +345,11 @@
       }
     ],
     "Works": 40,
-    "Bugs": 18,
+    "Bugs": 4,
     "Readable": 6,
     "OwnTests": 9.4,
-    "Merge": 0,
-    "Total": 73.4,
+    "Merge": 10,
+    "Total": 69.4,
     "StyleScore": 9,
     "AnyBuilt": true,
     "ConfirmedHigh": 0,
@@ -168,88 +358,201 @@
     "ModelCalls": 4.5
   },
   {
-    "Model": "claude-opus-5-5",
+    "Model": "deepseek-v3-2",
     "Runs": [
       {
-        "Model": "claude-opus-5-5",
+        "Model": "deepseek-v3-2",
         "Run": "run1",
         "Built": true,
-        "Works": 40,
-        "Bugs": 18,
-        "OwnTests": 9.3,
-        "Merge": 0,
-        "Reviewed": false,
-        "StyleScore": 9,
+        "Works": 32,
+        "Bugs": 4,
+        "OwnTests": 0,
+        "Merge": 20,
+        "Reviewed": true,
+        "StyleScore": 6,
         "StyleMeasured": true,
         "Confirmed": [
           {
-            "id": "T09",
+            "id": "T03",
+            "source": "errcheck",
+            "file": "main.go",
+            "line": 84,
+            "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T05",
             "source": "gosec",
             "rule": "G114",
             "file": "main.go",
-            "line": 194,
+            "line": 30,
             "message": "G114: Use of net/http serve function that has no support for setting timeouts",
-            "verdict": "confirmed",
-            "note": "main.go:194 http.ListenAndServe uses a server with no timeouts."
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T06",
+            "source": "gosec",
+            "rule": "G706",
+            "file": "main.go",
+            "line": 190,
+            "message": "G706: Log injection via taint analysis",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T07",
+            "source": "gosec",
+            "rule": "G710",
+            "file": "main.go",
+            "line": 194,
+            "message": "G710: Open redirect via taint analysis",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T08",
+            "source": "gosec",
+            "rule": "G306",
+            "file": "store.go",
+            "line": 81,
+            "message": "G306: Expect WriteFile permissions to be 0600 or less",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T09",
+            "source": "gosec",
+            "rule": "G306",
+            "file": "store.go",
+            "line": 107,
+            "message": "G306: Expect WriteFile permissions to be 0600 or less",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T10",
+            "source": "gosec",
+            "rule": "G703",
+            "file": "store.go",
+            "line": 112,
+            "message": "G703: Path traversal via taint analysis",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T11",
+            "source": "gosec",
+            "rule": "G404",
+            "file": "store.go",
+            "line": 289,
+            "message": "G404: Use of weak random number generator (math/rand or math/rand/v2 instead of crypto/rand)",
+            "verdict": "confirmed"
           }
         ],
         "Pending": 0,
         "Stats": {
-          "model_calls": 3,
-          "input_tokens": 22088,
-          "output_tokens": 7996,
-          "cost_usd": 0.2483,
-          "seconds": 75,
+          "model_calls": 38,
+          "input_tokens": 779736,
+          "output_tokens": 30428,
+          "cost_usd": 0.5397,
+          "seconds": 890,
           "finished": true,
           "stopped_by": "done",
           "error": ""
         },
-        "HiddenPassed": 55,
+        "HiddenPassed": 46,
         "HiddenTotal": 55,
-        "Coverage": 74.5,
-        "OwnTestsPassed": true
+        "Coverage": 78.8,
+        "OwnTestsPassed": false
       },
       {
-        "Model": "claude-opus-5-5",
+        "Model": "deepseek-v3-2",
         "Run": "run2",
         "Built": true,
-        "Works": 40,
-        "Bugs": 20,
-        "OwnTests": 8.7,
-        "Merge": 0,
-        "Reviewed": false,
-        "StyleScore": 14,
+        "Works": 35,
+        "Bugs": 8,
+        "OwnTests": 10,
+        "Merge": 14,
+        "Reviewed": true,
+        "StyleScore": 12,
         "StyleMeasured": true,
-        "Confirmed": null,
+        "Confirmed": [
+          {
+            "id": "T01",
+            "source": "errcheck",
+            "file": "handler.go",
+            "line": 102,
+            "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T02",
+            "source": "errcheck",
+            "file": "handler.go",
+            "line": 139,
+            "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T03",
+            "source": "errcheck",
+            "file": "handler.go",
+            "line": 187,
+            "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T15",
+            "source": "gosec",
+            "rule": "G114",
+            "file": "main.go",
+            "line": 28,
+            "message": "G114: Use of net/http serve function that has no support for setting timeouts",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T16",
+            "source": "gosec",
+            "rule": "G306",
+            "file": "store.go",
+            "line": 84,
+            "message": "G306: Expect WriteFile permissions to be 0600 or less",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T17",
+            "source": "gosec",
+            "rule": "G703",
+            "file": "store.go",
+            "line": 88,
+            "message": "G703: Path traversal via taint analysis",
+            "verdict": "confirmed"
+          }
+        ],
         "Pending": 0,
         "Stats": {
-          "model_calls": 4,
-          "input_tokens": 32492,
-          "output_tokens": 9102,
-          "cost_usd": 0.312,
-          "seconds": 84,
+          "model_calls": 40,
+          "input_tokens": 935993,
+          "output_tokens": 36596,
+          "cost_usd": 0.648,
+          "seconds": 1036,
           "finished": true,
           "stopped_by": "done",
           "error": ""
         },
-        "HiddenPassed": 55,
+        "HiddenPassed": 49,
         "HiddenTotal": 55,
-        "Coverage": 69.5,
+        "Coverage": 81.2,
         "OwnTestsPassed": true
       }
     ],
-    "Works": 40,
-    "Bugs": 19,
-    "Readable": 2,
-    "OwnTests": 9,
-    "Merge": 0,
-    "Total": 70,
-    "StyleScore": 11.5,
+    "Works": 33.5,
+    "Bugs": 6,
+    "Readable": 6,
+    "OwnTests": 5,
+    "Merge": 17,
+    "Total": 67.5,
+    "StyleScore": 9,
     "AnyBuilt": true,
     "ConfirmedHigh": 0,
-    "CostUSD": 0.28015,
-    "Seconds": 79.5,
-    "ModelCalls": 3.5
+    "CostUSD": 0.59385,
+    "Seconds": 963,
+    "ModelCalls": 39
   },
   {
     "Model": "gemini-3-1-pro",
@@ -259,13 +562,77 @@
         "Run": "run1",
         "Built": true,
         "Works": 39.3,
-        "Bugs": 15,
-        "OwnTests": 9.6,
-        "Merge": 0,
-        "Reviewed": false,
+        "Bugs": 0,
+        "OwnTests": 10,
+        "Merge": 6,
+        "Reviewed": true,
         "StyleScore": 5,
         "StyleMeasured": true,
         "Confirmed": [
+          {
+            "id": "T01",
+            "source": "errcheck",
+            "file": "server.go",
+            "line": 22,
+            "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T02",
+            "source": "errcheck",
+            "file": "server.go",
+            "line": 92,
+            "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T03",
+            "source": "errcheck",
+            "file": "server.go",
+            "line": 113,
+            "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T04",
+            "source": "errcheck",
+            "file": "server.go",
+            "line": 154,
+            "message": "Error return value of `rw.ResponseWriter.Write` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T05",
+            "source": "errcheck",
+            "file": "server.go",
+            "line": 159,
+            "message": "Error return value of `rw.ResponseWriter.Write` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T13",
+            "source": "errcheck",
+            "file": "store.go",
+            "line": 66,
+            "message": "Error return value of `os.Remove` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T14",
+            "source": "errcheck",
+            "file": "store.go",
+            "line": 69,
+            "message": "Error return value of `f.Close` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T15",
+            "source": "errcheck",
+            "file": "store.go",
+            "line": 73,
+            "message": "Error return value of `f.Close` is not checked",
+            "verdict": "confirmed"
+          },
           {
             "id": "T16",
             "source": "gosec",
@@ -273,30 +640,16 @@
             "file": "main.go",
             "line": 30,
             "message": "G114: Use of net/http serve function that has no support for setting timeouts",
-            "verdict": "confirmed",
-            "note": "http.ListenAndServe with no server timeouts (main.go:30)."
+            "verdict": "confirmed"
           },
           {
-            "id": "A07",
-            "source": "agent",
-            "rule": "Secrets and sensitive data",
-            "file": "server.go",
-            "line": 28,
-            "message": "server.go:28-29 — The admin token is compared with `!=`, which is not constant-time and so allows timing attacks. Fix: use `subtle.ConstantTimeCompare` on the supplied token and the expected token.",
-            "severity": "medium",
-            "verdict": "confirmed",
-            "note": "Admin token is compared with != rather than in constant time, which can leak it through timing (server.go:28-29)."
-          },
-          {
-            "id": "A19",
-            "source": "agent",
-            "rule": "Tests",
-            "file": "time_test.go",
-            "line": 10,
-            "message": "time_test.go:10-16 — `TestRFC3339` can't meaningfully fail. `time.Now().UTC()` always marshals with `Z`, and the assertion also accepts any `+`. It doesn't test `Create`'s millisecond truncation either. Fix: create through the store and parse the output with `time.Parse(time.RFC3339Nano, ...)`.",
-            "severity": "low",
-            "verdict": "confirmed",
-            "note": "TestRFC3339 marshals a time it built itself and accepts any Z or +, so it cannot fail (time_test.go:10-16)."
+            "id": "T17",
+            "source": "gosec",
+            "rule": "G304",
+            "file": "store.go",
+            "line": 35,
+            "message": "G304: Potential file inclusion via variable",
+            "verdict": "confirmed"
           }
         ],
         "Pending": 0,
@@ -312,7 +665,7 @@
         },
         "HiddenPassed": 53,
         "HiddenTotal": 55,
-        "Coverage": 76.8,
+        "Coverage": 80.7,
         "OwnTestsPassed": true
       },
       {
@@ -320,10 +673,10 @@
         "Run": "run2",
         "Built": true,
         "Works": 39.3,
-        "Bugs": 12,
-        "OwnTests": 7.7,
-        "Merge": 0,
-        "Reviewed": false,
+        "Bugs": 2,
+        "OwnTests": 7.8,
+        "Merge": 10,
+        "Reviewed": true,
         "StyleScore": 10,
         "StyleMeasured": true,
         "Confirmed": [
@@ -333,41 +686,75 @@
             "rule": "DATA RACE",
             "file": "store.go",
             "line": 116,
-            "message": "WARNING: DATA RACE\nWrite at 0x00c00006a4f8 by goroutine 51:\n  main.(*Store).Visit()\n      /tmp/score-2354122949/code/store.go:116 +0x16b\n  main.(*Server).handleFollowLink()\n      /tmp/score-2354122949/code/server.go:117 +0x24b\n  main.(*Server).handleFollowLink-fm()\n      \u003cautogenerated\u003e:1 +0x51\n  net/http.HandlerFunc.ServeHTTP()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:2294 +0x47\n  net/http.(*ServeMux).ServeHTTP()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:2822 +0x23e\n  main.main.wrapInterceptor.func2()\n      /tmp/score-2354122949/code/server.go:198 +0xe2\n  net/http.HandlerFunc.ServeHTTP()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:2294 +0x47\n  net/http.serverHandler.ServeHTTP()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:3301 +0x2a1\n  net/http.(*conn).serve()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:2102 +0x1304\n  net/http.(*Server).Serve.gowrap3()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:3454 +0x4f\n\nPrevious read at 0x00c00006a4f8 by goroutine 43:\n  reflect.Value.Int()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/reflect/value.go:1455 +0x1b3\n  encoding/json.intEncoder()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/encoding/json/encode.go:525 +0x185\n  encoding/json.structEncoder.encode()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/encoding/json/encode.go:727 +0x3c7\n  encoding/json.structEncoder.encode-fm()\n      \u003cautogenerated\u003e:1 +0xe4\n …[trimmed]",
-            "verdict": "confirmed",
-            "note": "store.go:116 Visit increments l.Visits under the lock while List/Create return live *Link pointers that server.go:137/107 JSON-encode after unlock: a real data race."
+            "message": "WARNING: DATA RACE\nWrite at 0x00c0000a0438 by goroutine 40:\n  main.(*Store).Visit()\n      /private/var/folders/dr/t48yfz7s06d1q8lsck41hq440000gp/T/score-3742302627/code/store.go:116 +0xe8\n  main.(*Server).handleFollowLink()\n      /private/var/folders/dr/t48yfz7s06d1q8lsck41hq440000gp/T/score-3742302627/code/server.go:117 +0x1d4\n  main.(*Server).handleFollowLink-fm()\n      \u003cautogenerated\u003e:1 +0x44\n  net/http.HandlerFunc.ServeHTTP()\n      /opt/homebrew/Cellar/go/1.27.1/libexec/src/net/http/server.go:2338 +0x48\n  net/http.(*ServeMux).ServeHTTP()\n      /opt/homebrew/Cellar/go/1.27.1/libexec/src/net/http/server.go:2903 +0x1a8\n  main.wrapInterceptor.func1()\n      /private/var/folders/dr/t48yfz7s06d1q8lsck41hq440000gp/T/score-3742302627/code/server.go:198 +0xc8\n  net/http.HandlerFunc.ServeHTTP()\n      /opt/homebrew/Cellar/go/1.27.1/libexec/src/net/http/server.go:2338 +0x48\n  net/http.serverHandler.ServeHTTP()\n      /opt/homebrew/Cellar/go/1.27.1/libexec/src/net/http/server.go:3413 +0x268\n  net/http.(*conn).serve()\n      /opt/homebrew/Cellar/go/1.27.1/libexec/src/net/http/server.go:2137 +0xa84\n  context.withCancel()\n      /opt/homebrew/Cellar/go/1.27.1/libexec/src/context/context.go:279 +0x94\n  context.WithCancel()\n      /opt/homebrew/Cellar/go/1.27.1/libexec/src/context/context.go:242 +0x28\n  net/http.(*conn).serve()\n      /opt/homebrew/Cellar/go/1.27.1/libexec/src/net/http/server.go:2030 +0x288\n  net/http.(*Server).Serve.gowrap3()\n      /opt/homebrew/Cellar/go/1.27.1/libexec/src/net …[trimmed]",
+            "verdict": "confirmed"
           },
           {
-            "id": "T20",
+            "id": "T02",
+            "source": "errcheck",
+            "file": "server.go",
+            "line": 21,
+            "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T03",
+            "source": "errcheck",
+            "file": "server.go",
+            "line": 188,
+            "message": "Error return value of `w.ResponseWriter.Write` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T04",
+            "source": "errcheck",
+            "file": "server.go",
+            "line": 189,
+            "message": "Error return value of `w.ResponseWriter.Write` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T17",
+            "source": "errcheck",
+            "file": "store.go",
+            "line": 66,
+            "message": "Error return value of `f.Close` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T18",
+            "source": "errcheck",
+            "file": "store.go",
+            "line": 70,
+            "message": "Error return value of `f.Close` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T19",
             "source": "gosec",
             "rule": "G114",
             "file": "main.go",
             "line": 39,
             "message": "G114: Use of net/http serve function that has no support for setting timeouts",
-            "verdict": "confirmed",
-            "note": "main.go:39 http.ListenAndServe uses a server with no timeouts."
+            "verdict": "confirmed"
           },
           {
-            "id": "A01",
-            "source": "agent",
-            "rule": "Error handling",
-            "file": "server.go",
-            "line": 166,
-            "message": "server.go:166-193 (with server.go:24-26, 113, 123, 153) — The 404/405 interceptor re-wraps JSON that the handlers already wrote. A missing code, `/api`, or a delete of a nonexistent code returns `{\"error\":\"{\\\"error\\\":\\\"not found\\\"}\"}`, which is JSON nested inside a JSON string. Only mux-generated errors such as `/a/b` come out correctly. Fix: in `Write`, only rewrite the body when the handler did not already set `Content-Type: application/json`. A cleaner way is to remember in `WriteHeader` that the interceptor changed the header, and rewrite only in that case. [verified]",
-            "severity": "medium",
-            "verdict": "confirmed",
-            "note": "server.go:178-191 re-wraps handler JSON errors on 404/405; verified GET /nope returns {\"error\":\"{\\\"error\\\":\\\"not found\\\"}\"}, which breaks the spec's error body format."
+            "id": "T20",
+            "source": "gosec",
+            "rule": "G304",
+            "file": "store.go",
+            "line": 34,
+            "message": "G304: Potential file inclusion via variable",
+            "verdict": "confirmed"
           },
           {
-            "id": "A09",
-            "source": "agent",
-            "rule": "Secrets and sensitive data",
-            "file": "server.go",
-            "line": 28,
-            "message": "server.go:28-31 — The bearer token is compared with `==`, which is not constant-time and allows timing attacks. Fix: use `subtle.ConstantTimeCompare` on the two values (hash both first, or compare lengths separately).",
-            "severity": "medium",
-            "verdict": "confirmed",
-            "note": "server.go:28-31 compares the bearer token with ==, not constant-time, which the policy counts as a token-leaking comparison."
+            "id": "T21",
+            "source": "gosec",
+            "rule": "G302",
+            "file": "store.go",
+            "line": 61,
+            "message": "G302: Expect file permissions to be 0600 or less",
+            "verdict": "confirmed"
           }
         ],
         "Pending": 0,
@@ -383,16 +770,16 @@
         },
         "HiddenPassed": 53,
         "HiddenTotal": 55,
-        "Coverage": 61.9,
+        "Coverage": 62.5,
         "OwnTestsPassed": true
       }
     ],
     "Works": 39.3,
-    "Bugs": 13.5,
+    "Bugs": 1,
     "Readable": 8,
-    "OwnTests": 8.65,
-    "Merge": 0,
-    "Total": 69.45,
+    "OwnTests": 8.9,
+    "Merge": 8,
+    "Total": 65.19999999999999,
     "StyleScore": 7.5,
     "AnyBuilt": true,
     "ConfirmedHigh": 0,
@@ -401,175 +788,219 @@
     "ModelCalls": 36
   },
   {
-    "Model": "deepseek-v3-2",
+    "Model": "claude-opus-5-5",
     "Runs": [
       {
-        "Model": "deepseek-v3-2",
+        "Model": "claude-opus-5-5",
         "Run": "run1",
         "Built": true,
-        "Works": 33.1,
-        "Bugs": 12,
-        "OwnTests": 9.7,
-        "Merge": 0,
-        "Reviewed": false,
-        "StyleScore": 6,
+        "Works": 40,
+        "Bugs": 2,
+        "OwnTests": 9.4,
+        "Merge": 10,
+        "Reviewed": true,
+        "StyleScore": 9,
         "StyleMeasured": true,
         "Confirmed": [
           {
+            "id": "T01",
+            "source": "errcheck",
+            "file": "main.go",
+            "line": 28,
+            "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T04",
+            "source": "errcheck",
+            "file": "store.go",
+            "line": 80,
+            "message": "Error return value of `os.Remove` is not checked",
+            "verdict": "confirmed"
+          },
+          {
             "id": "T05",
+            "source": "errcheck",
+            "file": "store.go",
+            "line": 84,
+            "message": "Error return value of `f.Close` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T06",
+            "source": "errcheck",
+            "file": "store.go",
+            "line": 88,
+            "message": "Error return value of `f.Close` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T07",
+            "source": "errcheck",
+            "file": "store.go",
+            "line": 99,
+            "message": "Error return value of `d.Sync` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T08",
+            "source": "errcheck",
+            "file": "store.go",
+            "line": 100,
+            "message": "Error return value of `d.Close` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T09",
             "source": "gosec",
             "rule": "G114",
             "file": "main.go",
-            "line": 30,
+            "line": 194,
             "message": "G114: Use of net/http serve function that has no support for setting timeouts",
-            "verdict": "confirmed",
-            "note": "http.ListenAndServe with no server timeouts (main.go:30)."
+            "verdict": "confirmed"
           },
           {
-            "id": "A01",
-            "source": "agent",
-            "rule": "Error handling",
+            "id": "T10",
+            "source": "gosec",
+            "rule": "G304",
             "file": "store.go",
-            "line": 230,
-            "message": "store.go:230-243 (also 191-205) — `Delete` removes the link from memory and then saves. If the save fails, it returns an error but does not put the link back. The API reports a 500, yet the link is gone from memory and still on disk. After a failed delete, `Get` returned \"not found\" and the file still contained the link. It comes back after a restart. `Create` (store.go:167-172) does roll back, so the three write paths behave inconsistently. `IncrementVisits` also keeps the changed count in memory when the save fails. Fix: copy the old value, mutate, save, and restore the old value if the save fails. Or build the new map, save it, and swap it in only on success. [verified]",
-            "severity": "medium",
-            "verdict": "confirmed",
-            "note": "Severity changed from high to medium. Delete removes the link from memory and never restores it when saveLocked fails, so a request answered 500 still deletes in memory and memory/disk diverge (store.go:230-243); needs a disk failure, so lowered from high to medium. Severity set to medium for both projects with this failed-save-on-delete bug: it only happens when a save fails."
+            "line": 37,
+            "message": "G304: Potential file inclusion via variable",
+            "verdict": "confirmed"
           },
           {
-            "id": "A04",
-            "source": "agent",
-            "rule": "Error handling",
+            "id": "T11",
+            "source": "gosec",
+            "rule": "G304",
             "file": "store.go",
-            "line": 81,
-            "message": "store.go:81-88, 107-114 — The temp file is never fsynced and the directory is not synced. The write is not safe against power loss, which the README claims (\"even during crashes\"). If the rename fails, the stale `.tmp` file stays behind. Fix: use `os.CreateTemp` in the same directory, then `f.Sync()`, `f.Close()` and `os.Rename`. Remove the temp file on error.",
-            "severity": "low",
-            "verdict": "confirmed",
-            "note": "Severity changed from medium to low. Temp file is written with os.WriteFile and renamed with no fsync (store.go:81-88, 107-114), so an OS crash can leave an empty data.json that fails to parse at startup, breaking the crash-safety rule. Severity set to low for both projects with this missing fsync: only an OS crash or power loss, not a killed process, can leave the bad file."
-          },
-          {
-            "id": "A07",
-            "source": "agent",
-            "rule": "Secrets and sensitive data",
-            "file": "main.go",
-            "line": 99,
-            "message": "main.go:99 — The admin token is compared with `==`, which is not constant-time. Also the `Bearer` prefix is case-sensitive, so `bearer tok` gets 401 (verified). Fix: use `subtle.ConstantTimeCompare([]byte(token), []byte(h.adminToken))` and `strings.EqualFold` for the scheme. Weak tokens are accepted, since any non-empty value passes.",
-            "severity": "medium",
-            "verdict": "confirmed",
-            "note": "Admin token is compared with == rather than in constant time, which can leak it through timing (main.go:99)."
-          },
-          {
-            "id": "A25",
-            "source": "agent",
-            "rule": "Tests",
-            "file": "handler_test.go",
-            "line": 326,
-            "message": "handler_test.go:326-338 — `TestMain_EnvironmentValidation` asserts nothing and only logs. It cannot fail. Delete it, or move the check into a testable function.",
-            "severity": "low",
-            "verdict": "confirmed",
-            "note": "TestMain_EnvironmentValidation only calls t.Log and asserts nothing, so it cannot fail (handler_test.go:326-338)."
+            "line": 98,
+            "message": "G304: Potential file inclusion via variable",
+            "verdict": "confirmed"
           }
         ],
         "Pending": 0,
         "Stats": {
-          "model_calls": 38,
-          "input_tokens": 779736,
-          "output_tokens": 30428,
-          "cost_usd": 0.5397,
-          "seconds": 890,
+          "model_calls": 3,
+          "input_tokens": 22088,
+          "output_tokens": 7996,
+          "cost_usd": 0.2483,
+          "seconds": 75,
           "finished": true,
           "stopped_by": "done",
           "error": ""
         },
-        "HiddenPassed": 47,
+        "HiddenPassed": 55,
         "HiddenTotal": 55,
-        "Coverage": 77.9,
+        "Coverage": 75,
         "OwnTestsPassed": true
       },
       {
-        "Model": "deepseek-v3-2",
+        "Model": "claude-opus-5-5",
         "Run": "run2",
         "Built": true,
-        "Works": 35.6,
-        "Bugs": 13,
-        "OwnTests": 9.9,
-        "Merge": 0,
-        "Reviewed": false,
-        "StyleScore": 12,
+        "Works": 40,
+        "Bugs": 4,
+        "OwnTests": 8.4,
+        "Merge": 6,
+        "Reviewed": true,
+        "StyleScore": 14,
         "StyleMeasured": true,
         "Confirmed": [
           {
-            "id": "T15",
-            "source": "gosec",
-            "rule": "G114",
-            "file": "main.go",
-            "line": 28,
-            "message": "G114: Use of net/http serve function that has no support for setting timeouts",
-            "verdict": "confirmed",
-            "note": "main.go:28 http.ListenAndServe uses a server with no timeouts."
+            "id": "T01",
+            "source": "errcheck",
+            "file": "server.go",
+            "line": 31,
+            "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+            "verdict": "confirmed"
           },
           {
-            "id": "A01",
-            "source": "agent",
-            "rule": "Error handling",
-            "file": "store.go",
-            "line": 175,
-            "message": "store.go:175 — When `save()` fails in `Delete`, the rollback puts back `\u0026Link{Code: code}`, not the original link. The URL, creation time and visit count are lost, and the in-memory entry is now an empty link. A later redirect to that code would send `Location: \"\"`. Keep the original pointer (`link := s.links[code]`) and restore that. [verified] A scratch test with a failing save left `{Code:abc URL:\"\" Visits:0}` after a failed delete, where the original had 1 visit.",
-            "severity": "medium",
-            "verdict": "confirmed",
-            "note": "Severity changed from high to medium. store.go:175 Delete rollback reinserts \u0026Link{Code: code}, losing URL/created_at/visits (verified: empty link after failed save; next successful save persists it). Severity set to medium for both projects with this failed-save-on-delete bug: it only happens when a save fails."
-          },
-          {
-            "id": "A06",
-            "source": "agent",
-            "rule": "Error handling",
+            "id": "T08",
+            "source": "errcheck",
             "file": "store.go",
             "line": 83,
-            "message": "store.go:83-88 — `save` does not `fsync` the temp file before `Rename`. A power loss can leave an empty or truncated data file, which contradicts the README's \"supports crash recovery\" (README.md:92). A failed rename also leaves a stale `.tmp` file behind. Open the file, write, `Sync`, `Close`, then rename, and remove the temp file on error.",
-            "severity": "low",
-            "verdict": "confirmed",
-            "note": "store.go:84 os.WriteFile without fsync before os.Rename can leave an empty/truncated data file after a power loss, which then fails to load (spec: crash must never leave an unstartable file). Severity set to low for both projects with this missing fsync: only an OS crash or power loss, not a killed process, can leave the bad file."
+            "message": "Error return value of `f.Close` is not checked",
+            "verdict": "confirmed"
           },
           {
-            "id": "A08",
-            "source": "agent",
-            "rule": "Secrets and sensitive data",
-            "file": "handler.go",
-            "line": 182,
-            "message": "handler.go:182 — The admin token is compared with `==`, which is not constant-time and could leak the token through timing. Use `subtle.ConstantTimeCompare` on `[]byte` values (or on hashes of them).",
-            "severity": "medium",
-            "verdict": "confirmed",
-            "note": "handler.go:182 compares the admin token with ==, not constant-time; policy lists leaky token comparison as a defect."
+            "id": "T09",
+            "source": "errcheck",
+            "file": "store.go",
+            "line": 93,
+            "message": "Error return value of `os.Remove` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T10",
+            "source": "errcheck",
+            "file": "store.go",
+            "line": 97,
+            "message": "Error return value of `os.Remove` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T11",
+            "source": "errcheck",
+            "file": "store.go",
+            "line": 101,
+            "message": "Error return value of `d.Sync` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T12",
+            "source": "errcheck",
+            "file": "store.go",
+            "line": 102,
+            "message": "Error return value of `d.Close` is not checked",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T13",
+            "source": "gosec",
+            "rule": "G304",
+            "file": "store.go",
+            "line": 38,
+            "message": "G304: Potential file inclusion via variable",
+            "verdict": "confirmed"
+          },
+          {
+            "id": "T14",
+            "source": "gosec",
+            "rule": "G304",
+            "file": "store.go",
+            "line": 100,
+            "message": "G304: Potential file inclusion via variable",
+            "verdict": "confirmed"
           }
         ],
         "Pending": 0,
         "Stats": {
-          "model_calls": 40,
-          "input_tokens": 935993,
-          "output_tokens": 36596,
-          "cost_usd": 0.648,
-          "seconds": 1036,
+          "model_calls": 4,
+          "input_tokens": 32492,
+          "output_tokens": 9102,
+          "cost_usd": 0.312,
+          "seconds": 84,
           "finished": true,
           "stopped_by": "done",
           "error": ""
         },
-        "HiddenPassed": 50,
+        "HiddenPassed": 55,
         "HiddenTotal": 55,
-        "Coverage": 79.5,
+        "Coverage": 67.2,
         "OwnTestsPassed": true
       }
     ],
-    "Works": 34.35,
-    "Bugs": 12.5,
-    "Readable": 6,
-    "OwnTests": 9.8,
-    "Merge": 0,
-    "Total": 62.650000000000006,
-    "StyleScore": 9,
+    "Works": 40,
+    "Bugs": 3,
+    "Readable": 2,
+    "OwnTests": 8.9,
+    "Merge": 8,
+    "Total": 61.9,
+    "StyleScore": 11.5,
     "AnyBuilt": true,
     "ConfirmedHigh": 0,
-    "CostUSD": 0.59385,
-    "Seconds": 963,
-    "ModelCalls": 39
+    "CostUSD": 0.28015,
+    "Seconds": 79.5,
+    "ModelCalls": 3.5
   }
 ]

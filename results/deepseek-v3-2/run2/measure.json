@@ -1,6 +1,6 @@
 {
-  "label": "deepseek-v3-2/run2",
-  "measured_at": "2026-10-05T01:44:41.215695333Z",
+  "label": "project D",
+  "measured_at": "2026-10-05T21:22:14.747176Z",
   "size": {
     "go_files": 7,
     "code_lines": 485,
@@ -23,7 +23,7 @@
       "TestAdmin_ListNeedsToken/token_longer": "pass",
       "TestAdmin_ListNeedsToken/token_prefix": "pass",
       "TestAdmin_ListNeedsToken/wrong_token": "pass",
-      "TestAdmin_ListOldestFirst": "pass",
+      "TestAdmin_ListOldestFirst": "fail",
       "TestAdmin_StartWithoutTokenFails": "pass",
       "TestConcurrency_MixedLoadNoServerErrors": "fail",
       "TestConcurrency_ParallelCreates": "pass",
@@ -71,7 +71,7 @@
     },
     "categories": {
       "Admin": [
-        12,
+        11,
         12
       ],
       "Concurrency": [
@@ -96,20 +96,21 @@
       ]
     },
     "points": {
-      "Admin": 7,
+      "Admin": 6.4,
       "Concurrency": 5.3,
       "Core": 8,
       "Errors": 1,
       "Persistence": 7,
       "Validation": 7.3
     },
-    "total": 35.6,
+    "total": 35,
     "failures": {
-      "TestConcurrency_MixedLoadNoServerErrors": "acceptance_test.go:604: 6 requests failed under mixed load; first: status 500 err \u003cnil\u003e",
+      "TestAdmin_ListOldestFirst": "acceptance_test.go:269: list order: want [order-0 order-1 order-2 order-3 order-4], got position 0 = \"order-4\"",
+      "TestConcurrency_MixedLoadNoServerErrors": "acceptance_test.go:604: 3 requests failed under mixed load; first: status 500 err \u003cnil\u003e",
       "TestErrors_JSONErrorFormat": "acceptance_test.go:326: wrong method: want 405, got 404: {\"error\":\"not found\"}",
       "TestErrors_MethodNotAllowed": "acceptance_test.go:343: PUT /api/links: want 405, got 404: {\"error\":\"not found\"}",
-      "TestValidation_BadURLs/port_only": "acceptance_test.go:125: url \"http://:80/x\": want 400, got 201: {\"code\":\"OSE6UwF\",\"url\":\"http://:80/x\",\"created_at\":\"2026-10-05T01:44:42.73687933Z\",\"visits\":0}",
-      "TestValidation_UnknownField": "acceptance_test.go:195: unknown field: want 400, got 201: {\"code\":\"wzBrozo\",\"url\":\"https://example.com\",\"created_at\":\"2026-10-05T01:44:43.36667819Z\",\"visits\":0}"
+      "TestValidation_BadURLs/port_only": "acceptance_test.go:125: url \"http://:80/x\": want 400, got 201: {\"code\":\"DQhvHmf\",\"url\":\"http://:80/x\",\"created_at\":\"2026-10-05T21:22:16.455606Z\",\"visits\":0}",
+      "TestValidation_UnknownField": "acceptance_test.go:195: unknown field: want 400, got 201: {\"code\":\"nHaMRy0\",\"url\":\"https://example.com\",\"created_at\":\"2026-10-05T21:22:17.602423Z\",\"visits\":0}"
     }
   },
   "style": {
@@ -139,9 +140,9 @@
     "test_files": 3,
     "test_funcs": 22,
     "passed": true,
-    "coverage": 79.5,
-    "points": 9.9,
-    "output": "ok  \tshortener\t0.203s\tcoverage: 79.5% of statements"
+    "coverage": 81.2,
+    "points": 10,
+    "output": "ok  \tshortener\t0.512s\tcoverage: 81.2% of statements"
   },
   "findings": [
     {
@@ -277,6 +278,15 @@
     {
       "id": "T17",
       "source": "gosec",
+      "rule": "G703",
+      "file": "store.go",
+      "line": 88,
+      "message": "G703: Path traversal via taint analysis",
+      "verdict": "pending"
+    },
+    {
+      "id": "T18",
+      "source": "gosec",
       "rule": "G306",
       "file": "store_test.go",
       "line": 233,
@@ -284,5 +294,5 @@
       "verdict": "pending"
     }
   ],
-  "elapsed_ns": 22845282073
+  "elapsed_ns": 19303195208
 }
