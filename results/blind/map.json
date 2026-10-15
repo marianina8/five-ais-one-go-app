@@ -1,0 +1,12 @@
+{
+  "A": "deepseek-v3-2/run1",
+  "B": "claude-opus-5-5/run1",
+  "C": "gpt-6-1-sol/run1",
+  "D": "deepseek-v3-2/run2",
+  "E": "gemini-3-1-pro/run2",
+  "F": "claude-sonnet-5-5/run2",
+  "G": "gpt-6-1-sol/run2",
+  "H": "gemini-3-1-pro/run1",
+  "I": "claude-opus-5-5/run2",
+  "J": "claude-sonnet-5-5/run1"
+}

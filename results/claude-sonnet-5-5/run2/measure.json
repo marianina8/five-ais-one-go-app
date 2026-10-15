@@ -1,6 +1,6 @@
 {
-  "label": "claude-sonnet-5-5/run2",
-  "measured_at": "2026-10-05T01:43:54.379996606Z",
+  "label": "project F",
+  "measured_at": "2026-10-05T21:23:09.125501Z",
   "size": {
     "go_files": 3,
     "code_lines": 392,
@@ -121,7 +121,7 @@
     "passed": true,
     "coverage": 75.9,
     "points": 9.5,
-    "output": "ok  \tshortener\t0.086s\tcoverage: 75.9% of statements"
+    "output": "ok  \tshortener\t1.273s\tcoverage: 75.9% of statements"
   },
   "findings": [
     {
@@ -208,5 +208,5 @@
       "verdict": "pending"
     }
   ],
-  "elapsed_ns": 23466947120
+  "elapsed_ns": 43819194167
 }

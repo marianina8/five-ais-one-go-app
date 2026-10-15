@@ -1,4 +1,6 @@
-# Verdicts to confirm
+# Draft verdicts (superseded)
+
+> This draft wasn't used for the final scorecard. See the note at the top of [verdict-policy.md](verdict-policy.md) for the rule that was, and each run's `findings.json` for the final verdicts.
 
 Every finding from the tools and the review agent got a draft verdict under [the verdict policy](verdict-policy.md), written by reviewers who saw each project under a random code. **Only confirmed findings cost points.** This page lists every confirmed finding, the duplicates, and the judgement calls worth a second look. The full list, with a reason for every rejection, is in each run's `findings.json`.
 

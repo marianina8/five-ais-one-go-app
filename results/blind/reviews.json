@@ -1,0 +1,52 @@
+{
+  "A": {
+    "approve": 10,
+    "understand": 10,
+    "notes": "cleanest code, I like this the best"
+  },
+  "B": {
+    "approve": 5,
+    "understand": 5,
+    "notes": "no, I'd request changes"
+  },
+  "C": {
+    "approve": 7,
+    "understand": 7,
+    "notes": "highest code coverage"
+  },
+  "D": {
+    "approve": 7,
+    "understand": 7,
+    "notes": "no, I'd request changes"
+  },
+  "E": {
+    "approve": 5,
+    "understand": 5,
+    "notes": "no, I'd request changes"
+  },
+  "F": {
+    "approve": 5,
+    "understand": 5,
+    "notes": "no, I'd request changes"
+  },
+  "G": {
+    "approve": 3,
+    "understand": 3,
+    "notes": "no, I'd request major changes"
+  },
+  "H": {
+    "approve": 3,
+    "understand": 3,
+    "notes": "no, I'd request major changes"
+  },
+  "I": {
+    "approve": 3,
+    "understand": 3,
+    "notes": "no, I'd request major changes"
+  },
+  "J": {
+    "approve": 5,
+    "understand": 5,
+    "notes": "no, I'd request changes"
+  }
+}

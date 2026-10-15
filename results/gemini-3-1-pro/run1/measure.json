@@ -1,6 +1,6 @@
 {
-  "label": "gemini-3-1-pro/run1",
-  "measured_at": "2026-10-05T07:23:49.82899124Z",
+  "label": "project H",
+  "measured_at": "2026-10-05T21:24:43.985113Z",
   "size": {
     "go_files": 9,
     "code_lines": 424,
@@ -105,8 +105,8 @@
     },
     "total": 39.3,
     "failures": {
-      "TestValidation_BadURLs/port_only": "acceptance_test.go:125: url \"http://:80/x\": want 400, got 201: {\"code\":\"KpSDgoS\",\"url\":\"http://:80/x\",\"created_at\":\"2026-10-05T07:23:56.044Z\",\"visits\":0}",
-      "TestValidation_MalformedJSON/trailing_data": "acceptance_test.go:187: malformed JSON: trailing_data: want 400, got 201: {\"code\":\"1esEewr\",\"url\":\"https://example.com/trailing\",\"created_at\":\"2026-10-05T07:23:56.886Z\",\"visits\":0}"
+      "TestValidation_BadURLs/port_only": "acceptance_test.go:125: url \"http://:80/x\": want 400, got 201: {\"code\":\"cU8iKga\",\"url\":\"http://:80/x\",\"created_at\":\"2026-10-05T21:24:46.708Z\",\"visits\":0}",
+      "TestValidation_MalformedJSON/trailing_data": "acceptance_test.go:187: malformed JSON: trailing_data: want 400, got 201: {\"code\":\"N0n4N6N\",\"url\":\"https://example.com/trailing\",\"created_at\":\"2026-10-05T21:24:47.773Z\",\"visits\":0}"
     }
   },
   "style": {
@@ -127,9 +127,9 @@
     "test_files": 4,
     "test_funcs": 5,
     "passed": true,
-    "coverage": 76.8,
-    "points": 9.6,
-    "output": "ok  \tshortener\t0.025s\tcoverage: 76.8% of statements"
+    "coverage": 80.7,
+    "points": 10,
+    "output": "ok  \tshortener\t0.393s\tcoverage: 80.7% of statements"
   },
   "findings": [
     {
@@ -271,5 +271,5 @@
       "verdict": "pending"
     }
   ],
-  "elapsed_ns": 45211002016
+  "elapsed_ns": 32513871667
 }
