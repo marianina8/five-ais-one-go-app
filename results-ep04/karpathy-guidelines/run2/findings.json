@@ -1,0 +1,109 @@
+[
+  {
+    "id": "T01",
+    "source": "errcheck",
+    "file": "main_test.go",
+    "line": 129,
+    "message": "Error return value of `store.Create` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T02",
+    "source": "errcheck",
+    "file": "main_test.go",
+    "line": 131,
+    "message": "Error return value of `store.Create` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T03",
+    "source": "errcheck",
+    "file": "main_test.go",
+    "line": 157,
+    "message": "Error return value of `store.Create` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T04",
+    "source": "errcheck",
+    "file": "main_test.go",
+    "line": 260,
+    "message": "Error return value of `store.Create` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T05",
+    "source": "errcheck",
+    "file": "main_test.go",
+    "line": 290,
+    "message": "Error return value of `store.Create` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T06",
+    "source": "errcheck",
+    "file": "main_test.go",
+    "line": 291,
+    "message": "Error return value of `store.Create` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T07",
+    "source": "errcheck",
+    "file": "main_test.go",
+    "line": 338,
+    "message": "Error return value of `store.Create` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T08",
+    "source": "errcheck",
+    "file": "main_test.go",
+    "line": 387,
+    "message": "Error return value of `store1.Create` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T09",
+    "source": "errcheck",
+    "file": "main_test.go",
+    "line": 388,
+    "message": "Error return value of `store1.Create` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T10",
+    "source": "errcheck",
+    "file": "main_test.go",
+    "line": 389,
+    "message": "Error return value of `store1.Visit` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T11",
+    "source": "gosec",
+    "rule": "G114",
+    "file": "main.go",
+    "line": 32,
+    "message": "G114: Use of net/http serve function that has no support for setting timeouts",
+    "verdict": "pending"
+  },
+  {
+    "id": "T12",
+    "source": "gosec",
+    "rule": "G306",
+    "file": "store.go",
+    "line": 75,
+    "message": "G306: Expect WriteFile permissions to be 0600 or less",
+    "verdict": "pending"
+  },
+  {
+    "id": "T13",
+    "source": "gosec",
+    "rule": "G115",
+    "file": "store.go",
+    "line": 93,
+    "message": "G115: integer overflow conversion int -\u003e uint",
+    "verdict": "pending"
+  }
+]

@@ -1,0 +1,35 @@
+{
+  "label": "bonus/run1",
+  "provider": "bedrock",
+  "model": "deepseek.v3.2",
+  "started_at": "2026-10-15T21:28:46.30438595Z",
+  "max_steps": 40,
+  "minutes": 20,
+  "max_output_tokens": 8192,
+  "model_calls": 40,
+  "tool_calls": 39,
+  "tool_calls_by_name": {
+    "go_build": 1,
+    "go_test": 10,
+    "go_vet": 1,
+    "list_files": 1,
+    "read_file": 10,
+    "write_file": 16
+  },
+  "input_tokens": 1054198,
+  "output_tokens": 43075,
+  "cached_tokens": 0,
+  "price": {
+    "input": 0.62,
+    "output": 1.85,
+    "max_output_tokens": 8192,
+    "source": "Amazon Bedrock pricing, us-west-2"
+  },
+  "cost_usd": 0.7333,
+  "seconds": 879,
+  "finished": false,
+  "stopped_by": "steps",
+  "skills": [
+    "go-pr-provider"
+  ]
+}

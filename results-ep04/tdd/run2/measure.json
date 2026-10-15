@@ -1,0 +1,165 @@
+{
+  "label": "tdd/run2",
+  "measured_at": "2026-10-15T22:13:41.633968314Z",
+  "size": {
+    "go_files": 5,
+    "code_lines": 497,
+    "test_lines": 699,
+    "test_files": 2,
+    "test_funcs": 13
+  },
+  "build": {
+    "ok": true
+  },
+  "hidden": {
+    "tests": {
+      "TestAdmin_Delete": "pass",
+      "TestAdmin_DeleteNeedsToken": "pass",
+      "TestAdmin_DeleteUnknown404": "pass",
+      "TestAdmin_ListEmptyIsArray": "pass",
+      "TestAdmin_ListNeedsToken/basic_scheme": "pass",
+      "TestAdmin_ListNeedsToken/no_bearer": "pass",
+      "TestAdmin_ListNeedsToken/no_header": "pass",
+      "TestAdmin_ListNeedsToken/token_longer": "pass",
+      "TestAdmin_ListNeedsToken/token_prefix": "pass",
+      "TestAdmin_ListNeedsToken/wrong_token": "pass",
+      "TestAdmin_ListOldestFirst": "pass",
+      "TestAdmin_StartWithoutTokenFails": "pass",
+      "TestConcurrency_MixedLoadNoServerErrors": "pass",
+      "TestConcurrency_ParallelCreates": "pass",
+      "TestConcurrency_ParallelVisitsExact": "pass",
+      "TestConcurrency_SameAliasOnceOnly": "pass",
+      "TestCore_CreateGeneratedCode": "pass",
+      "TestCore_CreateWithAlias": "pass",
+      "TestCore_GeneratedCodesUnique": "pass",
+      "TestCore_Redirect": "pass",
+      "TestCore_RedirectAlias": "pass",
+      "TestCore_RedirectUnknown404": "pass",
+      "TestCore_VisitsCounted": "pass",
+      "TestErrors_BodyTooLarge413": "fail",
+      "TestErrors_JSONErrorFormat": "fail",
+      "TestErrors_MethodNotAllowed": "fail",
+      "TestPersistence_DefaultDataFile": "pass",
+      "TestPersistence_DeleteSurvivesRestart": "pass",
+      "TestPersistence_KillAndRecoverWithoutRestartGrace": "pass",
+      "TestPersistence_KillDuringWrites": "pass",
+      "TestPersistence_SurvivesRestart": "pass",
+      "TestPersistence_UsesDataFlag": "pass",
+      "TestValidation_BadAliases/non_ascii": "pass",
+      "TestValidation_BadAliases/reserved_api": "pass",
+      "TestValidation_BadAliases/slash": "pass",
+      "TestValidation_BadAliases/space": "pass",
+      "TestValidation_BadAliases/too_long_33": "pass",
+      "TestValidation_BadAliases/too_short": "pass",
+      "TestValidation_BadURLs/data_url": "pass",
+      "TestValidation_BadURLs/empty": "pass",
+      "TestValidation_BadURLs/ftp_scheme": "pass",
+      "TestValidation_BadURLs/header_injection": "pass",
+      "TestValidation_BadURLs/javascript": "pass",
+      "TestValidation_BadURLs/no_host": "pass",
+      "TestValidation_BadURLs/not_a_url": "pass",
+      "TestValidation_BadURLs/port_only": "fail",
+      "TestValidation_BadURLs/relative": "pass",
+      "TestValidation_BadURLs/too_long_2049": "pass",
+      "TestValidation_DuplicateAlias409": "pass",
+      "TestValidation_EdgeAliasesAccepted": "pass",
+      "TestValidation_MalformedJSON/trailing_data": "fail",
+      "TestValidation_MalformedJSON/truncated": "pass",
+      "TestValidation_MaxLengthURLAccepted": "pass",
+      "TestValidation_MissingURL": "pass",
+      "TestValidation_UnknownField": "pass"
+    },
+    "categories": {
+      "Admin": [
+        12,
+        12
+      ],
+      "Concurrency": [
+        4,
+        4
+      ],
+      "Core": [
+        7,
+        7
+      ],
+      "Errors": [
+        0,
+        3
+      ],
+      "Persistence": [
+        6,
+        6
+      ],
+      "Validation": [
+        21,
+        23
+      ]
+    },
+    "points": {
+      "Admin": 7,
+      "Concurrency": 7,
+      "Core": 8,
+      "Errors": 0,
+      "Persistence": 7,
+      "Validation": 7.3
+    },
+    "total": 36.3,
+    "failures": {
+      "TestErrors_BodyTooLarge413": "acceptance_test.go:337: 2 MiB body: want 413, got 400: {\"error\":\"Invalid request body\"}",
+      "TestErrors_JSONErrorFormat": "acceptance_test.go:326: wrong method: want 405, got 404: {\"error\": \"Not found\"}",
+      "TestErrors_MethodNotAllowed": "acceptance_test.go:343: PUT /api/links: want 405, got 404: {\"error\": \"Not found\"}",
+      "TestValidation_BadURLs/port_only": "acceptance_test.go:125: url \"http://:80/x\": want 400, got 201: {\"code\":\"DOkHUwd\",\"url\":\"http://:80/x\",\"created_at\":\"2026-10-15T22:13:42.849858841Z\",\"visits\":0}",
+      "TestValidation_MalformedJSON/trailing_data": "acceptance_test.go:187: malformed JSON: trailing_data: want 400, got 201: {\"code\":\"8sPfrVY\",\"url\":\"https://example.com/trailing\",\"created_at\":\"2026-10-15T22:13:43.800421022Z\",\"visits\":0}"
+    }
+  },
+  "style": {
+    "measured": true,
+    "issues": 1,
+    "issues_by_linter": {
+      "typecheck": 1
+    },
+    "max_complexity": 10,
+    "most_complex_func": "`(*handler).ServeHTTP`",
+    "score": 1,
+    "details": [
+      "codegen.go:1 : # shortener [shortener.test]\n./store_test.go:4:2: \"encoding/json\" imported and not used\n./store_test.go:5:2: \"net/http\" imported and not used\n./store_test.go:6:2: \"net/http/httptest\" imported and not used\n./store_test.go:8:2: \"strings\" imported and not used\n./store_test.go:10:2: \"time\" imported and not used\n./store_test.go:200:4: invalid operation: \"a\" * 33 (mismatched types untyped string and untyped int)\n./store_test.go:230:2: declared and not used: link\n./store_test.go:272:2: declared and not used: link\n./handler_test.go:6:2: \"fmt\" imported and not used (typecheck)"
+    ]
+  },
+  "own_tests": {
+    "test_files": 2,
+    "test_funcs": 13,
+    "passed": false,
+    "coverage": 0,
+    "points": 0,
+    "output": "# shortener [shortener.test]\n./store_test.go:4:2: \"encoding/json\" imported and not used\n./store_test.go:5:2: \"net/http\" imported and not used\n./store_test.go:6:2: \"net/http/httptest\" imported and not used\n./store_test.go:8:2: \"strings\" imported and not used\n./store_test.go:10:2: \"time\" imported and not used\n./store_test.go:200:4: invalid operation: \"a\" * 33 (mismatched types untyped string and untyped int)\n./store_test.go:230:2: declared and not used: link\n./store_test.go:272:2: declared and not used: link\n./handler_test.go:6:2: \"fmt\" imported and not used\nFAIL\tshortener [build failed]\nFAIL"
+  },
+  "findings": [
+    {
+      "id": "T01",
+      "source": "race",
+      "rule": "DATA RACE",
+      "file": "store.go",
+      "line": 83,
+      "message": "WARNING: DATA RACE\nWrite at 0x00c00011eff0 by goroutine 30:\n  runtime.mapassign_faststr()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/internal/runtime/maps/runtime_faststr_swiss.go:263 +0x0\n  main.(*jsonStore).Create()\n      /tmp/score-3828299119/code/store.go:83 +0x596\n  main.(*handler).createLink()\n      /tmp/score-3828299119/code/main.go:131 +0x3f5\n  main.(*handler).ServeHTTP()\n      /tmp/score-3828299119/code/main.go:74 +0x2f5\n  net/http.serverHandler.ServeHTTP()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:3301 +0x2a1\n  net/http.(*conn).serve()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:2102 +0x1304\n  net/http.(*Server).Serve.gowrap3()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:3454 +0x4f\n\nPrevious read at 0x00c00011eff0 by goroutine 63:\n  runtime.mapaccess2_faststr()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/internal/runtime/maps/runtime_faststr_swiss.go:162 +0x0\n  main.generateUniqueCode()\n      /tmp/score-3828299119/code/store.go:255 +0x71\n  main.(*jsonStore).Create()\n      /tmp/score-3828299119/code/store.go:62 +0x178\n  main.(*handler).createLink()\n      /tmp/score-3828299119/code/main.go:131 +0x3f5\n  main.(*handler).ServeHTTP()\n      /tmp/score-3828299119/code/main.go:74 +0x2f5\n  net/http.serverHandler.ServeHTTP()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:3301 +0x2a1\n  net/http.(*conn).serve()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:2102 +0x1304\n  ne …[trimmed]",
+      "verdict": "pending"
+    },
+    {
+      "id": "T02",
+      "source": "race",
+      "rule": "DATA RACE",
+      "file": "store.go",
+      "line": 255,
+      "message": "WARNING: DATA RACE\nRead at 0x00c00007eff0 by goroutine 38:\n  runtime.mapaccess2_faststr()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/internal/runtime/maps/runtime_faststr_swiss.go:162 +0x0\n  main.generateUniqueCode()\n      /tmp/score-3828299119/code/store.go:255 +0x71\n  main.(*jsonStore).Create()\n      /tmp/score-3828299119/code/store.go:62 +0x178\n  main.(*handler).createLink()\n      /tmp/score-3828299119/code/main.go:131 +0x3f5\n  main.(*handler).ServeHTTP()\n      /tmp/score-3828299119/code/main.go:74 +0x2f5\n  net/http.serverHandler.ServeHTTP()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:3301 +0x2a1\n  net/http.(*conn).serve()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:2102 +0x1304\n  net/http.(*Server).Serve.gowrap3()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:3454 +0x4f\n\nPrevious write at 0x00c00007eff0 by goroutine 35:\n  runtime.mapassign_faststr()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/internal/runtime/maps/runtime_faststr_swiss.go:263 +0x0\n  main.(*jsonStore).Create()\n      /tmp/score-3828299119/code/store.go:83 +0x596\n  main.(*handler).createLink()\n      /tmp/score-3828299119/code/main.go:131 +0x3f5\n  main.(*handler).ServeHTTP()\n      /tmp/score-3828299119/code/main.go:74 +0x2f5\n  net/http.serverHandler.ServeHTTP()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:3301 +0x2a1\n  net/http.(*conn).serve()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:2102 +0x1304\n  ne …[trimmed]",
+      "verdict": "pending"
+    },
+    {
+      "id": "T03",
+      "source": "typecheck",
+      "file": "codegen.go",
+      "line": 1,
+      "message": ": # shortener [shortener.test]\n./store_test.go:4:2: \"encoding/json\" imported and not used\n./store_test.go:5:2: \"net/http\" imported and not used\n./store_test.go:6:2: \"net/http/httptest\" imported and not used\n./store_test.go:8:2: \"strings\" imported and not used\n./store_test.go:10:2: \"time\" imported and not used\n./store_test.go:200:4: invalid operation: \"a\" * 33 (mismatched types untyped string and untyped int)\n./store_test.go:230:2: declared and not used: link\n./store_test.go:272:2: declared and not used: link\n./handler_test.go:6:2: \"fmt\" imported and not used",
+      "verdict": "pending"
+    }
+  ],
+  "elapsed_ns": 21643005531
+}

@@ -1,0 +1,266 @@
+{
+  "label": "superpowers/run3",
+  "measured_at": "2026-10-15T22:12:52.422824636Z",
+  "size": {
+    "go_files": 11,
+    "code_lines": 400,
+    "test_lines": 196,
+    "test_files": 3,
+    "test_funcs": 6
+  },
+  "build": {
+    "ok": true
+  },
+  "hidden": {
+    "tests": {
+      "TestAdmin_Delete": "fail",
+      "TestAdmin_DeleteNeedsToken": "fail",
+      "TestAdmin_DeleteUnknown404": "fail",
+      "TestAdmin_ListEmptyIsArray": "fail",
+      "TestAdmin_ListNeedsToken/basic_scheme": "fail",
+      "TestAdmin_ListNeedsToken/no_bearer": "fail",
+      "TestAdmin_ListNeedsToken/no_header": "fail",
+      "TestAdmin_ListNeedsToken/token_longer": "fail",
+      "TestAdmin_ListNeedsToken/token_prefix": "fail",
+      "TestAdmin_ListNeedsToken/wrong_token": "fail",
+      "TestAdmin_ListOldestFirst": "fail",
+      "TestAdmin_StartWithoutTokenFails": "pass",
+      "TestConcurrency_MixedLoadNoServerErrors": "fail",
+      "TestConcurrency_ParallelCreates": "fail",
+      "TestConcurrency_ParallelVisitsExact": "fail",
+      "TestConcurrency_SameAliasOnceOnly": "fail",
+      "TestCore_CreateGeneratedCode": "fail",
+      "TestCore_CreateWithAlias": "fail",
+      "TestCore_GeneratedCodesUnique": "fail",
+      "TestCore_Redirect": "fail",
+      "TestCore_RedirectAlias": "fail",
+      "TestCore_RedirectUnknown404": "fail",
+      "TestCore_VisitsCounted": "fail",
+      "TestErrors_BodyTooLarge413": "fail",
+      "TestErrors_JSONErrorFormat": "fail",
+      "TestErrors_MethodNotAllowed": "fail",
+      "TestPersistence_DefaultDataFile": "fail",
+      "TestPersistence_DeleteSurvivesRestart": "fail",
+      "TestPersistence_KillAndRecoverWithoutRestartGrace": "fail",
+      "TestPersistence_KillDuringWrites": "fail",
+      "TestPersistence_SurvivesRestart": "fail",
+      "TestPersistence_UsesDataFlag": "fail",
+      "TestValidation_BadAliases/non_ascii": "fail",
+      "TestValidation_BadAliases/reserved_api": "fail",
+      "TestValidation_BadAliases/slash": "fail",
+      "TestValidation_BadAliases/space": "fail",
+      "TestValidation_BadAliases/too_long_33": "fail",
+      "TestValidation_BadAliases/too_short": "fail",
+      "TestValidation_BadURLs/data_url": "fail",
+      "TestValidation_BadURLs/empty": "fail",
+      "TestValidation_BadURLs/ftp_scheme": "fail",
+      "TestValidation_BadURLs/header_injection": "fail",
+      "TestValidation_BadURLs/javascript": "fail",
+      "TestValidation_BadURLs/no_host": "fail",
+      "TestValidation_BadURLs/not_a_url": "fail",
+      "TestValidation_BadURLs/port_only": "fail",
+      "TestValidation_BadURLs/relative": "fail",
+      "TestValidation_BadURLs/too_long_2049": "fail",
+      "TestValidation_DuplicateAlias409": "fail",
+      "TestValidation_EdgeAliasesAccepted": "fail",
+      "TestValidation_MalformedJSON/trailing_data": "fail",
+      "TestValidation_MalformedJSON/truncated": "fail",
+      "TestValidation_MaxLengthURLAccepted": "fail",
+      "TestValidation_MissingURL": "fail",
+      "TestValidation_UnknownField": "fail"
+    },
+    "categories": {
+      "Admin": [
+        1,
+        12
+      ],
+      "Concurrency": [
+        0,
+        4
+      ],
+      "Core": [
+        0,
+        7
+      ],
+      "Errors": [
+        0,
+        3
+      ],
+      "Persistence": [
+        0,
+        6
+      ],
+      "Validation": [
+        0,
+        23
+      ]
+    },
+    "points": {
+      "Admin": 0.6,
+      "Concurrency": 0,
+      "Core": 0,
+      "Errors": 0,
+      "Persistence": 0,
+      "Validation": 0
+    },
+    "total": 0.6,
+    "failures": {
+      "TestAdmin_Delete": "acceptance_test.go:278: program exited during startup: | Starting server on 127.0.0.1:38319 with data file /tmp/TestAdmin_Delete1073175686/001/links.json",
+      "TestAdmin_DeleteNeedsToken": "acceptance_test.go:298: program exited during startup: | Starting server on 127.0.0.1:33725 with data file /tmp/TestAdmin_DeleteNeedsToken950304865/001/links.json",
+      "TestAdmin_DeleteUnknown404": "acceptance_test.go:293: program exited during startup: | Starting server on 127.0.0.1:43081 with data file /tmp/TestAdmin_DeleteUnknown4042698064858/001/links.json",
+      "TestAdmin_ListEmptyIsArray": "acceptance_test.go:248: program exited during startup: | Starting server on 127.0.0.1:36089 with data file /tmp/TestAdmin_ListEmptyIsArray2119364041/001/links.json",
+      "TestAdmin_ListNeedsToken/basic_scheme": "acceptance_test.go:236: program exited during startup: | Starting server on 127.0.0.1:45077 with data file /tmp/TestAdmin_ListNeedsTokenbasic_scheme4063437842/001/links.json",
+      "TestAdmin_ListNeedsToken/no_bearer": "acceptance_test.go:236: program exited during startup: | Starting server on 127.0.0.1:43201 with data file /tmp/TestAdmin_ListNeedsTokenno_bearer2743760723/001/links.json",
+      "TestAdmin_ListNeedsToken/no_header": "acceptance_test.go:236: program exited during startup: | Starting server on 127.0.0.1:35031 with data file /tmp/TestAdmin_ListNeedsTokenno_header2248082043/001/links.json",
+      "TestAdmin_ListNeedsToken/token_longer": "acceptance_test.go:236: program exited during startup: | Starting server on 127.0.0.1:40757 with data file /tmp/TestAdmin_ListNeedsTokentoken_longer1876815007/001/links.json",
+      "TestAdmin_ListNeedsToken/token_prefix": "acceptance_test.go:236: program exited during startup: | Starting server on 127.0.0.1:33761 with data file /tmp/TestAdmin_ListNeedsTokentoken_prefix2183854433/001/links.json",
+      "TestAdmin_ListNeedsToken/wrong_token": "acceptance_test.go:236: program exited during startup: | Starting server on 127.0.0.1:40097 with data file /tmp/TestAdmin_ListNeedsTokenwrong_token1290657836/001/links.json",
+      "TestAdmin_ListOldestFirst": "acceptance_test.go:257: program exited during startup: | Starting server on 127.0.0.1:44967 with data file /tmp/TestAdmin_ListOldestFirst4265863925/001/links.json",
+      "TestConcurrency_MixedLoadNoServerErrors": "acceptance_test.go:570: program exited during startup: | Starting server on 127.0.0.1:32913 with data file /tmp/TestConcurrency_MixedLoadNoServerErrors725683289/001/links.json",
+      "TestConcurrency_ParallelCreates": "acceptance_test.go:468: program exited during startup: | Starting server on 127.0.0.1:39907 with data file /tmp/TestConcurrency_ParallelCreates1414928487/001/links.json",
+      "TestConcurrency_ParallelVisitsExact": "acceptance_test.go:505: program exited during startup: | Starting server on 127.0.0.1:32919 with data file /tmp/TestConcurrency_ParallelVisitsExact2981080418/001/links.json",
+      "TestConcurrency_SameAliasOnceOnly": "acceptance_test.go:539: program exited during startup: | Starting server on 127.0.0.1:38375 with data file /tmp/TestConcurrency_SameAliasOnceOnly3032800043/001/links.json",
+      "TestCore_CreateGeneratedCode": "acceptance_test.go:22: program exited during startup: | Starting server on 127.0.0.1:39949 with data file /tmp/TestCore_CreateGeneratedCode986790121/001/links.json",
+      "TestCore_CreateWithAlias": "acceptance_test.go:43: program exited during startup: | Starting server on 127.0.0.1:45961 with data file /tmp/TestCore_CreateWithAlias828757600/001/links.json",
+      "TestCore_GeneratedCodesUnique": "acceptance_test.go:51: program exited during startup: | Starting server on 127.0.0.1:41115 with data file /tmp/TestCore_GeneratedCodesUnique4217662202/001/links.json",
+      "TestCore_Redirect": "acceptance_test.go:66: program exited during startup: | Starting server on 127.0.0.1:33743 with data file /tmp/TestCore_Redirect3528202262/001/links.json",
+      "TestCore_RedirectAlias": "acceptance_test.go:77: program exited during startup: | Starting server on 127.0.0.1:43219 with data file /tmp/TestCore_RedirectAlias261669953/001/links.json",
+      "TestCore_RedirectUnknown404": "acceptance_test.go:87: program exited during startup: | Starting server on 127.0.0.1:43627 with data file /tmp/TestCore_RedirectUnknown404592956061/001/links.json",
+      "TestCore_VisitsCounted": "acceptance_test.go:92: program exited during startup: | Starting server on 127.0.0.1:40171 with data file /tmp/TestCore_VisitsCounted2409536512/001/links.json",
+      "TestErrors_BodyTooLarge413": "acceptance_test.go:331: program exited during startup: | Starting server on 127.0.0.1:38471 with data file /tmp/TestErrors_BodyTooLarge4132701862851/001/links.json",
+      "TestErrors_JSONErrorFormat": "acceptance_test.go:310: program exited during startup: | Starting server on 127.0.0.1:37143 with data file /tmp/TestErrors_JSONErrorFormat2543291861/001/links.json",
+      "TestErrors_MethodNotAllowed": "acceptance_test.go:341: program exited during startup: | Starting server on 127.0.0.1:36261 with data file /tmp/TestErrors_MethodNotAllowed3507581111/001/links.json",
+      "TestPersistence_DefaultDataFile": "acceptance_test.go:393: program exited during startup: | Starting server on 127.0.0.1:43809 with data file data.json",
+      "TestPersistence_DeleteSurvivesRestart": "acceptance_test.go:371: program exited during startup: | Starting server on 127.0.0.1:44051 with data file /tmp/TestPersistence_DeleteSurvivesRestart4200720586/001/links.json",
+      "TestPersistence_KillAndRecoverWithoutRestartGrace": "acceptance_test.go:408: program exited during startup: | Starting server on 127.0.0.1:41201 with data file /tmp/TestPersistence_KillAndRecoverWithoutRestartGrace1631024513/001/links.json",
+      "TestPersistence_KillDuringWrites": "acceptance_test.go:434: program exited during startup: | Starting server on 127.0.0.1:40107 with data file /tmp/TestPersistence_KillDuringWrites2589414469/001/links.json",
+      "TestPersistence_SurvivesRestart": "acceptance_test.go:350: program exited during startup: | Starting server on 127.0.0.1:44153 with data file /tmp/TestPersistence_SurvivesRestart448291370/001/links.json",
+      "TestPersistence_UsesDataFlag": "acceptance_test.go:381: program exited during startup: | Starting server on 127.0.0.1:38597 with data file /tmp/TestPersistence_UsesDataFlag2880005934/001/nested-name.json",
+      "TestValidation_BadAliases/non_ascii": "acceptance_test.go:150: program exited during startup: | Starting server on 127.0.0.1:39615 with data file /tmp/TestValidation_BadAliasesnon_ascii53606452/001/links.json",
+      "TestValidation_BadAliases/reserved_api": "acceptance_test.go:150: program exited during startup: | Starting server on 127.0.0.1:35481 with data file /tmp/TestValidation_BadAliasesreserved_api2134167829/001/links.json",
+      "TestValidation_BadAliases/slash": "acceptance_test.go:150: program exited during startup: | Starting server on 127.0.0.1:36383 with data file /tmp/TestValidation_BadAliasesslash1018008187/001/links.json",
+      "TestValidation_BadAliases/space": "acceptance_test.go:150: program exited during startup: | Starting server on 127.0.0.1:39823 with data file /tmp/TestValidation_BadAliasesspace3209861832/001/links.json",
+      "TestValidation_BadAliases/too_long_33": "acceptance_test.go:150: program exited during startup: | Starting server on 127.0.0.1:37299 with data file /tmp/TestValidation_BadAliasestoo_long_331392171308/001/links.json",
+      "TestValidation_BadAliases/too_short": "acceptance_test.go:150: program exited during startup: | Starting server on 127.0.0.1:38641 with data file /tmp/TestValidation_BadAliasestoo_short2619718212/001/links.json",
+      "TestValidation_BadURLs/data_url": "acceptance_test.go:123: program exited during startup: | Starting server on 127.0.0.1:35681 with data file /tmp/TestValidation_BadURLsdata_url2944370157/001/links.json",
+      "TestValidation_BadURLs/empty": "acceptance_test.go:123: program exited during startup: | Starting server on 127.0.0.1:32897 with data file /tmp/TestValidation_BadURLsempty3553164191/001/links.json",
+      "TestValidation_BadURLs/ftp_scheme": "acceptance_test.go:123: program exited during startup: | Starting server on 127.0.0.1:41181 with data file /tmp/TestValidation_BadURLsftp_scheme2397222457/001/links.json",
+      "TestValidation_BadURLs/header_injection": "acceptance_test.go:123: program exited during startup: | Starting server on 127.0.0.1:45027 with data file /tmp/TestValidation_BadURLsheader_injection4263314261/001/links.json",
+      "TestValidation_BadURLs/javascript": "acceptance_test.go:123: program exited during startup: | Starting server on 127.0.0.1:44957 with data file /tmp/TestValidation_BadURLsjavascript1105882771/001/links.json",
+      "TestValidation_BadURLs/no_host": "acceptance_test.go:123: program exited during startup: | Starting server on 127.0.0.1:39651 with data file /tmp/TestValidation_BadURLsno_host3598883773/001/links.json",
+      "TestValidation_BadURLs/not_a_url": "acceptance_test.go:123: program exited during startup: | Starting server on 127.0.0.1:43409 with data file /tmp/TestValidation_BadURLsnot_a_url2304711673/001/links.json",
+      "TestValidation_BadURLs/port_only": "acceptance_test.go:123: program exited during startup: | Starting server on 127.0.0.1:44919 with data file /tmp/TestValidation_BadURLsport_only325121375/001/links.json",
+      "TestValidation_BadURLs/relative": "acceptance_test.go:123: program exited during startup: | Starting server on 127.0.0.1:35015 with data file /tmp/TestValidation_BadURLsrelative3669618605/001/links.json",
+      "TestValidation_BadURLs/too_long_2049": "acceptance_test.go:123: program exited during startup: | Starting server on 127.0.0.1:42061 with data file /tmp/TestValidation_BadURLstoo_long_20491594639916/001/links.json",
+      "TestValidation_DuplicateAlias409": "acceptance_test.go:168: program exited during startup: | Starting server on 127.0.0.1:32959 with data file /tmp/TestValidation_DuplicateAlias4091519285891/001/links.json",
+      "TestValidation_EdgeAliasesAccepted": "acceptance_test.go:158: program exited during startup: | Starting server on 127.0.0.1:40535 with data file /tmp/TestValidation_EdgeAliasesAccepted3061666109/001/links.json",
+      "TestValidation_MalformedJSON/trailing_data": "acceptance_test.go:185: program exited during startup: | Starting server on 127.0.0.1:44855 with data file /tmp/TestValidation_MalformedJSONtrailing_data2428220442/001/links.json",
+      "TestValidation_MalformedJSON/truncated": "acceptance_test.go:185: program exited during startup: | Starting server on 127.0.0.1:43471 with data file /tmp/TestValidation_MalformedJSONtruncated1245543799/001/links.json",
+      "TestValidation_MaxLengthURLAccepted": "acceptance_test.go:131: program exited during startup: | Starting server on 127.0.0.1:46355 with data file /tmp/TestValidation_MaxLengthURLAccepted3023333152/001/links.json",
+      "TestValidation_MissingURL": "acceptance_test.go:199: program exited during startup: | Starting server on 127.0.0.1:40667 with data file /tmp/TestValidation_MissingURL4277811790/001/links.json",
+      "TestValidation_UnknownField": "acceptance_test.go:193: program exited during startup: | Starting server on 127.0.0.1:43829 with data file /tmp/TestValidation_UnknownField1523611995/001/links.json"
+    }
+  },
+  "style": {
+    "measured": true,
+    "issues": 12,
+    "issues_by_linter": {
+      "gofmt": 11,
+      "staticcheck": 1
+    },
+    "max_complexity": 9,
+    "most_complex_func": "`(*Handler).CreateLink`",
+    "score": 12,
+    "details": [
+      "internal/handler/create.go:27 File is not properly formatted (gofmt)",
+      "internal/handler/create_test.go:16 File is not properly formatted (gofmt)",
+      "internal/handler/handler.go:56 File is not properly formatted (gofmt)",
+      "internal/handler/handler_test.go:11 File is not properly formatted (gofmt)",
+      "internal/handler/list.go:14 File is not properly formatted (gofmt)",
+      "internal/handler/redirect.go:15 File is not properly formatted (gofmt)",
+      "internal/model/link.go:11 File is not properly formatted (gofmt)",
+      "internal/store/json_store.go:31 File is not properly formatted (gofmt)",
+      "internal/store/json_store_test.go:11 File is not properly formatted (gofmt)",
+      "internal/store/store.go:13 File is not properly formatted (gofmt)",
+      "main.go:21 File is not properly formatted (gofmt)",
+      "internal/store/json_store.go:21 ST1003: func NewJsonStore should be NewJSONStore (staticcheck)"
+    ]
+  },
+  "own_tests": {
+    "test_files": 3,
+    "test_funcs": 6,
+    "passed": true,
+    "coverage": 44.4,
+    "points": 5.5,
+    "output": "shortener\t\tcoverage: 0.0% of statements\nok  \tshortener/internal/handler\t0.004s\tcoverage: 56.0% of statements\n?   \tshortener/internal/model\t[no test files]\nok  \tshortener/internal/store\t0.002s\tcoverage: 36.2% of statements"
+  },
+  "findings": [
+    {
+      "id": "T01",
+      "source": "errcheck",
+      "file": "internal/handler/create.go",
+      "line": 30,
+      "message": "Error return value of `r.Body.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T02",
+      "source": "errcheck",
+      "file": "internal/handler/create.go",
+      "line": 68,
+      "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T03",
+      "source": "errcheck",
+      "file": "internal/handler/handler.go",
+      "line": 70,
+      "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T04",
+      "source": "errcheck",
+      "file": "internal/handler/handler_test.go",
+      "line": 51,
+      "message": "Error return value of `w.Write` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T05",
+      "source": "errcheck",
+      "file": "internal/handler/list.go",
+      "line": 22,
+      "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T06",
+      "source": "errcheck",
+      "file": "internal/store/json_store_test.go",
+      "line": 10,
+      "message": "Error return value of `os.Remove` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T07",
+      "source": "gosec",
+      "rule": "G306",
+      "file": "internal/store/json_store.go",
+      "line": 121,
+      "message": "G306: Expect WriteFile permissions to be 0600 or less",
+      "verdict": "pending"
+    },
+    {
+      "id": "T08",
+      "source": "staticcheck",
+      "rule": "SA9003",
+      "file": "internal/handler/redirect.go",
+      "line": 29,
+      "message": "SA9003: empty branch",
+      "verdict": "pending"
+    }
+  ],
+  "elapsed_ns": 26014417564
+}

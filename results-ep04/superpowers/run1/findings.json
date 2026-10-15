@@ -1,0 +1,149 @@
+[
+  {
+    "id": "T01",
+    "source": "errcheck",
+    "file": "handler.go",
+    "line": 121,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T02",
+    "source": "errcheck",
+    "file": "handler.go",
+    "line": 169,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T03",
+    "source": "errcheck",
+    "file": "handler.go",
+    "line": 211,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T04",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 52,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T05",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 86,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T06",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 131,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T07",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 166,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T08",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 206,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T09",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 240,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T10",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 273,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T11",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 311,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T12",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 344,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T13",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 371,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T14",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 392,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T15",
+    "source": "errcheck",
+    "file": "store_file_test.go",
+    "line": 82,
+    "message": "Error return value of `f.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T16",
+    "source": "gosec",
+    "rule": "G306",
+    "file": "file_store.go",
+    "line": 80,
+    "message": "G306: Expect WriteFile permissions to be 0600 or less",
+    "verdict": "pending"
+  },
+  {
+    "id": "T17",
+    "source": "gosec",
+    "rule": "G404",
+    "file": "handler.go",
+    "line": 258,
+    "message": "G404: Use of weak random number generator (math/rand or math/rand/v2 instead of crypto/rand)",
+    "verdict": "pending"
+  },
+  {
+    "id": "T18",
+    "source": "gosec",
+    "rule": "G304",
+    "file": "store_file_test.go",
+    "line": 78,
+    "message": "G304: Potential file inclusion via variable",
+    "verdict": "pending"
+  }
+]

@@ -1,0 +1,431 @@
+[
+  {
+    "id": "T01",
+    "source": "errcheck",
+    "file": "handlers.go",
+    "line": 20,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T02",
+    "source": "errcheck",
+    "file": "handlers.go",
+    "line": 31,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T03",
+    "source": "errcheck",
+    "file": "handlers.go",
+    "line": 36,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T04",
+    "source": "errcheck",
+    "file": "handlers.go",
+    "line": 40,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T05",
+    "source": "errcheck",
+    "file": "handlers.go",
+    "line": 51,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T06",
+    "source": "errcheck",
+    "file": "handlers.go",
+    "line": 60,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T07",
+    "source": "errcheck",
+    "file": "handlers.go",
+    "line": 63,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T08",
+    "source": "errcheck",
+    "file": "handlers.go",
+    "line": 66,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T09",
+    "source": "errcheck",
+    "file": "handlers.go",
+    "line": 72,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T10",
+    "source": "errcheck",
+    "file": "handlers.go",
+    "line": 78,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T11",
+    "source": "errcheck",
+    "file": "handlers.go",
+    "line": 93,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T12",
+    "source": "errcheck",
+    "file": "handlers.go",
+    "line": 99,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T13",
+    "source": "errcheck",
+    "file": "handlers.go",
+    "line": 110,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T14",
+    "source": "errcheck",
+    "file": "handlers.go",
+    "line": 113,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T15",
+    "source": "errcheck",
+    "file": "main.go",
+    "line": 30,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T16",
+    "source": "errcheck",
+    "file": "server.go",
+    "line": 45,
+    "message": "Error return value of `fmt.Fprintf` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T17",
+    "source": "errcheck",
+    "file": "server.go",
+    "line": 61,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T18",
+    "source": "errcheck",
+    "file": "server.go",
+    "line": 74,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T19",
+    "source": "errcheck",
+    "file": "server.go",
+    "line": 100,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T20",
+    "source": "errcheck",
+    "file": "server.go",
+    "line": 120,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T21",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 28,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T22",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 102,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T23",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 145,
+    "message": "Error return value of `resp1.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T24",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 162,
+    "message": "Error return value of `resp2.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T25",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 195,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T26",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 225,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T27",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 243,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T28",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 254,
+    "message": "Error return value of `store.CreateLink` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T29",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 255,
+    "message": "Error return value of `store.CreateLink` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T30",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 266,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T31",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 300,
+    "message": "Error return value of `resp1.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T32",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 316,
+    "message": "Error return value of `resp2.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T33",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 341,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T34",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 360,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T35",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 390,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T36",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 408,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T37",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 68,
+    "message": "Error return value of `file.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T38",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 21,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T39",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 92,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T40",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 124,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T41",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 165,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T42",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 213,
+    "message": "Error return value of `store1.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T43",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 220,
+    "message": "Error return value of `store2.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T44",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 248,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T45",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 251,
+    "message": "Error return value of `store.CreateLink` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T46",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 253,
+    "message": "Error return value of `store.CreateLink` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T47",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 255,
+    "message": "Error return value of `store.CreateLink` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T48",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 284,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T49",
+    "source": "gosec",
+    "rule": "G404",
+    "file": "codegen.go",
+    "line": 22,
+    "message": "G404: Use of weak random number generator (math/rand or math/rand/v2 instead of crypto/rand)",
+    "verdict": "pending"
+  },
+  {
+    "id": "T50",
+    "source": "gosec",
+    "rule": "G112",
+    "file": "main.go",
+    "line": 36,
+    "message": "G112: Potential Slowloris Attack because ReadHeaderTimeout is not configured in the http.Server",
+    "verdict": "pending"
+  },
+  {
+    "id": "T51",
+    "source": "gosec",
+    "rule": "G306",
+    "file": "store.go",
+    "line": 103,
+    "message": "G306: Expect WriteFile permissions to be 0600 or less",
+    "verdict": "pending"
+  },
+  {
+    "id": "T52",
+    "source": "gosec",
+    "rule": "G304",
+    "file": "store_test.go",
+    "line": 287,
+    "message": "G304: Potential file inclusion via variable",
+    "verdict": "pending"
+  },
+  {
+    "id": "T53",
+    "source": "staticcheck",
+    "rule": "SA4006",
+    "file": "store_test.go",
+    "line": 127,
+    "message": "SA4006: this value of link is never used",
+    "verdict": "pending"
+  }
+]

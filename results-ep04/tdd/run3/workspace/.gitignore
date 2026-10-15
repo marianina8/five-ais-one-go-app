@@ -1,0 +1,12 @@
+# Binaries
+shortener
+*.exe
+*.bin
+
+# Test data files
+test-store-*.json
+integration-example-*.json
+*.tmp
+
+# Data files (user-specific)
+data.json

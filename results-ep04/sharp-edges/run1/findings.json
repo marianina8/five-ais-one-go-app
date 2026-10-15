@@ -1,0 +1,10 @@
+[
+  {
+    "id": "T01",
+    "source": "typecheck",
+    "file": "main.go",
+    "line": 1,
+    "message": ": # shortener [shortener.test]\n./integration_test.go:6:2: \"fmt\" imported and not used\n./integration_test.go:11:2: \"time\" imported and not used",
+    "verdict": "pending"
+  }
+]

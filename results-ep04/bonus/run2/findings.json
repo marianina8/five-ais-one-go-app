@@ -1,0 +1,256 @@
+[
+  {
+    "id": "T01",
+    "source": "race",
+    "rule": "DATA RACE",
+    "file": "utils.go",
+    "line": 17,
+    "message": "WARNING: DATA RACE\nRead at 0x00c0001c0000 by goroutine 36:\n  math/rand.(*rngSource).Uint64()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/math/rand/rng.go:239 +0x30\n  math/rand.(*rngSource).Int63()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/math/rand/rng.go:234 +0x1be\n  math/rand.(*Rand).Int63()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/math/rand/rand.go:96 +0x76\n  math/rand.(*Rand).Int31()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/math/rand/rand.go:110 +0x77\n  math/rand.(*Rand).Int31n()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/math/rand/rand.go:145 +0x57\n  math/rand.(*Rand).Intn()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/math/rand/rand.go:183 +0x44\n  main.generateRandomCode()\n      /tmp/score-2296102134/code/utils.go:17 +0xfa4\n  main.(*Server).createLink()\n      /tmp/score-2296102134/code/server.go:117 +0x8a2\n  main.(*Server).ServeHTTP()\n      /tmp/score-2296102134/code/server.go:32 +0x4c4\n  net/http.serverHandler.ServeHTTP()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:3301 +0x2a1\n  net/http.(*conn).serve()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:2102 +0x1304\n  net/http.(*Server).Serve.gowrap3()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:3454 +0x4f\n\nPrevious write at 0x00c0001c0000 by goroutine 37:\n  math/rand.(*rngSource).Uint64()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/math/rand/rng.go:239 +0x44\n  math/rand.(*rngSource).Int63()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/math/ …[trimmed]",
+    "verdict": "pending"
+  },
+  {
+    "id": "T02",
+    "source": "errcheck",
+    "file": "main.go",
+    "line": 26,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T03",
+    "source": "errcheck",
+    "file": "main.go",
+    "line": 44,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T04",
+    "source": "errcheck",
+    "file": "server.go",
+    "line": 67,
+    "message": "Error return value of `r.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T05",
+    "source": "errcheck",
+    "file": "server.go",
+    "line": 142,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T06",
+    "source": "errcheck",
+    "file": "server.go",
+    "line": 179,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T07",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 23,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T08",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 187,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T09",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 266,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T10",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 404,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T11",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 455,
+    "message": "Error return value of `os.Setenv` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T12",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 458,
+    "message": "Error return value of `os.Setenv` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T13",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 470,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T14",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 51,
+    "message": "Error return value of `file.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T15",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 86,
+    "message": "Error return value of `file.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T16",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 91,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T17",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 96,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T18",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 102,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T19",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 18,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T20",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 67,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T21",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 107,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T22",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 148,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T23",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 221,
+    "message": "Error return value of `store1.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T24",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 228,
+    "message": "Error return value of `store2.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T25",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 276,
+    "message": "Error return value of `file.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T26",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 283,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T27",
+    "source": "gosec",
+    "rule": "G114",
+    "file": "main.go",
+    "line": 31,
+    "message": "G114: Use of net/http serve function that has no support for setting timeouts",
+    "verdict": "pending"
+  },
+  {
+    "id": "T28",
+    "source": "gosec",
+    "rule": "G304",
+    "file": "store.go",
+    "line": 82,
+    "message": "G304: Potential file inclusion via variable",
+    "verdict": "pending"
+  },
+  {
+    "id": "T29",
+    "source": "gosec",
+    "rule": "G304",
+    "file": "store_test.go",
+    "line": 272,
+    "message": "G304: Potential file inclusion via variable",
+    "verdict": "pending"
+  },
+  {
+    "id": "T30",
+    "source": "gosec",
+    "rule": "G404",
+    "file": "utils.go",
+    "line": 11,
+    "message": "G404: Use of weak random number generator (math/rand or math/rand/v2 instead of crypto/rand)",
+    "verdict": "pending"
+  },
+  {
+    "id": "T31",
+    "source": "staticcheck",
+    "rule": "SA1019",
+    "file": "utils.go",
+    "line": 24,
+    "message": "SA1019: rand.Seed has been deprecated since Go 1.20 and an alternative has been available since Go 1.0: As of Go 1.20 there is no reason to call Seed with a random value. Programs that call Seed with a known value to get a specific sequence of results should use New(NewSource(seed)) to obtain a local random generator.",
+    "verdict": "pending"
+  }
+]

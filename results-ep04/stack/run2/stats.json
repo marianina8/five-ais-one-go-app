@@ -1,0 +1,53 @@
+{
+  "label": "stack/run2",
+  "provider": "bedrock",
+  "model": "deepseek.v3.2",
+  "started_at": "2026-10-15T21:28:53.582708085Z",
+  "max_steps": 40,
+  "minutes": 20,
+  "max_output_tokens": 8192,
+  "model_calls": 40,
+  "tool_calls": 39,
+  "tool_calls_by_name": {
+    "Skill": 5,
+    "go_test": 11,
+    "go_vet": 2,
+    "list_files": 1,
+    "read_file": 2,
+    "write_file": 18
+  },
+  "input_tokens": 1002592,
+  "output_tokens": 17247,
+  "cached_tokens": 0,
+  "price": {
+    "input": 0.62,
+    "output": 1.85,
+    "max_output_tokens": 8192,
+    "source": "Amazon Bedrock pricing, us-west-2"
+  },
+  "cost_usd": 0.6535,
+  "seconds": 505,
+  "finished": false,
+  "stopped_by": "steps",
+  "skills": [
+    "brainstorming",
+    "diagnosing-superpowers",
+    "dispatching-parallel-agents",
+    "executing-plans",
+    "finishing-a-development-branch",
+    "golang-pro",
+    "karpathy-guidelines",
+    "receiving-code-review",
+    "requesting-code-review",
+    "sharp-edges",
+    "subagent-driven-development",
+    "systematic-debugging",
+    "tdd",
+    "test-driven-development",
+    "using-git-worktrees",
+    "using-superpowers",
+    "verification-before-completion",
+    "writing-plans",
+    "writing-skills"
+  ]
+}

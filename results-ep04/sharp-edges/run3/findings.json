@@ -1,0 +1,270 @@
+[
+  {
+    "id": "T01",
+    "source": "race",
+    "rule": "DATA RACE",
+    "file": "handler.go",
+    "line": 248,
+    "message": "WARNING: DATA RACE\nRead at 0x00c000162000 by goroutine 14:\n  math/rand.(*rngSource).Uint64()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/math/rand/rng.go:239 +0x30\n  math/rand.(*rngSource).Int63()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/math/rand/rng.go:234 +0x1be\n  math/rand.(*Rand).Int63()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/math/rand/rand.go:96 +0x76\n  math/rand.(*Rand).Int31()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/math/rand/rand.go:110 +0x77\n  math/rand.(*Rand).Int31n()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/math/rand/rand.go:145 +0x57\n  math/rand.(*Rand).Intn()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/math/rand/rand.go:183 +0x44\n  main.(*Handler).generateCode()\n      /tmp/score-3442837780/code/handler.go:248 +0x98\n  main.(*Handler).createLink()\n      /tmp/score-3442837780/code/handler.go:129 +0x8db\n  main.(*Handler).ServeHTTP()\n      /tmp/score-3442837780/code/handler.go:62 +0x6a4\n  net/http.serverHandler.ServeHTTP()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:3301 +0x2a1\n  net/http.(*conn).serve()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:2102 +0x1304\n  net/http.(*Server).Serve.gowrap3()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:3454 +0x4f\n\nPrevious write at 0x00c000162000 by goroutine 13:\n  math/rand.(*rngSource).Uint64()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/math/rand/rng.go:239 +0x44\n  math/rand.(*rngSource).Int63()\n      /opt/hostedtoolcache/go/1.24.13/x6 …[trimmed]",
+    "verdict": "pending"
+  },
+  {
+    "id": "T02",
+    "source": "errcheck",
+    "file": "edge_cases_test.go",
+    "line": 16,
+    "message": "Error return value of `tmpFile.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T03",
+    "source": "errcheck",
+    "file": "edge_cases_test.go",
+    "line": 17,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T04",
+    "source": "errcheck",
+    "file": "edge_cases_test.go",
+    "line": 23,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T05",
+    "source": "errcheck",
+    "file": "edge_cases_test.go",
+    "line": 86,
+    "message": "Error return value of `tmpFile.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T06",
+    "source": "errcheck",
+    "file": "edge_cases_test.go",
+    "line": 87,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T07",
+    "source": "errcheck",
+    "file": "edge_cases_test.go",
+    "line": 93,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T08",
+    "source": "errcheck",
+    "file": "edge_cases_test.go",
+    "line": 174,
+    "message": "Error return value of `tmpFile.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T09",
+    "source": "errcheck",
+    "file": "edge_cases_test.go",
+    "line": 175,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T10",
+    "source": "errcheck",
+    "file": "edge_cases_test.go",
+    "line": 181,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T11",
+    "source": "errcheck",
+    "file": "handler.go",
+    "line": 151,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T12",
+    "source": "errcheck",
+    "file": "handler.go",
+    "line": 168,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T13",
+    "source": "errcheck",
+    "file": "handler.go",
+    "line": 256,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T14",
+    "source": "errcheck",
+    "file": "handler_test.go",
+    "line": 18,
+    "message": "Error return value of `tmpFile.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T15",
+    "source": "errcheck",
+    "file": "handler_test.go",
+    "line": 28,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T16",
+    "source": "errcheck",
+    "file": "handler_test.go",
+    "line": 29,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T17",
+    "source": "errcheck",
+    "file": "integration_test.go",
+    "line": 17,
+    "message": "Error return value of `tmpFile.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T18",
+    "source": "errcheck",
+    "file": "integration_test.go",
+    "line": 18,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T19",
+    "source": "errcheck",
+    "file": "integration_test.go",
+    "line": 24,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T20",
+    "source": "errcheck",
+    "file": "integration_test.go",
+    "line": 101,
+    "message": "Error return value of `tmpFile.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T21",
+    "source": "errcheck",
+    "file": "integration_test.go",
+    "line": 102,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T22",
+    "source": "errcheck",
+    "file": "integration_test.go",
+    "line": 108,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T23",
+    "source": "errcheck",
+    "file": "main.go",
+    "line": 28,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T24",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 15,
+    "message": "Error return value of `tmpFile.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T25",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 23,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T26",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 24,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T27",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 184,
+    "message": "Error return value of `tmpFile.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T28",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 185,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T29",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 198,
+    "message": "Error return value of `store1.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T30",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 205,
+    "message": "Error return value of `store2.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T31",
+    "source": "gosec",
+    "rule": "G404",
+    "file": "handler.go",
+    "line": 48,
+    "message": "G404: Use of weak random number generator (math/rand or math/rand/v2 instead of crypto/rand)",
+    "verdict": "pending"
+  },
+  {
+    "id": "T32",
+    "source": "gosec",
+    "rule": "G112",
+    "file": "main.go",
+    "line": 32,
+    "message": "G112: Potential Slowloris Attack because ReadHeaderTimeout is not configured in the http.Server",
+    "verdict": "pending"
+  },
+  {
+    "id": "T33",
+    "source": "gosec",
+    "rule": "G306",
+    "file": "store.go",
+    "line": 82,
+    "message": "G306: Expect WriteFile permissions to be 0600 or less",
+    "verdict": "pending"
+  }
+]

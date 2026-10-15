@@ -1,0 +1,68 @@
+[
+  {
+    "id": "T01",
+    "source": "errcheck",
+    "file": "internal/handler/create.go",
+    "line": 30,
+    "message": "Error return value of `r.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T02",
+    "source": "errcheck",
+    "file": "internal/handler/create.go",
+    "line": 68,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T03",
+    "source": "errcheck",
+    "file": "internal/handler/handler.go",
+    "line": 70,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T04",
+    "source": "errcheck",
+    "file": "internal/handler/handler_test.go",
+    "line": 51,
+    "message": "Error return value of `w.Write` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T05",
+    "source": "errcheck",
+    "file": "internal/handler/list.go",
+    "line": 22,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T06",
+    "source": "errcheck",
+    "file": "internal/store/json_store_test.go",
+    "line": 10,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T07",
+    "source": "gosec",
+    "rule": "G306",
+    "file": "internal/store/json_store.go",
+    "line": 121,
+    "message": "G306: Expect WriteFile permissions to be 0600 or less",
+    "verdict": "pending"
+  },
+  {
+    "id": "T08",
+    "source": "staticcheck",
+    "rule": "SA9003",
+    "file": "internal/handler/redirect.go",
+    "line": 29,
+    "message": "SA9003: empty branch",
+    "verdict": "pending"
+  }
+]

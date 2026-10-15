@@ -1,0 +1,35 @@
+{
+  "label": "golang-pro/run2",
+  "provider": "bedrock",
+  "model": "deepseek.v3.2",
+  "started_at": "2026-10-15T21:28:41.883345629Z",
+  "max_steps": 40,
+  "minutes": 20,
+  "max_output_tokens": 8192,
+  "model_calls": 40,
+  "tool_calls": 39,
+  "tool_calls_by_name": {
+    "go_build": 4,
+    "go_test": 7,
+    "go_vet": 2,
+    "list_files": 2,
+    "read_file": 6,
+    "write_file": 18
+  },
+  "input_tokens": 766036,
+  "output_tokens": 29316,
+  "cached_tokens": 0,
+  "price": {
+    "input": 0.62,
+    "output": 1.85,
+    "max_output_tokens": 8192,
+    "source": "Amazon Bedrock pricing, us-west-2"
+  },
+  "cost_usd": 0.5292,
+  "seconds": 695,
+  "finished": false,
+  "stopped_by": "steps",
+  "skills": [
+    "golang-pro"
+  ]
+}

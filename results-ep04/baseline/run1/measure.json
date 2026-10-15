@@ -1,0 +1,616 @@
+{
+  "label": "baseline/run1",
+  "measured_at": "2026-10-15T21:47:42.402247017Z",
+  "size": {
+    "go_files": 7,
+    "code_lines": 654,
+    "test_lines": 719,
+    "test_files": 2,
+    "test_funcs": 18
+  },
+  "build": {
+    "ok": true
+  },
+  "hidden": {
+    "tests": {
+      "TestAdmin_Delete": "fail",
+      "TestAdmin_DeleteNeedsToken": "fail",
+      "TestAdmin_DeleteUnknown404": "pass",
+      "TestAdmin_ListEmptyIsArray": "pass",
+      "TestAdmin_ListNeedsToken/basic_scheme": "fail",
+      "TestAdmin_ListNeedsToken/no_bearer": "fail",
+      "TestAdmin_ListNeedsToken/no_header": "fail",
+      "TestAdmin_ListNeedsToken/token_longer": "fail",
+      "TestAdmin_ListNeedsToken/token_prefix": "fail",
+      "TestAdmin_ListNeedsToken/wrong_token": "fail",
+      "TestAdmin_ListOldestFirst": "fail",
+      "TestAdmin_StartWithoutTokenFails": "pass",
+      "TestConcurrency_MixedLoadNoServerErrors": "fail",
+      "TestConcurrency_ParallelCreates": "fail",
+      "TestConcurrency_ParallelVisitsExact": "fail",
+      "TestConcurrency_SameAliasOnceOnly": "fail",
+      "TestCore_CreateGeneratedCode": "fail",
+      "TestCore_CreateWithAlias": "fail",
+      "TestCore_GeneratedCodesUnique": "fail",
+      "TestCore_Redirect": "fail",
+      "TestCore_RedirectAlias": "fail",
+      "TestCore_RedirectUnknown404": "pass",
+      "TestCore_VisitsCounted": "fail",
+      "TestErrors_BodyTooLarge413": "pass",
+      "TestErrors_JSONErrorFormat": "fail",
+      "TestErrors_MethodNotAllowed": "fail",
+      "TestPersistence_DefaultDataFile": "fail",
+      "TestPersistence_DeleteSurvivesRestart": "fail",
+      "TestPersistence_KillAndRecoverWithoutRestartGrace": "fail",
+      "TestPersistence_KillDuringWrites": "fail",
+      "TestPersistence_SurvivesRestart": "fail",
+      "TestPersistence_UsesDataFlag": "fail",
+      "TestValidation_BadAliases/non_ascii": "fail",
+      "TestValidation_BadAliases/reserved_api": "fail",
+      "TestValidation_BadAliases/slash": "fail",
+      "TestValidation_BadAliases/space": "fail",
+      "TestValidation_BadAliases/too_long_33": "fail",
+      "TestValidation_BadAliases/too_short": "fail",
+      "TestValidation_BadURLs/data_url": "fail",
+      "TestValidation_BadURLs/empty": "pass",
+      "TestValidation_BadURLs/ftp_scheme": "fail",
+      "TestValidation_BadURLs/header_injection": "fail",
+      "TestValidation_BadURLs/javascript": "fail",
+      "TestValidation_BadURLs/no_host": "fail",
+      "TestValidation_BadURLs/not_a_url": "fail",
+      "TestValidation_BadURLs/port_only": "fail",
+      "TestValidation_BadURLs/relative": "fail",
+      "TestValidation_BadURLs/too_long_2049": "fail",
+      "TestValidation_DuplicateAlias409": "fail",
+      "TestValidation_EdgeAliasesAccepted": "fail",
+      "TestValidation_MalformedJSON/trailing_data": "fail",
+      "TestValidation_MalformedJSON/truncated": "pass",
+      "TestValidation_MaxLengthURLAccepted": "fail",
+      "TestValidation_MissingURL": "pass",
+      "TestValidation_UnknownField": "fail"
+    },
+    "categories": {
+      "Admin": [
+        3,
+        12
+      ],
+      "Concurrency": [
+        0,
+        4
+      ],
+      "Core": [
+        1,
+        7
+      ],
+      "Errors": [
+        1,
+        3
+      ],
+      "Persistence": [
+        0,
+        6
+      ],
+      "Validation": [
+        3,
+        23
+      ]
+    },
+    "points": {
+      "Admin": 1.8,
+      "Concurrency": 0,
+      "Core": 1.1,
+      "Errors": 1,
+      "Persistence": 0,
+      "Validation": 1
+    },
+    "total": 4.9,
+    "failures": {
+      "TestAdmin_Delete": "acceptance_test.go:279: POST /api/links: Post \"http://127.0.0.1:37085/api/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+      "TestAdmin_DeleteNeedsToken": "acceptance_test.go:299: POST /api/links: Post \"http://127.0.0.1:38059/api/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+      "TestAdmin_ListNeedsToken/basic_scheme": "acceptance_test.go:237: POST /api/links: Post \"http://127.0.0.1:38971/api/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+      "TestAdmin_ListNeedsToken/no_bearer": "acceptance_test.go:237: POST /api/links: Post \"http://127.0.0.1:34041/api/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+      "TestAdmin_ListNeedsToken/no_header": "acceptance_test.go:237: POST /api/links: Post \"http://127.0.0.1:33853/api/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+      "TestAdmin_ListNeedsToken/token_longer": "acceptance_test.go:237: POST /api/links: Post \"http://127.0.0.1:35673/api/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+      "TestAdmin_ListNeedsToken/token_prefix": "acceptance_test.go:237: POST /api/links: Post \"http://127.0.0.1:45567/api/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+      "TestAdmin_ListNeedsToken/wrong_token": "acceptance_test.go:237: POST /api/links: Post \"http://127.0.0.1:33103/api/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+      "TestAdmin_ListOldestFirst": "acceptance_test.go:260: POST /api/links: Post \"http://127.0.0.1:45161/api/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+      "TestConcurrency_MixedLoadNoServerErrors": "acceptance_test.go:573: POST /api/links: Post \"http://127.0.0.1:33509/api/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+      "TestConcurrency_ParallelCreates": "acceptance_test.go:489: 200 of 200 parallel creates failed",
+      "TestConcurrency_ParallelVisitsExact": "acceptance_test.go:506: POST /api/links: Post \"http://127.0.0.1:44167/api/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+      "TestConcurrency_SameAliasOnceOnly": "acceptance_test.go:564: 50 racing creates of one alias: want 1×201 and 49×409, got 0×201 and 0×409",
+      "TestCore_CreateGeneratedCode": "acceptance_test.go:23: POST /api/links: Post \"http://127.0.0.1:42157/api/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+      "TestCore_CreateWithAlias": "acceptance_test.go:44: POST /api/links: Post \"http://127.0.0.1:33541/api/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+      "TestCore_GeneratedCodesUnique": "acceptance_test.go:54: POST /api/links: Post \"http://127.0.0.1:39049/api/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+      "TestCore_Redirect": "acceptance_test.go:68: POST /api/links: Post \"http://127.0.0.1:45443/api/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+      "TestCore_RedirectAlias": "acceptance_test.go:78: POST /api/links: Post \"http://127.0.0.1:35381/api/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+      "TestCore_VisitsCounted": "acceptance_test.go:93: POST /api/links: Post \"http://127.0.0.1:42835/api/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+      "TestErrors_JSONErrorFormat": "acceptance_test.go:311: POST /api/links: Post \"http://127.0.0.1:38279/api/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+      "TestErrors_MethodNotAllowed": "acceptance_test.go:342: POST /api/links: Post \"http://127.0.0.1:39817/api/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+      "TestPersistence_DefaultDataFile": "acceptance_test.go:394: POST /api/links: Post \"http://127.0.0.1:35943/api/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+      "TestPersistence_DeleteSurvivesRestart": "acceptance_test.go:372: POST /api/links: Post \"http://127.0.0.1:34927/api/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+      "TestPersistence_KillAndRecoverWithoutRestartGrace": "acceptance_test.go:409: POST /api/links: Post \"http://127.0.0.1:36895/api/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+      "TestPersistence_KillDuringWrites": "acceptance_test.go:437: POST /api/links: Post \"http://127.0.0.1:36161/api/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+      "TestPersistence_SurvivesRestart": "acceptance_test.go:351: POST /api/links: Post \"http://127.0.0.1:38727/api/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+      "TestPersistence_UsesDataFlag": "acceptance_test.go:382: POST /api/links: Post \"http://127.0.0.1:40899/api/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+      "TestValidation_BadAliases/non_ascii": "acceptance_test.go:152: alias \"café-link\": want 400, got 500: {\"error\":\"internal server error\"}",
+      "TestValidation_BadAliases/reserved_api": "acceptance_test.go:152: alias \"api\": want 400, got 500: {\"error\":\"internal server error\"}",
+      "TestValidation_BadAliases/slash": "acceptance_test.go:152: alias \"a/b/c\": want 400, got 500: {\"error\":\"internal server error\"}",
+      "TestValidation_BadAliases/space": "acceptance_test.go:152: alias \"has space\": want 400, got 500: {\"error\":\"internal server error\"}",
+      "TestValidation_BadAliases/too_long_33": "acceptance_test.go:152: alias \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\": want 400, got 500: {\"error\":\"internal server error\"}",
+      "TestValidation_BadAliases/too_short": "acceptance_test.go:152: alias \"ab\": want 400, got 500: {\"error\":\"internal server error\"}",
+      "TestValidation_BadURLs/data_url": "acceptance_test.go:125: url \"data:text/html,\u003cscript\u003ealert(1)\u003c/script\u003e\": want 400, got 500: {\"error\":\"internal server error\"}",
+      "TestValidation_BadURLs/ftp_scheme": "acceptance_test.go:125: url \"ftp://example.com/file\": want 400, got 500: {\"error\":\"internal server error\"}",
+      "TestValidation_BadURLs/header_injection": "acceptance_test.go:125: url \"https://example.com/\\r\\nSet-Cookie: sessio\": want 400, got 500: {\"error\":\"internal server error\"}",
+      "TestValidation_BadURLs/javascript": "acceptance_test.go:125: url \"javascript:alert(document.cookie)\": want 400, got 500: {\"error\":\"internal server error\"}",
+      "TestValidation_BadURLs/no_host": "acceptance_test.go:125: url \"https://\": want 400, got 500: {\"error\":\"internal server error\"}",
+      "TestValidation_BadURLs/not_a_url": "acceptance_test.go:125: url \"not a url\": want 400, got 500: {\"error\":\"internal server error\"}",
+      "TestValidation_BadURLs/port_only": "acceptance_test.go:124: POST /api/links: Post \"http://127.0.0.1:44825/api/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+      "TestValidation_BadURLs/relative": "acceptance_test.go:125: url \"/just/a/path\": want 400, got 500: {\"error\":\"internal server error\"}",
+      "TestValidation_BadURLs/too_long_2049": "acceptance_test.go:125: url \"https://example.com/aaaaaaaaaaaaaaaaaaaa\": want 400, got 500: {\"error\":\"internal server error\"}",
+      "TestValidation_DuplicateAlias409": "acceptance_test.go:169: POST /api/links: Post \"http://127.0.0.1:42723/api/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+      "TestValidation_EdgeAliasesAccepted": "acceptance_test.go:160: POST /api/links: Post \"http://127.0.0.1:37169/api/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+      "TestValidation_MalformedJSON/trailing_data": "acceptance_test.go:186: POST /api/links: Post \"http://127.0.0.1:39647/api/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+      "TestValidation_MaxLengthURLAccepted": "acceptance_test.go:133: POST /api/links: Post \"http://127.0.0.1:39015/api/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+      "TestValidation_UnknownField": "acceptance_test.go:194: POST /api/links: Post \"http://127.0.0.1:41429/api/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+    }
+  },
+  "style": {
+    "measured": true,
+    "issues": 7,
+    "issues_by_linter": {
+      "gofmt": 7
+    },
+    "max_complexity": 12,
+    "most_complex_func": "`(*Store).CreateLink`",
+    "score": 9,
+    "details": [
+      "codegen.go:9 File is not properly formatted (gofmt)",
+      "handlers.go:119 File is not properly formatted (gofmt)",
+      "main.go:60 File is not properly formatted (gofmt)",
+      "server.go:124 File is not properly formatted (gofmt)",
+      "server_test.go:421 File is not properly formatted (gofmt)",
+      "store.go:30 File is not properly formatted (gofmt)",
+      "store_test.go:300 File is not properly formatted (gofmt)"
+    ]
+  },
+  "own_tests": {
+    "test_files": 2,
+    "test_funcs": 18,
+    "passed": false,
+    "coverage": 21.3,
+    "points": 0,
+    "output": "coverage: 21.3% of statements\npanic: test timed out after 4m0s\n\trunning tests:\n\t\tTestCreateLink (4m0s)\n\t\tTestCreateLink/valid_request_without_alias (4m0s)\n\ngoroutine 18 [running]:\ntesting.(*M).startAlarm.func1()\n\t/opt/hostedtoolcache/go/1.24.13/x64/src/testing/testing.go:2484 +0x394\ncreated by time.goFunc\n\t/opt/hostedtoolcache/go/1.24.13/x64/src/time/sleep.go:215 +0x2d\n\ngoroutine 1 [chan receive]:\ntesting.(*T).Run(0xc000003880, {0x804c9b?, 0xc000072b30?}, 0x8242b8)\n\t/opt/hostedtoolcache/go/1.24.13/x64/src/testing/testing.go:1859 +0x431\ntesting.runTests.func1(0xc000003880)\n\t/opt/hostedtoolcache/go/1.24.13/x64/src/testing/testing.go:2279 +0x37\ntesting.tRunner(0xc000003880, 0xc000072c70)\n\t/opt/hostedtoolcache/go/1.24.13/x64/src/testing/testing.go:1792 +0xf4\ntesting.runTests(0xc00000e078, {0xb084a0, 0x12, 0x12}, {0xb11080?, 0x7?, 0xb0faa0?})\n\t/opt/hostedtoolcache/go/1.24.13/x64/src/testing/testing.go:2277 +0x4b4\ntesting.(*M).Run(0xc000076320)\n\t/opt/hostedtoolcache/go/1.24.13/x64/src/testing/testing.go:2142 +0x64a\nmain.main()\n\t_testmain.go:89 +0x9b\n\ngoroutine 7 [chan receive]:\ntesting.(*T).Run(0xc000003a40, {0x80b752?, 0xc000073f50?}, 0xc000128190)\n\t/opt/hostedtoolcache/go/1.24.13/x64/src/testing/testing.go:1859 +0x431\nshortener.TestCreateLink(0xc000003a40)\n\t/tmp/score-1561232981/code/server_test.go:92 +0x116\ntesting.tRunner(0xc000003a40, 0x8242b8)\n\t/opt/hostedtoolcache/go/1.24.13/x64/src/testing/testing.go:1792 +0xf4\ncreated by testing.(*T).Run in goroutine 1\n\t/opt/hostedtoolcache/go/1.24.13/x64/src/testing/testing.go:1851 +0x413\n\ngoroutine 8 [IO wait]:\ninternal/poll.runtime_pollWait(0x7fa716a99780, 0x72)\n\t/opt/hostedtoolcache/go/1.24.13/x64/src/runtime/netpoll.go:351 +0x85\ninternal/poll.(*pollDesc).wait(0xc000146000?, 0x7b2660?, 0x0)\n\t/opt/hostedtoolcache/go/1.24.13/x64/src/internal/poll/fd_poll_runtime.go:84 +0x27\ninternal/poll.(*pollDesc).waitRead(...)\n\t/opt/hostedtoolcache/go/1.24.13/x64/src/internal/poll/fd_poll_runtime.go:89\ninternal/poll.(*FD).Accept(0xc000146000)\n\t/opt/hostedtoolcache/go/1.24.13/x64/src/internal/poll/fd_unix.go:620 +0x295\nnet.(*netFD).accept(0xc000146000)\n\t/opt/hostedtoolcache/go/1.24.13/x64/src/net/fd_unix.go:172 +0x29\nnet.(*TCPListener).accept(0xc00007ecc0)\n\t/opt/hostedtoolcache/go/1.24.13/x64/src/net/tcpsock_posix.go:159 +0x1b\nnet.(*TCPListener).Accept(0xc00007ecc0)\n\t/opt/hostedtoolcache/go/1.24.13/x64/src/net/tcpsock.go:380 +0x30\nnet/http.(*Server).Serve(0xc000158000, {0x893e68, 0xc00007ecc0})\n\t/opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:3424 +0x30c\nnet/http/httptest.(*Server).goServe.func1()\n\t/opt/hostedtoolcache/go/1.24.13/x64/src/net/http/httptest/server.go:311 +0x55\ncreated by net/http/httptest.(*Server).goServe in goroutine 7\n\t/opt/hostedtoolcache/go/1.24.13/x64/src/net/http/httptest/server.go:309 +0x65\n\ngoroutine 9 [select]:\nnet/http.(*persistConn).roundTrip(0xc0001365a0, 0xc000128280)\n\t/opt/hostedtoolcache/go/1.24.13/x64/src/net/http/transport.go:2829 +0x785\nnet/http.(*Transport).roundTrip(0xb08300,  …[trimmed]"
+  },
+  "findings": [
+    {
+      "id": "T01",
+      "source": "errcheck",
+      "file": "handlers.go",
+      "line": 20,
+      "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T02",
+      "source": "errcheck",
+      "file": "handlers.go",
+      "line": 31,
+      "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T03",
+      "source": "errcheck",
+      "file": "handlers.go",
+      "line": 36,
+      "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T04",
+      "source": "errcheck",
+      "file": "handlers.go",
+      "line": 40,
+      "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T05",
+      "source": "errcheck",
+      "file": "handlers.go",
+      "line": 51,
+      "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T06",
+      "source": "errcheck",
+      "file": "handlers.go",
+      "line": 60,
+      "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T07",
+      "source": "errcheck",
+      "file": "handlers.go",
+      "line": 63,
+      "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T08",
+      "source": "errcheck",
+      "file": "handlers.go",
+      "line": 66,
+      "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T09",
+      "source": "errcheck",
+      "file": "handlers.go",
+      "line": 72,
+      "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T10",
+      "source": "errcheck",
+      "file": "handlers.go",
+      "line": 78,
+      "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T11",
+      "source": "errcheck",
+      "file": "handlers.go",
+      "line": 93,
+      "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T12",
+      "source": "errcheck",
+      "file": "handlers.go",
+      "line": 99,
+      "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T13",
+      "source": "errcheck",
+      "file": "handlers.go",
+      "line": 110,
+      "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T14",
+      "source": "errcheck",
+      "file": "handlers.go",
+      "line": 113,
+      "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T15",
+      "source": "errcheck",
+      "file": "main.go",
+      "line": 30,
+      "message": "Error return value of `store.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T16",
+      "source": "errcheck",
+      "file": "server.go",
+      "line": 45,
+      "message": "Error return value of `fmt.Fprintf` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T17",
+      "source": "errcheck",
+      "file": "server.go",
+      "line": 61,
+      "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T18",
+      "source": "errcheck",
+      "file": "server.go",
+      "line": 74,
+      "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T19",
+      "source": "errcheck",
+      "file": "server.go",
+      "line": 100,
+      "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T20",
+      "source": "errcheck",
+      "file": "server.go",
+      "line": 120,
+      "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T21",
+      "source": "errcheck",
+      "file": "server_test.go",
+      "line": 28,
+      "message": "Error return value of `store.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T22",
+      "source": "errcheck",
+      "file": "server_test.go",
+      "line": 102,
+      "message": "Error return value of `resp.Body.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T23",
+      "source": "errcheck",
+      "file": "server_test.go",
+      "line": 145,
+      "message": "Error return value of `resp1.Body.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T24",
+      "source": "errcheck",
+      "file": "server_test.go",
+      "line": 162,
+      "message": "Error return value of `resp2.Body.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T25",
+      "source": "errcheck",
+      "file": "server_test.go",
+      "line": 195,
+      "message": "Error return value of `resp.Body.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T26",
+      "source": "errcheck",
+      "file": "server_test.go",
+      "line": 225,
+      "message": "Error return value of `resp.Body.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T27",
+      "source": "errcheck",
+      "file": "server_test.go",
+      "line": 243,
+      "message": "Error return value of `resp.Body.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T28",
+      "source": "errcheck",
+      "file": "server_test.go",
+      "line": 254,
+      "message": "Error return value of `store.CreateLink` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T29",
+      "source": "errcheck",
+      "file": "server_test.go",
+      "line": 255,
+      "message": "Error return value of `store.CreateLink` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T30",
+      "source": "errcheck",
+      "file": "server_test.go",
+      "line": 266,
+      "message": "Error return value of `resp.Body.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T31",
+      "source": "errcheck",
+      "file": "server_test.go",
+      "line": 300,
+      "message": "Error return value of `resp1.Body.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T32",
+      "source": "errcheck",
+      "file": "server_test.go",
+      "line": 316,
+      "message": "Error return value of `resp2.Body.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T33",
+      "source": "errcheck",
+      "file": "server_test.go",
+      "line": 341,
+      "message": "Error return value of `resp.Body.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T34",
+      "source": "errcheck",
+      "file": "server_test.go",
+      "line": 360,
+      "message": "Error return value of `resp.Body.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T35",
+      "source": "errcheck",
+      "file": "server_test.go",
+      "line": 390,
+      "message": "Error return value of `resp.Body.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T36",
+      "source": "errcheck",
+      "file": "server_test.go",
+      "line": 408,
+      "message": "Error return value of `resp.Body.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T37",
+      "source": "errcheck",
+      "file": "store.go",
+      "line": 68,
+      "message": "Error return value of `file.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T38",
+      "source": "errcheck",
+      "file": "store_test.go",
+      "line": 21,
+      "message": "Error return value of `store.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T39",
+      "source": "errcheck",
+      "file": "store_test.go",
+      "line": 92,
+      "message": "Error return value of `store.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T40",
+      "source": "errcheck",
+      "file": "store_test.go",
+      "line": 124,
+      "message": "Error return value of `store.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T41",
+      "source": "errcheck",
+      "file": "store_test.go",
+      "line": 165,
+      "message": "Error return value of `store.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T42",
+      "source": "errcheck",
+      "file": "store_test.go",
+      "line": 213,
+      "message": "Error return value of `store1.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T43",
+      "source": "errcheck",
+      "file": "store_test.go",
+      "line": 220,
+      "message": "Error return value of `store2.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T44",
+      "source": "errcheck",
+      "file": "store_test.go",
+      "line": 248,
+      "message": "Error return value of `store.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T45",
+      "source": "errcheck",
+      "file": "store_test.go",
+      "line": 251,
+      "message": "Error return value of `store.CreateLink` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T46",
+      "source": "errcheck",
+      "file": "store_test.go",
+      "line": 253,
+      "message": "Error return value of `store.CreateLink` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T47",
+      "source": "errcheck",
+      "file": "store_test.go",
+      "line": 255,
+      "message": "Error return value of `store.CreateLink` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T48",
+      "source": "errcheck",
+      "file": "store_test.go",
+      "line": 284,
+      "message": "Error return value of `store.Close` is not checked",
+      "verdict": "pending"
+    },
+    {
+      "id": "T49",
+      "source": "gosec",
+      "rule": "G404",
+      "file": "codegen.go",
+      "line": 22,
+      "message": "G404: Use of weak random number generator (math/rand or math/rand/v2 instead of crypto/rand)",
+      "verdict": "pending"
+    },
+    {
+      "id": "T50",
+      "source": "gosec",
+      "rule": "G112",
+      "file": "main.go",
+      "line": 36,
+      "message": "G112: Potential Slowloris Attack because ReadHeaderTimeout is not configured in the http.Server",
+      "verdict": "pending"
+    },
+    {
+      "id": "T51",
+      "source": "gosec",
+      "rule": "G306",
+      "file": "store.go",
+      "line": 103,
+      "message": "G306: Expect WriteFile permissions to be 0600 or less",
+      "verdict": "pending"
+    },
+    {
+      "id": "T52",
+      "source": "gosec",
+      "rule": "G304",
+      "file": "store_test.go",
+      "line": 287,
+      "message": "G304: Potential file inclusion via variable",
+      "verdict": "pending"
+    },
+    {
+      "id": "T53",
+      "source": "staticcheck",
+      "rule": "SA4006",
+      "file": "store_test.go",
+      "line": 127,
+      "message": "SA4006: this value of link is never used",
+      "verdict": "pending"
+    }
+  ],
+  "elapsed_ns": 1246795268659
+}

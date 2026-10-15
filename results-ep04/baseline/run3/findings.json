@@ -1,0 +1,449 @@
+[
+  {
+    "id": "T01",
+    "source": "errcheck",
+    "file": "handler_test.go",
+    "line": 19,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T02",
+    "source": "errcheck",
+    "file": "handler_test.go",
+    "line": 20,
+    "message": "Error return value of `tmpfile.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T03",
+    "source": "errcheck",
+    "file": "handler_test.go",
+    "line": 26,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T04",
+    "source": "errcheck",
+    "file": "handler_test.go",
+    "line": 138,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T05",
+    "source": "errcheck",
+    "file": "handler_test.go",
+    "line": 139,
+    "message": "Error return value of `tmpfile.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T06",
+    "source": "errcheck",
+    "file": "handler_test.go",
+    "line": 145,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T07",
+    "source": "errcheck",
+    "file": "handler_test.go",
+    "line": 184,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T08",
+    "source": "errcheck",
+    "file": "handler_test.go",
+    "line": 185,
+    "message": "Error return value of `tmpfile.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T09",
+    "source": "errcheck",
+    "file": "handler_test.go",
+    "line": 191,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T10",
+    "source": "errcheck",
+    "file": "handler_test.go",
+    "line": 196,
+    "message": "Error return value of `store.CreateLink` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T11",
+    "source": "errcheck",
+    "file": "handler_test.go",
+    "line": 197,
+    "message": "Error return value of `store.CreateLink` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T12",
+    "source": "errcheck",
+    "file": "handler_test.go",
+    "line": 246,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T13",
+    "source": "errcheck",
+    "file": "handler_test.go",
+    "line": 247,
+    "message": "Error return value of `tmpfile.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T14",
+    "source": "errcheck",
+    "file": "handler_test.go",
+    "line": 253,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T15",
+    "source": "errcheck",
+    "file": "handler_test.go",
+    "line": 307,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T16",
+    "source": "errcheck",
+    "file": "handler_test.go",
+    "line": 308,
+    "message": "Error return value of `tmpfile.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T17",
+    "source": "errcheck",
+    "file": "handler_test.go",
+    "line": 314,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T18",
+    "source": "errcheck",
+    "file": "handler_test.go",
+    "line": 344,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T19",
+    "source": "errcheck",
+    "file": "handler_test.go",
+    "line": 345,
+    "message": "Error return value of `tmpfile.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T20",
+    "source": "errcheck",
+    "file": "handler_test.go",
+    "line": 351,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T21",
+    "source": "errcheck",
+    "file": "main.go",
+    "line": 28,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T22",
+    "source": "errcheck",
+    "file": "main.go",
+    "line": 115,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T23",
+    "source": "errcheck",
+    "file": "main.go",
+    "line": 152,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T24",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 47,
+    "message": "Error return value of `file.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T25",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 109,
+    "message": "Error return value of `file.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T26",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 122,
+    "message": "Error return value of `file.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T27",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 133,
+    "message": "Error return value of `s.file.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T28",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 158,
+    "message": "Error return value of `file.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T29",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 171,
+    "message": "Error return value of `file.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T30",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 180,
+    "message": "Error return value of `s.file.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T31",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 14,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T32",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 15,
+    "message": "Error return value of `tmpfile.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T33",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 21,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T34",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 70,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T35",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 71,
+    "message": "Error return value of `tmpfile.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T36",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 77,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T37",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 119,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T38",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 120,
+    "message": "Error return value of `tmpfile.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T39",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 126,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T40",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 130,
+    "message": "Error return value of `store.CreateLink` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T41",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 132,
+    "message": "Error return value of `store.CreateLink` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T42",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 154,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T43",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 155,
+    "message": "Error return value of `tmpfile.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T44",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 161,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T45",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 193,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T46",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 194,
+    "message": "Error return value of `tmpfile.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T47",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 206,
+    "message": "Error return value of `store1.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T48",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 213,
+    "message": "Error return value of `store2.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T49",
+    "source": "gosec",
+    "rule": "G114",
+    "file": "main.go",
+    "line": 33,
+    "message": "G114: Use of net/http serve function that has no support for setting timeouts",
+    "verdict": "pending"
+  },
+  {
+    "id": "T50",
+    "source": "gosec",
+    "rule": "G302",
+    "file": "store.go",
+    "line": 39,
+    "message": "G302: Expect file permissions to be 0600 or less",
+    "verdict": "pending"
+  },
+  {
+    "id": "T51",
+    "source": "gosec",
+    "rule": "G304",
+    "file": "store.go",
+    "line": 105,
+    "message": "G304: Potential file inclusion via variable",
+    "verdict": "pending"
+  },
+  {
+    "id": "T52",
+    "source": "gosec",
+    "rule": "G302",
+    "file": "store.go",
+    "line": 136,
+    "message": "G302: Expect file permissions to be 0600 or less",
+    "verdict": "pending"
+  },
+  {
+    "id": "T53",
+    "source": "gosec",
+    "rule": "G304",
+    "file": "store.go",
+    "line": 154,
+    "message": "G304: Potential file inclusion via variable",
+    "verdict": "pending"
+  },
+  {
+    "id": "T54",
+    "source": "gosec",
+    "rule": "G302",
+    "file": "store.go",
+    "line": 183,
+    "message": "G302: Expect file permissions to be 0600 or less",
+    "verdict": "pending"
+  },
+  {
+    "id": "T55",
+    "source": "gosec",
+    "rule": "G404",
+    "file": "utils.go",
+    "line": 39,
+    "message": "G404: Use of weak random number generator (math/rand or math/rand/v2 instead of crypto/rand)",
+    "verdict": "pending"
+  }
+]

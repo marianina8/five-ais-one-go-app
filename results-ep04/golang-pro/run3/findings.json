@@ -1,0 +1,10 @@
+[
+  {
+    "id": "T01",
+    "source": "typecheck",
+    "file": "handlers.go",
+    "line": 1,
+    "message": ": # shortener [shortener.test]\n./integration_test.go:46:9: undefined: httptest\n./integration_test.go:48:7: undefined: httptest\n./integration_test.go:68:8: undefined: httptest\n./integration_test.go:70:6: undefined: httptest\n./integration_test.go:85:8: undefined: httptest\n./integration_test.go:87:6: undefined: httptest\n./integration_test.go:111:8: undefined: httptest\n./integration_test.go:114:6: undefined: httptest\n./integration_test.go:124:8: undefined: httptest\n./integration_test.go:126:6: undefined: httptest\n./integration_test.go:126:6: too many errors",
+    "verdict": "pending"
+  }
+]

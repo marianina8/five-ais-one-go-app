@@ -1,0 +1,28 @@
+[
+  {
+    "id": "T01",
+    "source": "race",
+    "rule": "DATA RACE",
+    "file": "store.go",
+    "line": 83,
+    "message": "WARNING: DATA RACE\nWrite at 0x00c00011eff0 by goroutine 30:\n  runtime.mapassign_faststr()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/internal/runtime/maps/runtime_faststr_swiss.go:263 +0x0\n  main.(*jsonStore).Create()\n      /tmp/score-3828299119/code/store.go:83 +0x596\n  main.(*handler).createLink()\n      /tmp/score-3828299119/code/main.go:131 +0x3f5\n  main.(*handler).ServeHTTP()\n      /tmp/score-3828299119/code/main.go:74 +0x2f5\n  net/http.serverHandler.ServeHTTP()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:3301 +0x2a1\n  net/http.(*conn).serve()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:2102 +0x1304\n  net/http.(*Server).Serve.gowrap3()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:3454 +0x4f\n\nPrevious read at 0x00c00011eff0 by goroutine 63:\n  runtime.mapaccess2_faststr()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/internal/runtime/maps/runtime_faststr_swiss.go:162 +0x0\n  main.generateUniqueCode()\n      /tmp/score-3828299119/code/store.go:255 +0x71\n  main.(*jsonStore).Create()\n      /tmp/score-3828299119/code/store.go:62 +0x178\n  main.(*handler).createLink()\n      /tmp/score-3828299119/code/main.go:131 +0x3f5\n  main.(*handler).ServeHTTP()\n      /tmp/score-3828299119/code/main.go:74 +0x2f5\n  net/http.serverHandler.ServeHTTP()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:3301 +0x2a1\n  net/http.(*conn).serve()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:2102 +0x1304\n  ne …[trimmed]",
+    "verdict": "pending"
+  },
+  {
+    "id": "T02",
+    "source": "race",
+    "rule": "DATA RACE",
+    "file": "store.go",
+    "line": 255,
+    "message": "WARNING: DATA RACE\nRead at 0x00c00007eff0 by goroutine 38:\n  runtime.mapaccess2_faststr()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/internal/runtime/maps/runtime_faststr_swiss.go:162 +0x0\n  main.generateUniqueCode()\n      /tmp/score-3828299119/code/store.go:255 +0x71\n  main.(*jsonStore).Create()\n      /tmp/score-3828299119/code/store.go:62 +0x178\n  main.(*handler).createLink()\n      /tmp/score-3828299119/code/main.go:131 +0x3f5\n  main.(*handler).ServeHTTP()\n      /tmp/score-3828299119/code/main.go:74 +0x2f5\n  net/http.serverHandler.ServeHTTP()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:3301 +0x2a1\n  net/http.(*conn).serve()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:2102 +0x1304\n  net/http.(*Server).Serve.gowrap3()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:3454 +0x4f\n\nPrevious write at 0x00c00007eff0 by goroutine 35:\n  runtime.mapassign_faststr()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/internal/runtime/maps/runtime_faststr_swiss.go:263 +0x0\n  main.(*jsonStore).Create()\n      /tmp/score-3828299119/code/store.go:83 +0x596\n  main.(*handler).createLink()\n      /tmp/score-3828299119/code/main.go:131 +0x3f5\n  main.(*handler).ServeHTTP()\n      /tmp/score-3828299119/code/main.go:74 +0x2f5\n  net/http.serverHandler.ServeHTTP()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:3301 +0x2a1\n  net/http.(*conn).serve()\n      /opt/hostedtoolcache/go/1.24.13/x64/src/net/http/server.go:2102 +0x1304\n  ne …[trimmed]",
+    "verdict": "pending"
+  },
+  {
+    "id": "T03",
+    "source": "typecheck",
+    "file": "codegen.go",
+    "line": 1,
+    "message": ": # shortener [shortener.test]\n./store_test.go:4:2: \"encoding/json\" imported and not used\n./store_test.go:5:2: \"net/http\" imported and not used\n./store_test.go:6:2: \"net/http/httptest\" imported and not used\n./store_test.go:8:2: \"strings\" imported and not used\n./store_test.go:10:2: \"time\" imported and not used\n./store_test.go:200:4: invalid operation: \"a\" * 33 (mismatched types untyped string and untyped int)\n./store_test.go:230:2: declared and not used: link\n./store_test.go:272:2: declared and not used: link\n./handler_test.go:6:2: \"fmt\" imported and not used",
+    "verdict": "pending"
+  }
+]

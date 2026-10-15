@@ -1,0 +1,267 @@
+[
+  {
+    "id": "T01",
+    "source": "errcheck",
+    "file": "example_test.go",
+    "line": 18,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T02",
+    "source": "errcheck",
+    "file": "example_test.go",
+    "line": 21,
+    "message": "Error return value of `os.Setenv` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T03",
+    "source": "errcheck",
+    "file": "example_test.go",
+    "line": 22,
+    "message": "Error return value of `os.Unsetenv` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T04",
+    "source": "errcheck",
+    "file": "example_test.go",
+    "line": 28,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T05",
+    "source": "errcheck",
+    "file": "example_test.go",
+    "line": 56,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T06",
+    "source": "errcheck",
+    "file": "example_test.go",
+    "line": 82,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T07",
+    "source": "errcheck",
+    "file": "example_test.go",
+    "line": 105,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T08",
+    "source": "errcheck",
+    "file": "example_test.go",
+    "line": 118,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T09",
+    "source": "errcheck",
+    "file": "example_test.go",
+    "line": 142,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T10",
+    "source": "errcheck",
+    "file": "example_test.go",
+    "line": 166,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T11",
+    "source": "errcheck",
+    "file": "example_test.go",
+    "line": 179,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T12",
+    "source": "errcheck",
+    "file": "example_test.go",
+    "line": 190,
+    "message": "Error return value of `resp.Body.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T13",
+    "source": "errcheck",
+    "file": "main.go",
+    "line": 23,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T14",
+    "source": "errcheck",
+    "file": "server.go",
+    "line": 179,
+    "message": "Error return value of `(*encoding/json.Encoder).Encode` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T15",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 17,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T16",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 23,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T17",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 113,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T18",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 119,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T19",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 168,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T20",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 174,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T21",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 235,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T22",
+    "source": "errcheck",
+    "file": "server_test.go",
+    "line": 241,
+    "message": "Error return value of `store.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T23",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 50,
+    "message": "Error return value of `file.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T24",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 81,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T25",
+    "source": "errcheck",
+    "file": "store.go",
+    "line": 88,
+    "message": "Error return value of `file.Close` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T26",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 14,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T27",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 51,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T28",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 73,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T29",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 107,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T30",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 148,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T31",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 187,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T32",
+    "source": "errcheck",
+    "file": "store_test.go",
+    "line": 224,
+    "message": "Error return value of `os.Remove` is not checked",
+    "verdict": "pending"
+  },
+  {
+    "id": "T33",
+    "source": "gosec",
+    "rule": "G114",
+    "file": "server.go",
+    "line": 27,
+    "message": "G114: Use of net/http serve function that has no support for setting timeouts",
+    "verdict": "pending"
+  }
+]
