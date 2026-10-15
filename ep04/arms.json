@@ -1,0 +1,10 @@
+[
+  {"label": "baseline",            "skills": "",                               "review": false},
+  {"label": "superpowers",         "skills": "skills/superpowers",             "review": false},
+  {"label": "tdd",                 "skills": "skills/tdd",                     "review": false},
+  {"label": "karpathy-guidelines", "skills": "skills/karpathy-guidelines",     "review": false},
+  {"label": "sharp-edges",         "skills": "skills/sharp-edges",             "review": false},
+  {"label": "golang-pro",          "skills": "skills/golang-pro",              "review": false},
+  {"label": "stack",               "skills": "skills/superpowers,skills/tdd,skills/karpathy-guidelines,skills/sharp-edges,skills/golang-pro", "review": false},
+  {"label": "bonus",               "skills": "skills/go-pr-review",            "review": true}
+]
