@@ -24,25 +24,6 @@ type Toolbox struct {
 	root      string // absolute path of the workspace
 	sandbox   Sandbox
 	maxOutput int // bytes of one tool result the model sees
-
-	// Ep04 additions, off unless the run asks for them.
-	skills   []Skill   // installed skills: adds the Skill tool
-	reviewer *Reviewer // the Ep01 review agent: adds the request_review tool
-	readOnly bool      // the reviewer's own view: no write_file, no Skill, no request_review
-}
-
-// ReadOnly returns a view of the same workspace with only the reading and checking tools.
-func (tb *Toolbox) ReadOnly() *Toolbox {
-	return &Toolbox{root: tb.root, sandbox: tb.sandbox, maxOutput: tb.maxOutput, readOnly: true}
-}
-
-// ToolNames lists the tools this toolbox offers, for the transcript header.
-func (tb *Toolbox) ToolNames() []string {
-	var names []string
-	for _, t := range tb.Tools() {
-		names = append(names, t.Name)
-	}
-	return names
 }
 
 func NewToolbox(root string, sandbox Sandbox, maxOutput int) (*Toolbox, error) {
@@ -68,7 +49,7 @@ func (tb *Toolbox) Tools() []Tool {
 	}
 	packages := str(`Package patterns separated by spaces (default "./...")`)
 
-	tools := []Tool{
+	return []Tool{
 		{"list_files", "List the files under a folder of your workspace, with their sizes.",
 			schema(map[string]any{"path": str(`Folder relative to the workspace, e.g. "."`)})},
 		{"read_file", "Read a file from your workspace. Lines are numbered.",
@@ -91,28 +72,9 @@ func (tb *Toolbox) Tools() []Tool {
 			})},
 		{"go_vet", "Run go vet in your workspace.", schema(map[string]any{"packages": packages})},
 	}
-	if tb.readOnly {
-		return slices.DeleteFunc(tools, func(t Tool) bool { return t.Name == "write_file" })
-	}
-	if len(tb.skills) > 0 {
-		tools = append(tools, Tool{"Skill",
-			"Load an installed skill: returns its SKILL.md with its instructions. The installed skills and when to use each are listed in the system prompt. With file set, returns another file inside that skill's folder (one its SKILL.md points to).",
-			schema(map[string]any{
-				"skill": str(`The skill's name, e.g. "tdd"`),
-				"file":  str(`Optional: a file inside the skill's folder, e.g. "references/testing.md"`),
-			}, "skill")})
-	}
-	if tb.reviewer != nil {
-		tools = append(tools, Tool{"request_review",
-			"Ask the PR review agent to review the code in your workspace before you finish. A separate reviewer reads the code, runs go vet and go test, and returns its findings by category with severity and file:line. It costs model calls of its own, not yours.",
-			schema(map[string]any{})})
-	}
-	return tools
 }
 
 type toolArgs struct {
-	Skill     string `json:"skill"`
-	File      string `json:"file"`
 	Path      string `json:"path"`
 	StartLine int    `json:"start_line"`
 	EndLine   int    `json:"end_line"`
@@ -144,20 +106,7 @@ func (tb *Toolbox) dispatch(ctx context.Context, call ToolCall) (string, error) 
 	case "read_file":
 		return tb.readFile(args.Path, args.StartLine, args.EndLine)
 	case "write_file":
-		if tb.readOnly {
-			return "", errors.New("this reviewer can't write files")
-		}
 		return tb.writeFile(args.Path, args.Content)
-	case "Skill":
-		if len(tb.skills) == 0 || tb.readOnly {
-			return "", fmt.Errorf("unknown tool %q", call.Name)
-		}
-		return loadSkill(tb.skills, args.Skill, args.File)
-	case "request_review":
-		if tb.reviewer == nil || tb.readOnly {
-			return "", fmt.Errorf("unknown tool %q", call.Name)
-		}
-		return tb.reviewer.Review(ctx)
 	case "go_build", "go_test", "go_vet":
 		goArgs, err := goCommand(call.Name, args)
 		if err != nil {

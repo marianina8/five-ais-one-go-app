@@ -17,7 +17,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 	"time"
 )
 
@@ -57,16 +56,6 @@ type Stats struct {
 	StoppedBy       string         `json:"stopped_by"`
 	Error           string         `json:"error,omitempty"`
 	FinalText       string         `json:"final_text,omitempty"`
-	Skills          []string       `json:"skills,omitempty"`       // Ep04: skills installed for this run
-	ReviewCalls     int            `json:"review_calls,omitempty"` // Ep04 bonus: reviews requested (their cost is in cost_usd)
-}
-
-func skillNames(skills []Skill) []string {
-	names := make([]string, len(skills))
-	for i, s := range skills {
-		names[i] = s.Name
-	}
-	return names
 }
 
 // runConfig is everything the flags set.
@@ -77,8 +66,6 @@ type runConfig struct {
 	minutes                     float64
 	sandbox, image, region      string
 	toolTimeout                 time.Duration
-	skills                      string // Ep04: comma-separated skill or pack folders
-	review                      bool   // Ep04 bonus: offer the Ep01 review agent as request_review
 }
 
 func main() {
@@ -104,8 +91,6 @@ func parseFlags() runConfig {
 	flag.StringVar(&c.image, "image", "golang:1.24", "docker image for go commands")
 	flag.DurationVar(&c.toolTimeout, "tool-timeout", 3*time.Minute, "limit for one go command")
 	flag.StringVar(&c.region, "region", "us-west-2", "bedrock: AWS region")
-	flag.StringVar(&c.skills, "skills", "", "Ep04: comma-separated skill folders or packs to install (each SKILL.md, unmodified)")
-	flag.BoolVar(&c.review, "review", false, "Ep04 bonus: give the model a request_review tool that runs the Ep01 PR review agent")
 	flag.Parse()
 	if c.label == "" {
 		c.label = c.model
@@ -126,7 +111,7 @@ func run(c runConfig) error {
 	if err != nil {
 		return err
 	}
-	agent, redact, err := newAgent(c, transcriptFile, string(spec))
+	agent, redact, err := newAgent(c, transcriptFile)
 	if err != nil {
 		_ = transcriptFile.Close()
 		return err
@@ -135,17 +120,11 @@ func run(c runConfig) error {
 	agent.Deadline = started.Add(time.Duration(c.minutes * float64(time.Minute)))
 	task := fmt.Sprintf("Your workspace is empty. Build the service described in this spec.\n\n%s\n\nBudget: %d model calls and %.0f minutes.", spec, c.maxSteps, c.minutes)
 	result := agent.Run(context.Background(), task)
-	reviewCalls := 0
-	if reviewer := agent.Tools.reviewer; reviewer != nil {
-		result.Usage.Add(reviewer.Usage) // the reviewer's tokens are part of this run's cost
-		reviewCalls = reviewer.Calls
-	}
 	if err := transcriptFile.Close(); err != nil {
 		return err
 	}
 
 	stats := newStats(c, price, result, started, redact)
-	stats.Skills, stats.ReviewCalls = skillNames(agent.Tools.skills), reviewCalls
 	agent.logf("%s: stopped by %s after %d model calls, %d tool calls, %.0fs, $%.2f",
 		c.label, stats.StoppedBy, stats.ModelCalls, stats.ToolCalls, stats.Seconds, stats.CostUSD)
 	return writeJSON(filepath.Join(c.outDir, "stats.json"), stats)
@@ -174,7 +153,7 @@ func prepare(c *runConfig) (spec []byte, price Price, err error) {
 
 // newAgent connects to the model and sets up the tools, log and transcript. API keys are
 // taken out of the environment here, before anything else can run.
-func newAgent(c runConfig, transcript *os.File, spec string) (*Agent, *Redactor, error) {
+func newAgent(c runConfig, transcript *os.File) (*Agent, *Redactor, error) {
 	keys := takeAPIKeys()
 	redact := NewRedactor(append(keys.all(), os.Getenv("AWS_ACCESS_KEY_ID"), os.Getenv("AWS_SECRET_ACCESS_KEY"), os.Getenv("AWS_SESSION_TOKEN"))...)
 	llm, err := newModel(context.Background(), c.provider, c.model, c.maxTokens, c.region, keys)
@@ -189,30 +168,12 @@ func newAgent(c runConfig, transcript *os.File, spec string) (*Agent, *Redactor,
 	if err != nil {
 		return nil, nil, err
 	}
-	system := systemPrompt
-	if c.skills != "" {
-		skills, err := LoadSkills(strings.Split(c.skills, ","))
-		if err != nil {
-			return nil, nil, err
-		}
-		block, err := skillsPrompt(skills)
-		if err != nil {
-			return nil, nil, err
-		}
-		tools.skills, system = skills, system+block
-	}
-	if c.review {
-		tools.reviewer = &Reviewer{Model: llm, Tools: tools.ReadOnly(), Spec: spec}
-	}
-	header := fmt.Sprintf("# %s\n\n`%s` via %s · up to %d model calls, %.0f minutes, %d output tokens per call · tools: %s\n",
-		c.label, c.model, c.provider, c.maxSteps, c.minutes, c.maxTokens, strings.Join(tools.ToolNames(), ", "))
-	if len(tools.skills) > 0 {
-		header += "\nSkills installed: " + strings.Join(skillNames(tools.skills), ", ") + "\n"
-	}
+	header := fmt.Sprintf("# %s\n\n`%s` via %s · up to %d model calls, %.0f minutes, %d output tokens per call · tools: list_files, read_file, write_file, go_build, go_test, go_vet\n",
+		c.label, c.model, c.provider, c.maxSteps, c.minutes, c.maxTokens)
 	return &Agent{
 		Model:      llm,
 		Tools:      tools,
-		System:     system,
+		System:     systemPrompt,
 		MaxSteps:   c.maxSteps,
 		Log:        redactingWriter{w: os.Stderr, redact: redact},
 		Transcript: NewTranscript(transcript, redact, header),
